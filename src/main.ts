@@ -122,7 +122,7 @@ export class Bshb extends utils.Adapter {
                         if (keepPolling) {
                             bshbController.getBshbClient().longPolling(this.config.mac, response.result).subscribe(information => {
                                 information.result.forEach(deviceService => {
-                                    this.log.info(JSON.stringify(deviceService));
+                                    this.log.debug(JSON.stringify(deviceService));
                                     bshbController.setStateAck(deviceService);
                                 });
                             }, () => {
