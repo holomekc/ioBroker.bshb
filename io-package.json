@@ -1,0 +1,76 @@
+{
+	"common": {
+		"name": "bshb",
+		"version": "0.0.1",
+		"news": {
+			"0.0.1": {
+				"en": "initial release",
+				"de": "Erstveröffentlichung",
+				"ru": "Начальная версия",
+				"pt": "lançamento inicial",
+				"nl": "Eerste uitgave",
+				"fr": "Première version",
+				"it": "Versione iniziale",
+				"es": "Versión inicial",
+				"pl": "Pierwsze wydanie",
+				"zh-cn": "首次出版"
+			}
+		},
+		"title": "Bosch Smart Home Bridge",
+		"desc": {
+			"en": "Integration Bosch Smart Home devices",
+			"de": "Einbinden von Bosch Smart Home Geräten"
+		},
+		"authors": [
+			"Author <author@mail.com>"
+		],
+		"keywords": [
+			"ioBroker",
+			"Bosch Smart Home",
+			"Smart Home",
+			"home automation"
+		],
+		"license": "MIT",
+		"platform": "Javascript/Node.js",
+		"main": "build/main.js",
+		"icon": "bshb-logo.jpg",
+		"enabled": false,
+		"extIcon": "https://raw.githubusercontent.com/holomekc/ioBroker.bshb/master/admin/bshb-logo.png",
+		"readme": "https://github.com/holomekc/ioBroker.bshb/master/README.md",
+		"loglevel": "info",
+		"mode": "daemon",
+		"type": "general",
+		"compact": true,
+		"materialize": true,
+		"materializeTab": true,
+		"adminTab": {
+			"singleton": true,
+			"name": {
+				"en": "Template (TypeScript)",
+				"de": "Vorlage (TypeScript)",
+				"ru": "Шаблон (TypeScript)",
+				"pt": "Modelo (TypeScript)",
+				"nl": "Sjabloon (TypeScript)",
+				"fr": "Modèle (TypeScript)",
+				"it": "Template (TypeScript)",
+				"es": "Plantilla (TypeScript)",
+				"pl": "Szablon (TypeScript)",
+				"zh-cn": "模板（TypeScript）"
+			},
+			"link": "",
+			"fa-icon": "info"
+		},
+		"supportCustoms": true,
+		"dependencies": [
+			{
+				"js-controller": ">=1.4.2"
+			}
+		]
+	},
+	"native": {
+		"option1": true,
+		"option2": "42"
+	},
+	"objects": [],
+	"instanceObjects": []
+}

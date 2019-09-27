@@ -1,0 +1,129 @@
+<html>
+
+<head>
+
+    <!-- Load ioBroker scripts and styles-->
+    <link rel="stylesheet" type="text/css" href="../../css/adapter.css"/>
+    <link rel="stylesheet" type="text/css" href="../../lib/css/materialize.css">
+
+    <script type="text/javascript" src="../../lib/js/jquery-3.2.1.min.js"></script>
+    <script type="text/javascript" src="../../socket.io/socket.io.js"></script>
+
+    <script type="text/javascript" src="../../js/translate.js"></script>
+    <script type="text/javascript" src="../../lib/js/materialize.js"></script>
+    <script type="text/javascript" src="../../js/adapter-settings.js"></script>
+
+    <!-- Load our own files -->
+    <link rel="stylesheet" type="text/css" href="style.css"/>
+    <script type="text/javascript" src="words.js"></script>
+
+    <script type="text/javascript">
+        // This will be called by the admin adapter when the settings page loads
+        function load(settings, onChange) {
+            // example: select elements with id=key and class=value and insert value
+            if (!settings) return;
+            $('.value').each(function () {
+                var $key = $(this);
+                var id = $key.attr('id');
+                if ($key.attr('type') === 'checkbox') {
+                    // do not call onChange direct, because onChange could expect some arguments
+                    $key.prop('checked', settings[id]).on('change', function () {
+                        return onChange();
+                    });
+                } else {
+                    // do not call onChange direct, because onChange could expect some arguments
+                    $key.val(settings[id]).on('change', function () {
+                        return onChange();
+                    }).on('keyup', function () {
+                        return onChange();
+                    });
+                }
+            });
+            onChange(false);
+            // reinitialize all the Materialize labels on the page if you are dynamically adding inputs:
+            if (M) M.updateTextFields();
+        }
+
+        // This will be called by the admin adapter when the user presses the save button
+        function save(callback) {
+            // example: select elements with class=value and build settings object
+            var obj = {};
+            $('.value').each(function () {
+                var $this = $(this);
+                if ($this.attr('type') === 'checkbox') {
+                    obj[$this.attr('id')] = $this.prop('checked');
+                } else {
+                    obj[$this.attr('id')] = $this.val();
+                }
+            });
+            callback(obj);
+        }
+    </script>
+
+</head>
+
+<body>
+
+<div class="m adapter-container">
+
+    <div class="row">
+        <div class="col s12 m4 l2">
+            <img src="bshb-logo.jpg" class="logo" alt="Logo">
+        </div>
+    </div>
+
+    <!-- Put your content here -->
+
+    <!-- For example columns with settings: -->
+    <div class="row">
+        <!--			<div class="col s6 input-field">-->
+        <!--				<input type="checkbox" class="value" id="option1" />-->
+        <!--				<label for="option1" class="translate">option1</label>-->
+        <!--			</div>-->
+
+        <!--			<div class="col s6 input-field">-->
+        <!--				<input type="text" class="value" id="option2" />-->
+        <!--				<label for="option2" class="translate">option2</label>-->
+        <!--			</div>-->
+        <div class="col s6 input-field">
+            <input type="text" class="value" id="host" placeholder="Enter IP address"/>
+            <label for="host" class="translate">Bosch Smart Home Controller IP address</label>
+            <span class="helper-text" data-error="wrong" data-success="right">IP address of BSHC</span>
+        </div>
+        <div class="col s6 input-field">
+            <input type="text" class="value" id="mac" placeholder="Enter Mac address"/>
+            <label for="mac" class="translate">Bosch Smart Home Controller Mac address</label>
+            <span class="helper-text" data-error="wrong" data-success="right">Mac address in format: xx-xx-xx-xx-xx-xx</span>
+        </div>
+        <div class="col s6 input-field">
+            <input type="text" class="value" id="identifier" placeholder="e.g. uuid"/>
+            <label for="identifier" class="translate">Unique identifier of created client</label>
+            <span class="helper-text" data-error="wrong" data-success="right">Used as name for created client certificate. Make sure that it is unique. It can be any string.</span>
+        </div>
+        <div class="col s6 input-field">
+            <input type="text" class="value" id="name" placeholder="Client name"/>
+            <label for="name" class="translate">Name of the created client</label>
+            <span class="helper-text" data-error="wrong" data-success="right">Name of client which will be shown in smartphone app</span>
+        </div>
+        <div class="col s6 input-field">
+            <input type="password" class="value" id="systemPassword" placeholder="Controller password"/>
+            <label for="systemPassword" class="translate">Bosch Controller password</label>
+            <span class="helper-text" data-error="wrong" data-success="right">Can be removed after pairing was ok</span>
+        </div>
+        <div class="col s6 input-field">
+            <input type="text" class="value" id="certsPath" placeholder="Absolute certs path"/>
+            <label for="certsPath" class="translate">Client certificate directory</label>
+            <span class="helper-text" data-error="wrong" data-success="right">Absolute path with corresponding access rights</span>
+        </div>
+        <div class="col s6 input-field">
+            <input type="number" class="value" id="pairingDelay" placeholder="in ms"/>
+            <label for="pairingDelay" class="translate">Delay during paring attempts in ms</label>
+            <span class="helper-text" data-error="wrong" data-success="right">Time waiting during pairing process attempts</span>
+        </div>
+    </div>
+
+</div>
+
+</body>
+
+</html>
