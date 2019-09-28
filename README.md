@@ -1,12 +1,12 @@
 ![Logo](admin/bshb-logo.jpg)
 # ioBroker.bshb
 
-[![NPM version](https://www.npmjs.com/package/iobroker.bshb)](https://www.npmjs.com/package/iobroker.bshb)
-[![Downloads](https://www.npmjs.com/package/iobroker.bshb)](https://www.npmjs.com/package/iobroker.bshb)
-[![Dependency Status](https://david-dm.org/holomekc/iobroker.bshb)](https://david-dm.org/holomekc/iobroker.bshb)
-[![Known Vulnerabilities](https://snyk.io/test/github/holomekc/ioBroker.bshb)](https://snyk.io/test/github/holomekc/ioBroker.bshb)
+[![NPM version](http://img.shields.io/npm/v/iobroker.bshb.svg)](https://www.npmjs.com/package/iobroker.bshb)
+[![Downloads](https://img.shields.io/npm/dm/iobroker.bshb.svg)](https://www.npmjs.com/package/iobroker.bshb)
+[![Dependency Status](https://david-dm.org/holomekc/iobroker.bshb.svg)](https://david-dm.org/holomekc/iobroker.bshb)
+[![Known Vulnerabilities](https://snyk.io/test/github/holomekc/ioBroker.bshb/badge.svg)](https://snyk.io/test/github/holomekc/ioBroker.bshb)
 
-[![NPM](https://nodei.co/npm/iobroker.bshb/)](https://nodei.co/npm/iobroker.bshb/)
+[![NPM](https://nodei.co/npm/iobroker.bshb.png)](https://nodei.co/npm/iobroker.bshb/)
 
 <!--**Tests:**: [![Travis-CI](http://img.shields.io/travis/Author/ioBroker.template/master.svg)](https://travis-ci.org/holomekc/ioBroker.bshb) -->
 
