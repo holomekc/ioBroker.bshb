@@ -1,6 +1,6 @@
 {
   "name": "iobroker.bshb",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "Connects Bosch Smart Home Interface-Processes to ioBroker",
   "author": {
     "name": "Christopher Holomek",
@@ -20,7 +20,7 @@
   },
   "dependencies": {
     "@iobroker/adapter-core": "^1.0.3",
-    "bosch-smart-home-bridge": "^0.0.2",
+    "bosch-smart-home-bridge": "^0.0.3",
     "rxjs": "^6.5.3"
   },
   "devDependencies": {

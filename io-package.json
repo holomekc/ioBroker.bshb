@@ -35,7 +35,7 @@
 		"main": "build/main.js",
 		"icon": "bshb-logo.jpg",
 		"enabled": false,
-		"extIcon": "https://raw.githubusercontent.com/holomekc/ioBroker.bshb/master/admin/bshb-logo.png",
+		"extIcon": "https://raw.githubusercontent.com/holomekc/ioBroker.bshb/master/admin/bshb-logo.jpg",
 		"readme": "https://github.com/holomekc/ioBroker.bshb/master/README.md",
 		"loglevel": "info",
 		"mode": "daemon",

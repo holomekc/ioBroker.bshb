@@ -59,12 +59,14 @@ export class BshbController {
 
         let cachedState = this.cachedStates.get(id);
 
+        this.bshb.log.debug('Found cached state: ' + JSON.stringify(cachedState));
+
         const data: any = {
             '@type': cachedState.deviceService.state['@type'],
         };
-        data[cachedState.state] = state.val;
+        data[cachedState.stateKey] = state.val;
 
-        this.bshb.log.debug('data put: ' + JSON.stringify(data));
+        this.bshb.log.debug('Data which will be send: ' + JSON.stringify(data));
 
         this.boschSmartHomeBridge.getBshcClient().putState(cachedState.deviceService.path, data).subscribe(value => {
             if (value) {
@@ -231,7 +233,7 @@ export class BshbController {
             native: {device: device, deviceService: deviceService, state: stateKey},
         });
 
-        this.cachedStates.set(this.bshb.namespace + '.' + id, {device: device, deviceService: deviceService, id: id});
+        this.cachedStates.set(this.bshb.namespace + '.' + id, {device: device, deviceService: deviceService, id: id, stateKey: stateKey});
 
         this.bshb.getState(id, (err, state) => {
 
