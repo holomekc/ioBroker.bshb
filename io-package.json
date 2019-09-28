@@ -1,7 +1,7 @@
 {
 	"common": {
 		"name": "bshb",
-		"version": "0.0.1",
+		"version": "0.0.4",
 		"news": {
 			"0.0.1": {
 				"en": "initial release",
@@ -22,7 +22,7 @@
 			"de": "Einbinden von Bosch Smart Home Geräten"
 		},
 		"authors": [
-			"Author <author@mail.com>"
+			"Author <holomekc.github@gmail.com>"
 		],
 		"keywords": [
 			"ioBroker",
