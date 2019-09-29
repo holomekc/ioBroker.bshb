@@ -16,3 +16,11 @@ This adapter allows to communicate with Bosch Smart Home devices.
 To achieve that it uses the [bosch-smart-home-bridge](https://github.com/holomekc/bosch-smart-home-bridge) library.
 
 Still work in progress. Feedback appreciated.
+
+## Install
+
+This build directory is not part of github but is only part of npm package.
+Therefore, you cannot install it via github in ioBroker. Do the following:
+
+* Install from URL
+* Custom and just enter: iobroker.bshb
