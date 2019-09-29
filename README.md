@@ -8,7 +8,7 @@
 
 [![NPM](https://nodei.co/npm/iobroker.bshb.png)](https://nodei.co/npm/iobroker.bshb/)
 
-**Tests:**: [![Travis-CI](http://img.shields.io/travis/Author/ioBroker.template/master.svg)](https://travis-ci.org/holomekc/ioBroker.bshb) 
+**Tests:**: [![Travis-CI](http://img.shields.io/travis/holomekc/ioBroker.bshb/master.svg)](https://travis-ci.org/holomekc/ioBroker.bshb) 
 
 ## bosch-smart-home-bridge adapter for ioBroker
 
