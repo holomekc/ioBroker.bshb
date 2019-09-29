@@ -8,7 +8,7 @@
 
 [![NPM](https://nodei.co/npm/iobroker.bshb.png)](https://nodei.co/npm/iobroker.bshb/)
 
-<!--**Tests:**: [![Travis-CI](http://img.shields.io/travis/Author/ioBroker.template/master.svg)](https://travis-ci.org/holomekc/ioBroker.bshb) -->
+**Tests:**: [![Travis-CI](http://img.shields.io/travis/Author/ioBroker.template/master.svg)](https://travis-ci.org/holomekc/ioBroker.bshb) 
 
 ## bosch-smart-home-bridge adapter for ioBroker
 
@@ -17,10 +17,41 @@ To achieve that it uses the [bosch-smart-home-bridge](https://github.com/holomek
 
 Still work in progress. Feedback appreciated.
 
-## Install
+## Changelog
 
-The build directory is not part of github but is only part of npm package.
-Therefore, you cannot install it via github in ioBroker. Do the following:
+### 0.0.5
+* Just do the steps adapter-check is telling me
+* Therefore, build files are part of git repo. So install via Github should be possible now
 
-* Install from URL
-* Custom and just enter: iobroker.bshb
+### 0.0.4
+* Long polling added to reduce load
+* Set of state values is possible now
+* Code cleanup
+
+### < 0.0.4
+* certificate generation added
+* first attempts to creat ioBroker objects, states, etc.
+
+## License
+
+MIT License
+
+Copyright (c) 2019 Christopher Holomek <holomekc.github@gmail.com>
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
