@@ -19,7 +19,7 @@ Still work in progress. Feedback appreciated.
 
 ## Install
 
-This build directory is not part of github but is only part of npm package.
+The build directory is not part of github but is only part of npm package.
 Therefore, you cannot install it via github in ioBroker. Do the following:
 
 * Install from URL
