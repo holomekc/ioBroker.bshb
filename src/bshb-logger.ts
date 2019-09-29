@@ -14,7 +14,7 @@ export class BshbLogger implements Logger {
 
     fine(message?: any, ...optionalParams: any[]): void {
         // We ignore fine so far. Because it is very detailed
-        // TODO: option which will do fine -> debug in iobroker
+        this.log('silly', message, optionalParams);
     }
 
     debug(message?: any, ...optionalParams: any[]): void {
@@ -33,7 +33,7 @@ export class BshbLogger implements Logger {
         this.log('warn', message, optionalParams);
     }
 
-    private log(msgType: 'debug' | 'info' | 'warn' | 'error', message?: any, ...optionalParams: any[]) {
+    private log(msgType: 'debug' | 'info' | 'warn' | 'error' | 'silly', message?: any, ...optionalParams: any[]) {
         if (message) {
             if (optionalParams[0].length > 0) {
                 let concatMessage = message;

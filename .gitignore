@@ -1,6 +1,6 @@
 # IDE
 .idea
-iobroker.bshb.iml
+*.iml
 
 # Logs
 logs
