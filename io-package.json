@@ -1,7 +1,7 @@
 {
 	"common": {
 		"name": "bshb",
-		"version": "0.0.5",
+		"version": "0.0.6",
 		"news": {
 			"0.0.1": {
 				"en": "initial release",
@@ -16,13 +16,32 @@
 				"zh-cn": "首次出版"
 			}
 		},
-		"title": "Bosch Smart Home Bridge",
+		"titleLang": {
+			"en": "Bosch Smart Home Bridge",
+			"de": "Bosch Smart Home Bridge",
+			"ru": "Bosch Smart Home Bridge",
+			"pt": "Bosch Smart Home Bridge",
+			"nl": "Bosch Smart Home Bridge",
+			"fr": "Bosch Smart Home Bridge",
+			"it": "Bosch Smart Home Bridge",
+			"es": "Bosch Smart Home Bridge",
+			"pl": "Bosch Smart Home Bridge",
+			"zh-cn": "Bosch Smart Home Bridge"
+		},
 		"desc": {
-			"en": "Integration Bosch Smart Home devices",
-			"de": "Einbinden von Bosch Smart Home Geräten"
+			"en": "Integration of Bosch Smart Home devices",
+			"de": "Einbinden von Bosch Smart Home Geräten",
+			"ru": "Интеграция устройств Bosch Smart Home",
+			"pt": "Integração de dispositivos Bosch Smart Home",
+			"nl": "Integratie van Bosch Smart Home apparaten",
+			"fr": "Intégration des appareils Bosch Smart Home",
+			"it": "Integrazione dei dispositivi Smart Home Bosch",
+			"es": "Integración de los dispositivos Smart Home de Bosch",
+			"pl": "Integracja inteligentnych urządzeń domowych firmy Bosch",
+			"zh-cn": "集成博世智能家居设备"
 		},
 		"authors": [
-			"Author <holomekc.github@gmail.com>"
+			"Christopher Holomek <holomekc.github@gmail.com>"
 		],
 		"keywords": [
 			"ioBroker",
@@ -39,7 +58,7 @@
 		"readme": "https://github.com/holomekc/ioBroker.bshb/master/README.md",
 		"loglevel": "info",
 		"mode": "daemon",
-		"type": "general",
+		"type": "iot-systems",
 		"compact": true,
 		"materialize": true,
 		"materializeTab": true,

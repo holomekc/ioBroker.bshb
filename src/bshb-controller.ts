@@ -68,17 +68,22 @@ export class BshbController {
 
         this.bshb.log.debug('Data which will be send: ' + JSON.stringify(data));
 
-        this.boschSmartHomeBridge.getBshcClient().putState(cachedState.deviceService.path, data).subscribe(value => {
-            if (value) {
-                this.bshb.log.info(JSON.stringify(value));
+        this.boschSmartHomeBridge.getBshcClient().putState(cachedState.deviceService.path, data).subscribe(response => {
+            if (response) {
+                this.bshb.log.debug(JSON.stringify(response));
             } else {
-                this.bshb.log.info('no response');
+                this.bshb.log.debug('no response');
             }
         },error => {
             this.bshb.log.error(error);
         });
     }
 
+    /**
+     * Set a state with ack. All values of deviceService - state type are set
+     *
+     * @param deviceService object containing @type and values
+     */
     public setStateAck(deviceService: any) {
         if (deviceService.path) {
             const cachedDeviceService = this.cachedDeviceServices.get(deviceService.path);

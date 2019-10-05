@@ -180,7 +180,7 @@ export class Bshb extends utils.Adapter {
             // The state was changed
 
             if (!state.ack) {
-                this.log.info(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
+                this.log.debug(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
                 this.bshbController.setState(id, state);
             }
 
