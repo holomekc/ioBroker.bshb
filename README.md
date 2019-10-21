@@ -12,12 +12,18 @@
 
 ## bosch-smart-home-bridge adapter for ioBroker
 
-This adapter allows to communicate with Bosch Smart Home devices. 
+This adapter allows to communicate with Bosch Smart Home devices.
+
+[Bosch Smart Home Controller](https://www.bosch-smarthome.com/de/de/produkte/smart-system-solutions/smart-home-controller)
+
 To achieve that it uses the [bosch-smart-home-bridge](https://github.com/holomekc/bosch-smart-home-bridge) library.
 
-Still work in progress. Feedback appreciated.
+Work in progress. Feedback appreciated.
 
 ## Changelog
+
+### 0.0.7
+-make sure that bosch-smart-home-bridge version >= 0.0.4
 
 ### 0.0.6
 * Just io-package.json changes
