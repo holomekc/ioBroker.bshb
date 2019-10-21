@@ -30,7 +30,7 @@ class BshbDefinition {
         }
         else if (type === 'temperatureLevelState') {
             if (key === 'temperature') {
-                return 'level.temperature';
+                return 'value.temperature';
             }
         }
         else if (type === 'colorState') {
@@ -39,13 +39,9 @@ class BshbDefinition {
             }
         }
         else if (type === 'climateControlState') {
-            if (key === 'setpointTemperature') {
-                return 'level.temperature';
-            }
-            else if (key === 'setpointTemperatureForLevelEco') {
-                return 'level.temperature';
-            }
-            else if (key === 'setpointTemperatureForLevelComfort') {
+            if (key === 'setpointTemperature' ||
+                key === 'setpointTemperatureForLevelEco' ||
+                key === 'setpointTemperatureForLevelComfort') {
                 return 'level.temperature';
             }
             else if (key === 'low') {
@@ -53,6 +49,15 @@ class BshbDefinition {
             }
             else if (key === 'boostMode') {
                 return 'switch.boost';
+            }
+            else if (key === 'operationMode') {
+                return 'text';
+            }
+            else if (key === 'showSetpointTemperature' || key === 'summerMode') {
+                return 'switch';
+            }
+            else if (key === 'supportsBoostMode' || key === 'ventilationMode') {
+                return 'indicator';
             }
         }
         else if (type === 'colorTemperatureState') {
@@ -63,6 +68,32 @@ class BshbDefinition {
         else if (type === 'multiLevelSwitchState') {
             if (key === 'level') {
                 return 'level.dimmer';
+            }
+        }
+        else if (type === 'temperatureOffsetState') {
+            if (key === 'offset' || key === 'stepSize' || key === 'minOffset' || key === 'maxOffset') {
+                return 'level';
+            }
+        }
+        else if (type === 'childLockState') {
+            if (key === 'childLock') {
+                return 'text';
+            }
+        }
+        else if (type === 'valveTappetState') {
+            if (key === 'position') {
+                return 'level.valve';
+            }
+            else if (key === 'value') {
+                return 'text';
+            }
+        }
+        else if (type === 'shutterContactState') {
+            if (key === 'value') {
+                // TODO: We could add a mapping for some values. In this case true -> OPEN, false -> CLOSED
+                // sensor.window would be great but this would require a boolean and this is a string
+                // OPEN / CLOSED
+                return 'text ';
             }
         }
         // else if (type === '') {

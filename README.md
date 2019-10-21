@@ -19,6 +19,10 @@ Still work in progress. Feedback appreciated.
 
 ## Changelog
 
+### 0.0.6
+* Just io-package.json changes
+* cleanup
+
 ### 0.0.5
 * Just do the steps adapter-check is telling me
 * Therefore, build files are part of git repo. So install via Github should be possible now
