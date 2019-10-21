@@ -115,7 +115,6 @@ tests.unit(path.join(__dirname, ".."), {
             config.pairingDelay = 1000;
             config.host = '127.0.0.1';
             config.mac = 'xx-xx-xx-xx-xx';
-            config.name = 'Test';
 
 
             return config;

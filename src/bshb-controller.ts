@@ -16,6 +16,7 @@ export class BshbController {
     private cachedStates = new Map<string, any>();
     private cachedDeviceServices = new Map<string, any>();
     private boschSmartHomeBridge: BoschSmartHomeBridge;
+    private clientName = 'ioBroker.bshb';
 
     /**
      * Create a new instance of {@link BshbController}
@@ -44,7 +45,7 @@ export class BshbController {
             pairingDelay = this.bshb.config.pairingDelay;
         }
 
-        return this.boschSmartHomeBridge.pairIfNeeded(this.bshb.config.name, systemPassword, pairingDelay, 100);
+        return this.boschSmartHomeBridge.pairIfNeeded(this.clientName, systemPassword, pairingDelay, 100);
     }
 
     /**

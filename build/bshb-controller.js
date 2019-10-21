@@ -22,6 +22,7 @@ class BshbController {
         this.cachedDevices = new Map();
         this.cachedStates = new Map();
         this.cachedDeviceServices = new Map();
+        this.clientName = 'ioBroker.bshb';
         this.boschSmartHomeBridge = new bosch_smart_home_bridge_1.BoschSmartHomeBridge(bshb.config.host, bshb.config.identifier, bshb.config.certsPath, new bshb_logger_1.BshbLogger(bshb));
     }
     getBshbClient() {
@@ -38,7 +39,7 @@ class BshbController {
         if (this.bshb.config.pairingDelay && this.bshb.config.pairingDelay > 5000) {
             pairingDelay = this.bshb.config.pairingDelay;
         }
-        return this.boschSmartHomeBridge.pairIfNeeded(this.bshb.config.name, systemPassword, pairingDelay, 100);
+        return this.boschSmartHomeBridge.pairIfNeeded(this.clientName, systemPassword, pairingDelay, 100);
     }
     /**
      * iobroker state changed. Change it via bosch-smart-home-bridge

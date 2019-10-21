@@ -22,6 +22,9 @@ Work in progress. Feedback appreciated.
 
 ## Changelog
 
+### 0.0.8
+-fix client name is: ioBroker.bshb
+
 ### 0.0.7
 -make sure that bosch-smart-home-bridge version >= 0.0.4
 

@@ -33,7 +33,6 @@ class Bshb extends utils.Adapter {
             this.log.debug('config host: ' + this.config.host);
             this.log.debug('config mac: ' + this.config.mac);
             this.log.debug('config identifier: ' + this.config.identifier);
-            this.log.debug('config name: ' + this.config.name);
             this.log.debug('config systemPassword: ' + (this.config.systemPassword != undefined));
             this.log.debug('config certsPath: ' + this.config.certsPath);
             this.log.debug('config pairingDelay: ' + this.config.pairingDelay);
