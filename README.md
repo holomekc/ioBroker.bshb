@@ -22,28 +22,31 @@ Work in progress. Feedback appreciated.
 
 ## Changelog
 
+### 0.0.9
+* (holomekc) update travis.yml due to jscontroller requires node dependency >=8.0
+
 ### 0.0.8
--fix client name is: ioBroker.bshb
+* (holomekc) fix client name is: ioBroker.bshb
 
 ### 0.0.7
--make sure that bosch-smart-home-bridge version >= 0.0.4
+* (holomekc) make sure that bosch-smart-home-bridge version >= 0.0.4
 
 ### 0.0.6
-* Just io-package.json changes
-* cleanup
+* (holomekc) Just io-package.json changes
+* (holomekc) cleanup
 
 ### 0.0.5
-* Just do the steps adapter-check is telling me
-* Therefore, build files are part of git repo. So install via Github should be possible now
+* (holomekc) Just do the steps adapter-check is telling me
+* (holomekc) Therefore, build files are part of git repo. So install via Github should be possible now
 
 ### 0.0.4
-* Long polling added to reduce load
-* Set of state values is possible now
-* Code cleanup
+* (holomekc) Long polling added to reduce load
+* (holomekc) Set of state values is possible now
+* (holomekc) Code cleanup
 
 ### < 0.0.4
-* certificate generation added
-* first attempts to creat ioBroker objects, states, etc.
+* (holomekc) certificate generation added
+* (holomekc) first attempts to creat ioBroker objects, states, etc.
 
 ## License
 
