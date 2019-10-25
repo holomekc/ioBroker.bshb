@@ -27,6 +27,9 @@ class Bshb extends utils.Adapter {
      */
     onReady() {
         return __awaiter(this, void 0, void 0, function* () {
+            // Overwrite configuration
+            // make sure that identifier is valid regarding Bosch T&C
+            this.config.identifier = 'ioBroker.bshb_' + this.config.identifier;
             // Initialize your adapter here
             // The adapters config (in the instance object everything under the attribute "native") is accessible via
             // this.config:

@@ -98,7 +98,7 @@
         <div class="col s6 input-field">
             <input type="text" class="value" id="identifier" placeholder="e.g. uuid"/>
             <label for="identifier" class="translate">Unique identifier of created client</label>
-            <span class="helper-text" data-error="wrong" data-success="right">Used as name for created client certificate. Make sure that it is unique. It can be any string.</span>
+            <span class="helper-text" data-error="wrong" data-success="right">Id will be: oss_ioBroker.bshb_{identifier}. Uuidv4 is a good choice.</span>
         </div>
         <div class="col s6 input-field">
             <input type="password" class="value" id="systemPassword" placeholder="Controller password"/>
@@ -108,7 +108,7 @@
         <div class="col s6 input-field">
             <input type="text" class="value" id="certsPath" placeholder="Absolute certs path"/>
             <label for="certsPath" class="translate">Client certificate directory</label>
-            <span class="helper-text" data-error="wrong" data-success="right">Absolute path with corresponding access rights</span>
+            <span class="helper-text" data-error="wrong" data-success="right">Absolute path with corresponding access rights. E.g. /home/iobroker/certs</span>
         </div>
         <div class="col s6 input-field">
             <input type="number" class="value" id="pairingDelay" placeholder="in ms"/>

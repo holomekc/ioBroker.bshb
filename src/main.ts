@@ -48,6 +48,10 @@ export class Bshb extends utils.Adapter {
      * Is called when databases are connected and adapter received configuration.
      */
     private async onReady(): Promise<void> {
+        // Overwrite configuration
+        // make sure that identifier is valid regarding Bosch T&C
+        this.config.identifier = 'ioBroker.bshb_' + this.config.identifier;
+
         // Initialize your adapter here
 
         // The adapters config (in the instance object everything under the attribute "native") is accessible via
