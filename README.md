@@ -22,6 +22,11 @@ Work in progress. Feedback appreciated.
 
 ## Changelog
 
+### 0.0.10
+* (holomekc) try to improve configuration description in application itself
+* (holomekc) change id so that it is valid regarding Bosch T&C
+* (holomekc) update to newest bosch-smart-home-bridge version for same reason
+
 ### 0.0.9
 * (holomekc) update travis.yml due to jscontroller requires node dependency >=8.0
 
