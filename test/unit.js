@@ -60,6 +60,17 @@ const bshbMock = {
             },
             getBshcClient: () => {
                 return {
+                    getRooms: () => {
+                        return new Observable((observer) => {
+                            observer.next([{
+                                "@type": "room",
+                                "id": "hz_2",
+                                "iconId": "icon_room_living_room",
+                                "name": "Wohnzimmer"
+                            }]);
+                            observer.complete();
+                        });
+                    },
                     getDevices: () => {
                         return new Observable((observer) => {
                             observer.next([device]);
@@ -115,6 +126,7 @@ tests.unit(path.join(__dirname, ".."), {
             config.pairingDelay = 1000;
             config.host = '127.0.0.1';
             config.mac = 'xx-xx-xx-xx-xx';
+            config.certsPath = '/test';
 
 
             return config;
