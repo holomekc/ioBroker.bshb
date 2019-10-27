@@ -56,7 +56,7 @@
 		"icon": "bshb-logo.jpg",
 		"enabled": false,
 		"extIcon": "https://raw.githubusercontent.com/holomekc/ioBroker.bshb/master/admin/bshb-logo.jpg",
-		"readme": "https://github.com/holomekc/ioBroker.bshb/master/README.md",
+		"readme": "https://github.com/holomekc/ioBroker.bshb/blob/master/README.md",
 		"loglevel": "info",
 		"mode": "daemon",
 		"type": "iot-systems",
