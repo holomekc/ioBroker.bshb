@@ -29,7 +29,11 @@ class Bshb extends utils.Adapter {
         return __awaiter(this, void 0, void 0, function* () {
             // Overwrite configuration
             // make sure that identifier is valid regarding Bosch T&C
-            this.config.identifier = 'ioBroker.bshb_' + this.config.identifier;
+            this.config.host = this.config.host.trim();
+            this.config.mac = this.config.mac.trim();
+            this.config.identifier = 'ioBroker.bshb_' + this.config.identifier.trim();
+            this.config.systemPassword = this.config.systemPassword.trim();
+            this.config.certsPath = this.config.certsPath.trim();
             // Initialize your adapter here
             // The adapters config (in the instance object everything under the attribute "native") is accessible via
             // this.config:
@@ -90,7 +94,9 @@ class Bshb extends utils.Adapter {
                         if (keepPolling) {
                             bshbController.getBshbClient().longPolling(this.config.mac, response.result).subscribe(information => {
                                 information.result.forEach(deviceService => {
-                                    this.log.debug(JSON.stringify(deviceService));
+                                    if (this.log.level === 'debug') {
+                                        this.log.debug(JSON.stringify(deviceService));
+                                    }
                                     bshbController.setStateAck(deviceService);
                                 });
                             }, () => {

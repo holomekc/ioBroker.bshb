@@ -3,6 +3,7 @@ import {Bshb} from './main';
 import {BshbLogger} from './bshb-logger';
 import {Observable} from 'rxjs';
 import {BshbDefinition} from './bshb-definition';
+import {switchMap} from "rxjs/operators";
 
 /**
  * This controller encapsulates bosch-smart-home-bridge and provides it to iobroker.bshb
@@ -12,6 +13,7 @@ import {BshbDefinition} from './bshb-definition';
  */
 export class BshbController {
 
+    private cachedRooms = new Map<string, any>();
     private cachedDevices = new Map<string, any>();
     private cachedStates = new Map<string, any>();
     private cachedDeviceServices = new Map<string, any>();
@@ -60,7 +62,7 @@ export class BshbController {
 
         let cachedState = this.cachedStates.get(id);
 
-        if(this.bshb.log.level === 'debug') {
+        if (this.bshb.log.level === 'debug') {
             this.bshb.log.debug('Found cached state: ' + JSON.stringify(cachedState));
         }
 
@@ -69,19 +71,19 @@ export class BshbController {
         };
         data[cachedState.stateKey] = state.val;
 
-        if(this.bshb.log.level === 'debug') {
+        if (this.bshb.log.level === 'debug') {
             this.bshb.log.debug('Data which will be send: ' + JSON.stringify(data));
         }
 
         this.boschSmartHomeBridge.getBshcClient().putState(cachedState.deviceService.path, data).subscribe(response => {
             if (response) {
-                if(this.bshb.log.level === 'debug') {
+                if (this.bshb.log.level === 'debug') {
                     this.bshb.log.debug(JSON.stringify(response));
                 }
             } else {
                 this.bshb.log.debug('no response');
             }
-        },error => {
+        }, error => {
             this.bshb.log.error(error);
         });
     }
@@ -121,11 +123,18 @@ export class BshbController {
     /**
      * detect devices will search for all devices and device states and load them to iobroker.
      */
-    public detectDevices() : Observable<void> {
+    public detectDevices(): Observable<void> {
         this.bshb.log.info('start detecting devices. This may take a while.');
 
         return new Observable(observer => {
-            this.boschSmartHomeBridge.getBshcClient().getDevices().subscribe((devices: any[]) => {
+            this.boschSmartHomeBridge.getBshcClient().getRooms().pipe(switchMap((rooms: any[]) => {
+
+                rooms.forEach(room => {
+                    this.cachedRooms.set(room.id, room);
+                });
+
+                return this.boschSmartHomeBridge.getBshcClient().getDevices();
+            }), switchMap((devices: any[]) => {
                 devices.forEach(device => {
                     // this.cachedDevices.set(device.id, device);
 
@@ -150,7 +159,8 @@ export class BshbController {
                         },
                         native: {
                             device: {
-                                id: device.rootDeviceId
+                                id: device.rootDeviceId,
+                                roomId: device.roomId
                             }
                         },
                     });
@@ -161,17 +171,19 @@ export class BshbController {
                         }
                     });
                 });
-                this.checkDeviceServices().subscribe(() => {
-                    this.bshb.log.info('Detecting devices finished');
 
-                    observer.next();
-                    observer.complete();
-                });
+                return this.checkDeviceServices();
+
+            })).subscribe(() => {
+                this.bshb.log.info('Detecting devices finished');
+
+                observer.next();
+                observer.complete();
             });
         });
     }
 
-    private checkDeviceServices() : Observable<void> {
+    private checkDeviceServices(): Observable<void> {
         return new Observable(observer => {
             this.boschSmartHomeBridge.getBshcClient().getDevicesServices().subscribe((deviceServices: any[]) => {
                 deviceServices.forEach(deviceService => {
@@ -213,6 +225,10 @@ export class BshbController {
             native: {device: device, deviceService: deviceService},
         });
 
+        this.addRoom(device.id, deviceService.id, undefined as unknown as string, device.roomId);
+
+        this.addFunction(device.id, deviceService.id, undefined as unknown as string);
+
         if (deviceService.state) {
             this.importStates(id, device, deviceService);
         }
@@ -220,6 +236,7 @@ export class BshbController {
 
     private importStates(idPrefix: string, device: any, deviceService: any) {
         // device service has a state
+
         Object.keys(deviceService.state).forEach(stateKey => {
             if (stateKey === '@type') {
                 return;
@@ -230,7 +247,7 @@ export class BshbController {
         this.cachedDeviceServices.set(deviceService.path, {device: device, deviceService: deviceService});
     }
 
-    private importSimpleState(idPrefix: string, device: any, deviceService: any, stateKey: string, stateValue: any) {
+    private importSimpleState(idPrefix: string, device: any, deviceService: any, stateKey: string, stateValue: any): void {
         const id = idPrefix + '.' + stateKey;
 
         this.bshb.setObject(id, {
@@ -245,7 +262,12 @@ export class BshbController {
             native: {device: device, deviceService: deviceService, state: stateKey},
         });
 
-        this.cachedStates.set(this.bshb.namespace + '.' + id, {device: device, deviceService: deviceService, id: id, stateKey: stateKey});
+        this.cachedStates.set(this.bshb.namespace + '.' + id, {
+            device: device,
+            deviceService: deviceService,
+            id: id,
+            stateKey: stateKey
+        });
 
         this.bshb.getState(id, (err, state) => {
 
@@ -257,5 +279,50 @@ export class BshbController {
 
             this.bshb.setState(id, {val: stateValue, ack: true});
         });
+
+        // We do not need to set it for every state. Set it for channel is enough
+        // this.addRoom(device.id, deviceService.id, id, device.roomId);
+    }
+
+    private chain = Promise.resolve();
+
+    private addRoom(deviceId: string, deviceServiceId: string, itemId: string, roomId: string) {
+        if (roomId) {
+            const room = this.cachedRooms.get(roomId);
+
+            if (room) {
+                let name = room.name;
+
+                if (name) {
+                    name = name.trim().toLowerCase().replace(/ /g, '_');
+
+                    if (name && name.length > 0) {
+                        // we need to make sure that the value exists to prevent crashing ioBroker
+                        if (itemId) {
+                            this.chain = this.chain.then(() => this.bshb.addStateToEnumAsync('rooms', name, deviceId, deviceServiceId, itemId));
+                        } else {
+                            this.chain = this.chain.then(() => this.bshb.addChannelToEnumAsync('rooms', name, deviceId, deviceServiceId));
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private addFunction(deviceId: string, deviceServiceId: string, itemId: string) {
+        let name = BshbDefinition.determineFunction(deviceServiceId);
+
+        if (name) {
+            name = name.trim().toLowerCase().replace(/ /g, '_');
+
+            if (name && name.length > 0) {
+                // we need to make sure that the value exists to prevent crashing ioBroker
+                if (itemId) {
+                    this.chain = this.chain.then(() => this.bshb.addStateToEnumAsync('functions', name, deviceId, deviceServiceId, itemId));
+                } else {
+                    this.chain = this.chain.then(() => this.bshb.addChannelToEnumAsync('functions', name, deviceId, deviceServiceId));
+                }
+            }
+        }
     }
 }

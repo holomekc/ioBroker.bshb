@@ -4,7 +4,29 @@
  * @author Christopher Holomek
  * @since 27.09.2019
  */
-export class BshbDefinition{
+export class BshbDefinition {
+
+    public static determineFunction(value: string): string {
+        if (value === 'TemperatureLevel' ||
+            value === 'TemperatureOffset' ||
+            value === 'Thermostat' ||
+            value === 'ValveTappet' ||
+            value === 'RoomClimateControl' ||
+            value === 'TemperatureLevel' ||
+            value === 'TemperatureLevelConfiguration') {
+            return 'heating';
+        } else if (value === 'ShutterContact') {
+            // hmm
+            // return '';
+        } else if (value === 'IntrusionDetectionControl' ||
+            value === 'SurveillanceAlarm') {
+            return 'security';
+        } else if(value === 'VentilationDelay') {
+            // not sure...
+            return 'heating';
+        }
+        return undefined as unknown as string;
+    }
 
     /**
      * Get type of a value from bsh
@@ -59,21 +81,21 @@ export class BshbDefinition{
             if (key === 'level') {
                 return 'level.dimmer';
             }
-        } else if(type === 'temperatureOffsetState') {
+        } else if (type === 'temperatureOffsetState') {
             if (key === 'offset' || key === 'stepSize' || key === 'minOffset' || key === 'maxOffset') {
                 return 'level';
             }
-        } else if(type === 'childLockState') {
+        } else if (type === 'childLockState') {
             if (key === 'childLock') {
                 return 'text';
             }
-        } else if(type === 'valveTappetState') {
+        } else if (type === 'valveTappetState') {
             if (key === 'position') {
                 return 'level.valve';
-            } else if(key === 'value') {
+            } else if (key === 'value') {
                 return 'text';
             }
-        } else if(type === 'shutterContactState') {
+        } else if (type === 'shutterContactState') {
             if (key === 'value') {
                 // TODO: We could add a mapping for some values. In this case true -> OPEN, false -> CLOSED
                 // sensor.window would be great but this would require a boolean and this is a string

@@ -7,6 +7,30 @@ Object.defineProperty(exports, "__esModule", { value: true });
  * @since 27.09.2019
  */
 class BshbDefinition {
+    static determineFunction(value) {
+        if (value === 'TemperatureLevel' ||
+            value === 'TemperatureOffset' ||
+            value === 'Thermostat' ||
+            value === 'ValveTappet' ||
+            value === 'RoomClimateControl' ||
+            value === 'TemperatureLevel' ||
+            value === 'TemperatureLevelConfiguration') {
+            return 'heating';
+        }
+        else if (value === 'ShutterContact') {
+            // hmm
+            // return '';
+        }
+        else if (value === 'IntrusionDetectionControl' ||
+            value === 'SurveillanceAlarm') {
+            return 'security';
+        }
+        else if (value === 'VentilationDelay') {
+            // not sure...
+            return 'heating';
+        }
+        return undefined;
+    }
     /**
      * Get type of a value from bsh
      *

@@ -22,6 +22,10 @@ Work in progress. Feedback appreciated.
 
 ## Changelog
 
+### 0.0.11
+* (holomekc) rooms and functions added for known channels
+* (holomekc) trim whitespaces from configuration values
+
 ### 0.0.10
 * (holomekc) try to improve configuration description in application itself
 * (holomekc) change id so that it is valid regarding Bosch T&C
