@@ -16,7 +16,9 @@ This adapter allows to communicate with Bosch Smart Home devices.
 
 [Bosch Smart Home Controller](https://www.bosch-smarthome.com/de/de/produkte/smart-system-solutions/smart-home-controller)
 
-To achieve that it uses the [bosch-smart-home-bridge](https://github.com/holomekc/bosch-smart-home-bridge) library.
+To achieve that it uses the [bosch-smart-home-bridge](https://github.com/holomekc/bosch-smart-home-bridge) library 
+which uses the information from official [Bosch Smart Home Controller Local REST API](https://github.com/BoschSmartHome/bosch-shc-api-docs).
+
 
 Work in progress. Feedback appreciated.
 

@@ -149,6 +149,8 @@ export class BshbController {
 
                     this.cachedDevices.set(this.bshb.namespace + '.' + device.id, device);
 
+
+
                     // root device. This should be the bosch smart home controller only. It does not exist as a
                     // separate device so we add it multiple times but due to unique id this should be ok
                     this.bshb.setObject(device.rootDeviceId, {
