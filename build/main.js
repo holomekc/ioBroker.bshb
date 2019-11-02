@@ -12,6 +12,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const utils = require("@iobroker/adapter-core");
 const bshb_controller_1 = require("./bshb-controller");
 const rxjs_1 = require("rxjs");
+const operators_1 = require("rxjs/operators");
 class Bshb extends utils.Adapter {
     constructor(options = {}) {
         super(Object.assign(Object.assign({}, options), { name: 'bshb' }));
@@ -86,7 +87,7 @@ class Bshb extends utils.Adapter {
         // start pairing if needed
         bshbController.pairDeviceIfNeeded(this.config.systemPassword).subscribe(() => {
             // Everything is ok. We check for devices first
-            bshbController.detectDevices().subscribe(() => {
+            bshbController.detectDevices().pipe(operators_1.switchMap(() => bshbController.detectScenarios())).subscribe(() => {
                 this.subscribeStates('*');
                 // subscribe for changes
                 bshbController.getBshbClient().subscribe(this.config.mac).subscribe(response => {
@@ -150,8 +151,8 @@ class Bshb extends utils.Adapter {
             return;
         }
         if (state) {
-            // The state was changed
             if (!state.ack) {
+                // The state was changed
                 this.log.debug(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
                 this.bshbController.setState(id, state);
             }

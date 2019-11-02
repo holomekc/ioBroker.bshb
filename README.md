@@ -24,6 +24,10 @@ Work in progress. Feedback appreciated.
 
 ## Changelog
 
+### 0.0.12
+* (holomekc) scenario support. Scenarios are listed as group 'scenarios' and can only be triggered
+* (holomekc) added definitions for Twinguard
+
 ### 0.0.11
 * (holomekc) rooms and functions added for known channels
 * (holomekc) trim whitespaces from configuration values

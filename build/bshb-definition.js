@@ -29,6 +29,18 @@ class BshbDefinition {
             // not sure...
             return 'heating';
         }
+        else if (value === 'CommunicationQuality') {
+            return 'communicationQuality';
+        }
+        else if (value === 'BatteryLevel') {
+            return 'battery';
+        }
+        else if (value === 'AirQualityLevel') {
+            return 'airQuality';
+        }
+        else if (value === 'SmokeSensitivity') {
+            return 'smokeSensitivity';
+        }
         return undefined;
     }
     /**
@@ -117,7 +129,57 @@ class BshbDefinition {
                 // TODO: We could add a mapping for some values. In this case true -> OPEN, false -> CLOSED
                 // sensor.window would be great but this would require a boolean and this is a string
                 // OPEN / CLOSED
-                return 'text ';
+                return 'text';
+            }
+        }
+        // Twinguard
+        else if (type === 'smokeSensitivityState') {
+            if (key === 'smokeSensitivity') {
+                return 'text';
+            }
+            else if (key === 'preAlarmEnabled') {
+                return 'indicator';
+            }
+        }
+        else if (type === 'twinguardNightlyPromiseState') {
+            if (key === 'nightlyPromiseEnabled') {
+                return 'indicator';
+            }
+        }
+        else if (type === 'communicationQualityState') {
+            if (key === 'quality') {
+                return 'text';
+            }
+        }
+        else if (type === 'airQualityLevelState') {
+            if (key === 'combinedRating') {
+                return 'text';
+            }
+            else if (key === 'description') {
+                return 'text';
+            }
+            else if (key === 'temperature') {
+                return 'value.temperature';
+            }
+            else if (key === 'temperatureRating') {
+                return 'text';
+            }
+            else if (key === 'humidity') {
+                return 'value.humidity';
+            }
+            else if (key === 'humidityRating') {
+                return 'text';
+            }
+            else if (key === 'purity') {
+                return 'value';
+            }
+            else if (key === 'purityRating') {
+                return 'text';
+            }
+        }
+        else if (type === 'smokeDetectorCheckState') {
+            if (key === 'value') {
+                return 'text';
             }
         }
         // else if (type === '') {

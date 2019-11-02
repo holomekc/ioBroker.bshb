@@ -1,7 +1,7 @@
 import * as utils from '@iobroker/adapter-core';
 import {BshbController} from './bshb-controller';
 import {BehaviorSubject} from 'rxjs';
-import {delay} from 'rxjs/operators';
+import {delay, switchMap} from 'rxjs/operators';
 
 /**
  * @author Christopher Holomek
@@ -118,7 +118,7 @@ export class Bshb extends utils.Adapter {
         bshbController.pairDeviceIfNeeded(this.config.systemPassword).subscribe(() => {
 
             // Everything is ok. We check for devices first
-            bshbController.detectDevices().subscribe(() => {
+            bshbController.detectDevices().pipe(switchMap(() => bshbController.detectScenarios())).subscribe(() => {
                 this.subscribeStates('*');
 
                 // subscribe for changes
@@ -185,9 +185,8 @@ export class Bshb extends utils.Adapter {
             return;
         }
         if (state) {
-            // The state was changed
-
             if (!state.ack) {
+                // The state was changed
                 this.log.debug(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
                 this.bshbController.setState(id, state);
             }
