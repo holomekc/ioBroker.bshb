@@ -2,6 +2,21 @@ const path = require("path");
 const {tests} = require("@iobroker/testing");
 const {Observable} = require("rxjs");
 
+const scenarios = [{
+    '@type': 'scenario',
+    'id': 'xxx',
+    'name': 'Alarm off',
+    'iconId': '',
+    'actions': [{
+        'deviceId': 'intrusionDetectionSystem',
+        "deviceServiceId": "IntrusionDetectionControl",
+        "targetState": {
+            "@type": "intrusionDetectionControlState",
+            "value": "SYSTEM_DISARMED"
+        }
+    }]
+}];
+
 const device = {
     "@type": "device",
     "rootDeviceId": "xx-xx-xx-xx-xx-xx",
@@ -68,6 +83,12 @@ const bshbMock = {
                                 "iconId": "icon_room_living_room",
                                 "name": "Wohnzimmer"
                             }]);
+                            observer.complete();
+                        });
+                    },
+                    getScenarios: () => {
+                        return new Observable((observer) => {
+                            observer.next([scenarios]);
                             observer.complete();
                         });
                     },
