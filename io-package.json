@@ -1,7 +1,7 @@
 {
 	"common": {
 		"name": "bshb",
-		"version": "0.0.12",
+		"version": "0.0.13",
 		"news": {
 			"0.0.1": {
 				"en": "initial release",
@@ -62,25 +62,6 @@
 		"type": "iot-systems",
 		"compact": true,
 		"materialize": true,
-		"materializeTab": true,
-		"adminTab": {
-			"singleton": true,
-			"name": {
-				"en": "Template (TypeScript)",
-				"de": "Vorlage (TypeScript)",
-				"ru": "Шаблон (TypeScript)",
-				"pt": "Modelo (TypeScript)",
-				"nl": "Sjabloon (TypeScript)",
-				"fr": "Modèle (TypeScript)",
-				"it": "Template (TypeScript)",
-				"es": "Plantilla (TypeScript)",
-				"pl": "Szablon (TypeScript)",
-				"zh-cn": "模板（TypeScript）"
-			},
-			"link": "",
-			"fa-icon": "info"
-		},
-		"supportCustoms": true,
 		"dependencies": [
 			{
 				"js-controller": ">=1.4.2"
@@ -88,8 +69,6 @@
 		]
 	},
 	"native": {
-		"option1": true,
-		"option2": "42"
 	},
 	"objects": [],
 	"instanceObjects": []
