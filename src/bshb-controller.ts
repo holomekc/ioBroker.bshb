@@ -138,7 +138,7 @@ export class BshbController {
         return new Observable<void>(subscriber => {
             this.boschSmartHomeBridge.getBshcClient().getScenarios().subscribe(scenarios => {
 
-                this.bshb.setObject('scenarios', {
+                this.bshb.setObjectNotExists('scenarios', {
                     type: 'group',
                     common: {
                         name: 'scenarios',
@@ -153,7 +153,7 @@ export class BshbController {
                 scenarios.forEach(scenario => {
                     // hmm do we want to see more?
                     const id = 'scenarios.' + scenario.id;
-                    this.bshb.setObject(id, {
+                    this.bshb.setObjectNotExists(id, {
                         type: 'state',
                         common: {
                             name: scenario.name,
@@ -195,7 +195,7 @@ export class BshbController {
                 devices.forEach(device => {
                     // this.cachedDevices.set(device.id, device);
 
-                    this.bshb.setObject(device.id, {
+                    this.bshb.setObjectNotExists(device.id, {
                         type: 'device',
                         common: {
                             name: device.id,
@@ -210,7 +210,7 @@ export class BshbController {
 
                     // root device. This should be the bosch smart home controller only. It does not exist as a
                     // separate device so we add it multiple times but due to unique id this should be ok
-                    this.bshb.setObject(device.rootDeviceId, {
+                    this.bshb.setObjectNotExists(device.rootDeviceId, {
                         type: 'device',
                         common: {
                             name: device.rootDeviceId,
@@ -275,7 +275,7 @@ export class BshbController {
 
         const name = deviceService.id;
 
-        this.bshb.setObject(id, {
+        this.bshb.setObjectNotExists(id, {
             type: 'channel',
             common: {
                 name: name,
@@ -309,7 +309,7 @@ export class BshbController {
     private importSimpleState(idPrefix: string, device: any, deviceService: any, stateKey: string, stateValue: any): void {
         const id = idPrefix + '.' + stateKey;
 
-        this.bshb.setObject(id, {
+        this.bshb.setObjectNotExists(id, {
             type: 'state',
             common: {
                 name: stateKey,
