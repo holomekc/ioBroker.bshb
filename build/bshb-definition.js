@@ -201,10 +201,10 @@ class BshbDefinition {
                 return 'list';
             }
             else if (key === 'armActivationDelayTime') {
-                return 'level.timer';
+                return 'level';
             }
             else if (key === 'alarmActivationDelayTime') {
-                return 'level.timer';
+                return 'level';
             }
         }
         else if (type === 'hueBridgeSearcherState') {
@@ -234,6 +234,14 @@ class BshbDefinition {
             if (key === 'swUpdateState' || key === 'swUpdateLastResult' ||
                 key === 'swUpdateAvailableVersion' || key === 'swInstalledVersion') {
                 return 'text';
+            }
+        }
+        else if (type === 'ventilationDelayState') {
+            if (key === 'devices') {
+                return 'list';
+            }
+            else if (key === 'delay') {
+                return 'level';
             }
         }
         // else if (type === '') {
