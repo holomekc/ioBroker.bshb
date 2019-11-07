@@ -182,6 +182,60 @@ class BshbDefinition {
                 return 'text';
             }
         }
+        else if (type === 'surveillanceAlarmState') {
+            if (key === 'value') {
+                return 'text';
+            }
+            else if (key === 'incidents') {
+                return 'list';
+            }
+        }
+        else if (type === 'intrusionDetectionControlState') {
+            if (key === 'value') {
+                return 'text';
+            }
+            else if (key === 'triggers') {
+                return 'list';
+            }
+            else if (key === 'actuators') {
+                return 'list';
+            }
+            else if (key === 'armActivationDelayTime') {
+                return 'level.timer';
+            }
+            else if (key === 'alarmActivationDelayTime') {
+                return 'level.timer';
+            }
+        }
+        else if (type === 'hueBridgeSearcherState') {
+            if (key === 'searcherState') {
+                return 'text';
+            }
+            else if (key === 'value') {
+                return 'text';
+            }
+        }
+        else if (type === 'armDisarmPushNotificationState') {
+            if (key === 'state') {
+                return 'text';
+            }
+        }
+        else if (type === 'remoteAccessState') {
+            if (key === 'state') {
+                return 'text';
+            }
+        }
+        else if (type === 'remotePushNotificationState') {
+            if (key === 'state') {
+                return 'text';
+            }
+        }
+        else if (type === 'softwareUpdateState') {
+            if (key === 'swUpdateState' || key === 'swUpdateLastResult' ||
+                key === 'swUpdateAvailableVersion' || key === 'swInstalledVersion') {
+                return 'text';
+            }
+        }
         // else if (type === '') {
         //     if (key === '') {
         //
