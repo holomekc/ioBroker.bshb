@@ -20,7 +20,7 @@ class Bshb extends utils.Adapter {
         this.on('ready', this.onReady.bind(this));
         this.on('objectChange', this.onObjectChange.bind(this));
         this.on('stateChange', this.onStateChange.bind(this));
-        // this.on("message", this.onMessage.bind(this));
+        this.on("message", this.onMessage.bind(this));
         this.on('unload', this.onUnload.bind(this));
     }
     /**
@@ -35,7 +35,6 @@ class Bshb extends utils.Adapter {
             this.config.identifier = 'ioBroker.bshb_' + this.config.identifier.trim();
             this.config.systemPassword = this.config.systemPassword.trim();
             this.config.certsPath = this.config.certsPath.trim();
-            // Initialize your adapter here
             // The adapters config (in the instance object everything under the attribute "native") is accessible via
             // this.config:
             this.log.debug('config host: ' + this.config.host);
@@ -47,71 +46,45 @@ class Bshb extends utils.Adapter {
             // Create controller for bosch-smart-home-bridge
             this.bshbController = new bshb_controller_1.BshbController(this);
             this.init(this.bshbController);
-            /*
-            For every state in the system there has to be also an object of type state
-            Here a simple template for a boolean variable named "testVariable"
-            Because every adapter instance uses its own unique namespace variable names can't collide with other adapters variables
-            */
-            // await this.setObjectAsync("testVariable", {
-            // 	type: "state",
-            // 	common: {
-            // 		name: "testVariable",
-            // 		type: "boolean",
-            // 		role: "indicator",
-            // 		read: true,
-            // 		write: true,
-            // 	},
-            // 	native: {},
-            // });
-            // in this template all states changes inside the adapters namespace are subscribed
-            /*
-            setState examples
-            you will notice that each setState will cause the stateChange event to fire (because of above subscribeStates cmd)
-            */
-            // the variable testVariable is set to true as command (ack=false)
-            // await this.setStateAsync("testVariable", true);
-            // same thing, but the value is flagged "ack"
-            // ack should be always set to true if the value is received from or acknowledged from the target system
-            // await this.setStateAsync("testVariable", { val: true, ack: true });
-            // same thing, but the state is deleted after 30s (getState will return null afterwards)
-            // await this.setStateAsync("testVariable", { val: true, ack: true, expire: 30 });
-            // examples for the checkPassword/checkGroup functions
-            // let result = await this.checkPasswordAsync("admin", "iobroker");
-            // this.log.info("check user admin pw ioboker: " + result);
-            //
-            // result = await this.checkGroupAsync("admin", "admin");
-            // this.log.info("check group user admin group admin: " + result);
         });
     }
     init(bshbController) {
         // start pairing if needed
-        bshbController.pairDeviceIfNeeded(this.config.systemPassword).subscribe(() => {
+        bshbController.pairDeviceIfNeeded(this.config.systemPassword).pipe(operators_1.switchMap(() => {
             // Everything is ok. We check for devices first
-            bshbController.detectDevices().pipe(operators_1.switchMap(() => bshbController.detectScenarios())).subscribe(() => {
-                this.subscribeStates('*');
-                // subscribe for changes
-                bshbController.getBshbClient().subscribe(this.config.mac).subscribe(response => {
-                    this.pollingTrigger.subscribe(keepPolling => {
-                        if (keepPolling) {
-                            bshbController.getBshbClient().longPolling(this.config.mac, response.result).subscribe(information => {
-                                information.result.forEach(deviceService => {
-                                    if (this.log.level === 'debug') {
-                                        this.log.debug(JSON.stringify(deviceService));
-                                    }
-                                    bshbController.setStateAck(deviceService);
-                                });
-                            }, () => {
-                                this.pollingTrigger.next(true);
-                            }, () => {
-                                this.pollingTrigger.next(true);
-                            });
-                        }
-                        else {
-                            bshbController.getBshbClient().unsubscribe(this.config.mac, response.result).subscribe(() => {
-                            });
-                        }
+            return bshbController.detectDevices();
+        }), operators_1.switchMap(() => {
+            // detect scenarios next
+            return bshbController.detectScenarios();
+        }), operators_1.switchMap(() => {
+            // register for changes
+            this.subscribeStates('*');
+            // now we want to subscribe to BSHC for changes
+            return bshbController.getBshbClient().subscribe(this.config.mac);
+        })).subscribe(response => {
+            // subscribe to pollingTrigger which will trigger when the long polling connection completed or results in an error.
+            this.pollingTrigger.subscribe(keepPolling => {
+                if (keepPolling) {
+                    bshbController.getBshbClient().longPolling(this.config.mac, response.result).subscribe(information => {
+                        information.result.forEach(deviceService => {
+                            if (this.log.level === 'debug') {
+                                this.log.debug(JSON.stringify(deviceService));
+                            }
+                            bshbController.setStateAck(deviceService);
+                        });
+                    }, () => {
+                        // we want to keep polling. So true
+                        this.pollingTrigger.next(true);
+                    }, () => {
+                        // we want to keep polling. So true
+                        this.pollingTrigger.next(true);
                     });
-                });
+                }
+                else {
+                    // polling was stopped. We unsubscribe
+                    bshbController.getBshbClient().unsubscribe(this.config.mac, response.result).subscribe(() => {
+                    });
+                }
             });
         });
     }
@@ -120,6 +93,7 @@ class Bshb extends utils.Adapter {
      */
     onUnload(callback) {
         try {
+            // we want to stop polling. So false
             this.pollingTrigger.next(false);
             this.pollingTrigger.complete();
             this.log.info('cleaned everything up...');
@@ -133,14 +107,7 @@ class Bshb extends utils.Adapter {
      * Is called if a subscribed object changes
      */
     onObjectChange(id, obj) {
-        if (obj) {
-            // The object was changed
-            // this.log.info(`object ${id} changed: ${JSON.stringify(obj)}`);
-        }
-        else {
-            // The object was deleted
-            // this.log.info(`object ${id} deleted`);
-        }
+        // We do not need this at the moment
     }
     /**
      * Is called if a subscribed state changes
@@ -156,12 +123,18 @@ class Bshb extends utils.Adapter {
                 this.log.debug(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
                 this.bshbController.setState(id, state);
             }
-            // this.log.info(`state ${id} changed: ${state.val} (ack = ${state.ack})`);
         }
         else {
             // The state was deleted
-            // this.log.info(`state ${id} deleted`);
+            // Currently we do not need this
         }
+    }
+    /**
+     * Some message was sent to this instance over message box. Used by email, pushover, text2speech, ...
+     * Using this method requires "common.message" property to be set to true in io-package.json
+     */
+    onMessage(obj) {
+        // We do not need this at the moment
     }
 }
 exports.Bshb = Bshb;
