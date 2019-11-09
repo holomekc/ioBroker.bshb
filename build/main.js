@@ -18,9 +18,7 @@ class Bshb extends utils.Adapter {
         super(Object.assign(Object.assign({}, options), { name: 'bshb' }));
         this.pollingTrigger = new rxjs_1.BehaviorSubject(true);
         this.on('ready', this.onReady.bind(this));
-        this.on('objectChange', this.onObjectChange.bind(this));
         this.on('stateChange', this.onStateChange.bind(this));
-        this.on("message", this.onMessage.bind(this));
         this.on('unload', this.onUnload.bind(this));
     }
     /**
@@ -104,12 +102,6 @@ class Bshb extends utils.Adapter {
         }
     }
     /**
-     * Is called if a subscribed object changes
-     */
-    onObjectChange(id, obj) {
-        // We do not need this at the moment
-    }
-    /**
      * Is called if a subscribed state changes
      */
     onStateChange(id, state) {
@@ -128,13 +120,6 @@ class Bshb extends utils.Adapter {
             // The state was deleted
             // Currently we do not need this
         }
-    }
-    /**
-     * Some message was sent to this instance over message box. Used by email, pushover, text2speech, ...
-     * Using this method requires "common.message" property to be set to true in io-package.json
-     */
-    onMessage(obj) {
-        // We do not need this at the moment
     }
 }
 exports.Bshb = Bshb;
