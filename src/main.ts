@@ -38,9 +38,7 @@ export class Bshb extends utils.Adapter {
             name: 'bshb',
         });
         this.on('ready', this.onReady.bind(this));
-        this.on('objectChange', this.onObjectChange.bind(this));
         this.on('stateChange', this.onStateChange.bind(this));
-        this.on("message", this.onMessage.bind(this));
         this.on('unload', this.onUnload.bind(this));
     }
 
@@ -127,13 +125,6 @@ export class Bshb extends utils.Adapter {
     }
 
     /**
-     * Is called if a subscribed object changes
-     */
-    private onObjectChange(id: string, obj: ioBroker.Object | null | undefined): void {
-        // We do not need this at the moment
-    }
-
-    /**
      * Is called if a subscribed state changes
      */
     private onStateChange(id: string, state: ioBroker.State | null | undefined): void {
@@ -151,14 +142,6 @@ export class Bshb extends utils.Adapter {
             // The state was deleted
             // Currently we do not need this
         }
-    }
-
-    /**
-     * Some message was sent to this instance over message box. Used by email, pushover, text2speech, ...
-     * Using this method requires "common.message" property to be set to true in io-package.json
-     */
-    private onMessage(obj: ioBroker.Message): void {
-    	// We do not need this at the moment
     }
 
 }

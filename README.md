@@ -24,6 +24,9 @@ Work in progress. Feedback appreciated.
 
 ## Changelog
 
+### 0.0.14
+* (holomekc) optimizations and cleanup
+
 ### 0.0.13
 * (holomekc) added more definitions
 * (holomekc) optimizations and cleanup
