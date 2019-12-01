@@ -1,4 +1,4 @@
-import {BoschSmartHomeBridge} from 'bosch-smart-home-bridge';
+import {BoschSmartHomeBridge, BoschSmartHomeBridgeBuilder} from 'bosch-smart-home-bridge';
 import {Bshb} from './main';
 import {BshbLogger} from './bshb-logger';
 import {Observable} from 'rxjs';
@@ -27,7 +27,12 @@ export class BshbController {
      *        instance of {@link Bshb}
      */
     constructor(private bshb: Bshb) {
-        this.boschSmartHomeBridge = new BoschSmartHomeBridge(bshb.config.host, bshb.config.identifier, bshb.config.certsPath, new BshbLogger(bshb));
+        this.boschSmartHomeBridge = BoschSmartHomeBridgeBuilder.builder()
+            .withHost(bshb.config.host)
+            .withClientCert(bshb.config.clientCert)
+            .withClientPrivateKey(bshb.config.clientPrivateKey)
+            .withLogger(new BshbLogger(bshb))
+            .build();
     }
 
     public getBshbClient() {
@@ -47,7 +52,8 @@ export class BshbController {
             pairingDelay = this.bshb.config.pairingDelay;
         }
 
-        return this.boschSmartHomeBridge.pairIfNeeded(this.clientName, systemPassword, pairingDelay, 100);
+        return this.boschSmartHomeBridge.pairIfNeeded(this.clientName, this.bshb.config.identifier,
+            systemPassword, pairingDelay, 100);
     }
 
     private scenarioRegex = /bshb\.\d+\.scenarios\.(.*)/;
@@ -116,14 +122,14 @@ export class BshbController {
                     if (stateKey === '@type') {
                         return;
                     }
-                    this.bshb.setState(this.getId(cachedDeviceService.device, cachedDeviceService.deviceService, stateKey),
+                    this.bshb.setState(BshbController.getId(cachedDeviceService.device, cachedDeviceService.deviceService, stateKey),
                         {val: deviceService.state[stateKey], ack: true});
                 });
             }
         }
     }
 
-    private getId(device: any, deviceService: any, stateKey: string): string {
+    private static getId(device: any, deviceService: any, stateKey: string): string {
         let id: string;
 
         if (device) {
@@ -136,7 +142,8 @@ export class BshbController {
 
     public detectScenarios(): Observable<void> {
         return new Observable<void>(subscriber => {
-            this.boschSmartHomeBridge.getBshcClient().getScenarios().subscribe(scenarios => {
+            this.boschSmartHomeBridge.getBshcClient().getScenarios().subscribe(response => {
+                const scenarios = response.parsedResponse;
 
                 this.bshb.setObjectNotExists('scenarios', {
                     type: 'group',
@@ -184,14 +191,17 @@ export class BshbController {
         this.bshb.log.info('Start detecting devices. This may take a while.');
 
         return new Observable(subscriber => {
-            this.boschSmartHomeBridge.getBshcClient().getRooms().pipe(switchMap((rooms: any[]) => {
+            this.boschSmartHomeBridge.getBshcClient().getRooms().pipe(switchMap(response => {
+                const rooms: any[] = response.parsedResponse;
 
                 rooms.forEach(room => {
                     this.cachedRooms.set(room.id, room);
                 });
 
                 return this.boschSmartHomeBridge.getBshcClient().getDevices();
-            }), switchMap((devices: any[]) => {
+            }), switchMap(response => {
+                const devices: any[] = response.parsedResponse;
+
                 devices.forEach(device => {
                     // this.cachedDevices.set(device.id, device);
 
@@ -244,7 +254,9 @@ export class BshbController {
 
     private checkDeviceServices(): Observable<void> {
         return new Observable(observer => {
-            this.boschSmartHomeBridge.getBshcClient().getDevicesServices().subscribe((deviceServices: any[]) => {
+            this.boschSmartHomeBridge.getBshcClient().getDevicesServices().subscribe(response => {
+                const deviceServices: any[] = response.parsedResponse;
+
                 deviceServices.forEach(deviceService => {
 
                     this.bshb.getObject(deviceService.deviceId, (err, ioBrokerDevice) => {

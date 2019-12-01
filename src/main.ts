@@ -17,7 +17,8 @@ declare global {
             mac: string;
             identifier: string;
             systemPassword: string;
-            certsPath: string;
+            clientCert: string;
+            clientPrivateKey: string;
             pairingDelay: number;
 
             // Or use a catch-all approach
@@ -60,7 +61,8 @@ export class Bshb extends utils.Adapter {
         this.log.debug('config mac: ' + this.config.mac);
         this.log.debug('config identifier: ' + this.config.identifier);
         this.log.debug('config systemPassword: ' + (this.config.systemPassword != undefined));
-        this.log.debug('config certsPath: ' + this.config.certsPath);
+        this.log.debug('config clientCert: ' + this.config.clientCert);
+        this.log.debug('config clientPrivateKey: ' + (this.config.clientPrivateKey != undefined));
         this.log.debug('config pairingDelay: ' + this.config.pairingDelay);
 
         // Create controller for bosch-smart-home-bridge
@@ -86,24 +88,27 @@ export class Bshb extends utils.Adapter {
             // subscribe to pollingTrigger which will trigger when the long polling connection completed or results in an error.
             this.pollingTrigger.subscribe(keepPolling => {
                 if (keepPolling) {
-                    bshbController.getBshbClient().longPolling(this.config.mac, response.result).subscribe(information => {
+                    bshbController.getBshbClient().longPolling(this.config.mac, response.parsedResponse.result).subscribe(infoResponse => {
+                        const information = infoResponse.parsedResponse;
+
                         information.result.forEach(deviceService => {
-                            if(this.log.level === 'debug') {
+                            if (this.log.level === 'debug') {
                                 this.log.debug(JSON.stringify(deviceService));
                             }
                             bshbController.setStateAck(deviceService);
                         });
-                    }, () => {
-                        // we want to keep polling. So true
-                        this.pollingTrigger.next(true);
+                    }, error => {
+                        this.log.warn(error);
+                        // we want to keep polling but complete will do that for us.
                     }, () => {
                         // we want to keep polling. So true
                         this.pollingTrigger.next(true);
                     });
-                } else{
+                } else {
                     // polling was stopped. We unsubscribe
-                    bshbController.getBshbClient().unsubscribe(this.config.mac, response.result).subscribe(() => {
-                    });
+                    bshbController.getBshbClient().unsubscribe(this.config.mac, response.parsedResponse.result)
+                        .subscribe(() => {
+                        });
                 }
             });
         });
