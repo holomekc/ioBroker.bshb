@@ -41,8 +41,7 @@ export class BshbController {
                 .withLogger(new BshbLogger(bshb))
                 .build();
         }catch (e) {
-            bshb.log.error(e);
-            throw e;
+            throw Utils.createError(bshb.log, e);
         }
     }
 
