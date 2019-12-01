@@ -4,6 +4,8 @@ import {BshbLogger} from './bshb-logger';
 import {Observable} from 'rxjs';
 import {BshbDefinition} from './bshb-definition';
 import {switchMap} from "rxjs/operators";
+import {LogLevel} from "./log-level";
+import {Utils} from "./utils";
 
 /**
  * This controller encapsulates bosch-smart-home-bridge and provides it to iobroker.bshb
@@ -25,14 +27,23 @@ export class BshbController {
      *
      * @param bshb
      *        instance of {@link Bshb}
+     * @param clientCert
+     *        client certificate
+     * @param clientPrivateKey
+     *        client private key
      */
-    constructor(private bshb: Bshb) {
-        this.boschSmartHomeBridge = BoschSmartHomeBridgeBuilder.builder()
-            .withHost(bshb.config.host)
-            .withClientCert(bshb.config.clientCert)
-            .withClientPrivateKey(bshb.config.clientPrivateKey)
-            .withLogger(new BshbLogger(bshb))
-            .build();
+    constructor(private bshb: Bshb, clientCert: string, clientPrivateKey: string) {
+        try{
+            this.boschSmartHomeBridge = BoschSmartHomeBridgeBuilder.builder()
+                .withHost(bshb.config.host)
+                .withClientCert(clientCert)
+                .withClientPrivateKey(clientPrivateKey)
+                .withLogger(new BshbLogger(bshb))
+                .build();
+        }catch (e) {
+            bshb.log.error(e);
+            throw e;
+        }
     }
 
     public getBshbClient() {
@@ -82,7 +93,7 @@ export class BshbController {
 
         let cachedState = this.cachedStates.get(id);
 
-        if (this.bshb.log.level === 'debug') {
+        if (Utils.isLevelActive(this.bshb.log.level, LogLevel.debug)) {
             this.bshb.log.debug('Found cached state: ' + JSON.stringify(cachedState));
         }
 
@@ -91,14 +102,15 @@ export class BshbController {
         };
         data[cachedState.stateKey] = state.val;
 
-        if (this.bshb.log.level === 'debug') {
+        if (Utils.isLevelActive(this.bshb.log.level, LogLevel.debug)) {
             this.bshb.log.debug('Data which will be send: ' + JSON.stringify(data));
         }
 
         this.boschSmartHomeBridge.getBshcClient().putState(cachedState.deviceService.path, data).subscribe(response => {
             if (response) {
-                if (this.bshb.log.level === 'debug') {
-                    this.bshb.log.debug(JSON.stringify(response));
+                if (Utils.isLevelActive(this.bshb.log.level, LogLevel.debug)) {
+                    this.bshb.log.debug(`HTTP response. status=${response.incomingMessage.statusCode},
+                     body=${JSON.stringify(response.parsedResponse)}`);
                 }
             } else {
                 this.bshb.log.debug('no response');

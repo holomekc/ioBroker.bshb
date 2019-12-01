@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "bshb",
-        "version": "0.0.14",
+        "version": "0.1.0",
         "news": {
+			"0.1.0": {
+				"en": "Certificates are stored in ioBroker now",
+				"de": "Zertifikat werden jetzt in ioBroker gespeichert",
+				"ru": "Сертификаты хранятся в ioBroker сейчас",
+				"pt": "Certificados são armazenados no ioBroker agora",
+				"nl": "De certificaten zijn nu opgeslagen in ioBroker",
+				"fr": "Les certificats sont maintenant stockés dans ioBroker",
+				"it": "I certificati sono memorizzati in ioBroker ora",
+				"es": "Los certificados se almacenan en ioBroker ahora",
+				"pl": "Certyfikaty są teraz przechowywane w ioBroker",
+				"zh-cn": "证书现在存储在ioBroker中"
+			},
 			"0.0.14": {
 				"en": "Performance optimizations",
 				"de": "Performance-Optimierungen",

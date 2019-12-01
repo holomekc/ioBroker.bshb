@@ -1,7 +1,12 @@
 import * as utils from '@iobroker/adapter-core';
 import {BshbController} from './bshb-controller';
-import {BehaviorSubject} from 'rxjs';
+import {BehaviorSubject, Observable} from 'rxjs';
 import {switchMap} from 'rxjs/operators';
+import {Migration} from "./migration";
+import {Utils} from "./utils";
+import {ClientCert} from "./client-cert";
+import {BshbUtils} from "bosch-smart-home-bridge";
+import {LogLevel} from "./log-level";
 
 /**
  * @author Christopher Holomek
@@ -17,8 +22,6 @@ declare global {
             mac: string;
             identifier: string;
             systemPassword: string;
-            clientCert: string;
-            clientPrivateKey: string;
             pairingDelay: number;
 
             // Or use a catch-all approach
@@ -51,7 +54,8 @@ export class Bshb extends utils.Adapter {
         // make sure that identifier is valid regarding Bosch T&C
         this.config.host = this.config.host.trim();
         this.config.mac = this.config.mac.trim();
-        this.config.identifier = 'ioBroker.bshb_' + this.config.identifier.trim();
+        const notPrefixedIdentifier = this.config.identifier.trim();
+        this.config.identifier = 'ioBroker.bshb_' + notPrefixedIdentifier;
         this.config.systemPassword = this.config.systemPassword.trim();
         this.config.certsPath = this.config.certsPath.trim();
 
@@ -61,13 +65,106 @@ export class Bshb extends utils.Adapter {
         this.log.debug('config mac: ' + this.config.mac);
         this.log.debug('config identifier: ' + this.config.identifier);
         this.log.debug('config systemPassword: ' + (this.config.systemPassword != undefined));
-        this.log.debug('config clientCert: ' + this.config.clientCert);
-        this.log.debug('config clientPrivateKey: ' + (this.config.clientPrivateKey != undefined));
         this.log.debug('config pairingDelay: ' + this.config.pairingDelay);
 
-        // Create controller for bosch-smart-home-bridge
-        this.bshbController = new BshbController(this);
-        this.init(this.bshbController);
+        if (!this.config.identifier) {
+            Utils.createError(this.log, 'Identifier not defined but it is a mandatory parameter');
+        }
+
+        this.loadCertificates(notPrefixedIdentifier).subscribe(clientCert => {
+            // Create controller for bosch-smart-home-bridge
+            this.bshbController = new BshbController(this, clientCert.certificate, clientCert.privateKey);
+            this.init(this.bshbController);
+        }, error => {
+            this.log.error('Could not initialize adapter. See more details in error: ' + error);
+        });
+    }
+
+    private loadCertificates(identifier: string) {
+        return new Observable<ClientCert>(subscriber => {
+            this.getForeignObject('system.certificates', (err, obj) => {
+                if (err || !obj) {
+                    subscriber.error(Utils.createError(this.log, 'Could not load certificates. This should not happen. Error: ' + err));
+                    subscriber.complete();
+                    return;
+                }
+
+                let certificateKeys = Utils.getCertificateKeys(identifier);
+
+                let clientCert = new ClientCert(obj.native.certificates[certificateKeys.cert],
+                    obj.native.certificates[certificateKeys.key]);
+
+                if (clientCert.certificate && clientCert.privateKey) {
+                    // found certificates
+                    this.log.info('Client certificate found in system.certificates');
+                    subscriber.next(clientCert);
+                    subscriber.complete();
+                } else {
+                    // no certificates found.
+                    this.log.info('Could not find client certificate. Check for old configuration');
+                    const migrationResult = this.migration();
+                    if (migrationResult) {
+                        clientCert = migrationResult;
+                    } else {
+                        this.log.info('No client certificate found in old configuration or it failed. Generate new certificate');
+                        clientCert = Bshb.generateCertificate(identifier);
+                    }
+                    // store information
+                    this.storeCertificate(obj, certificateKeys, clientCert).subscribe(value => {
+                        subscriber.next(clientCert);
+                        subscriber.complete();
+                    }, error => {
+                        subscriber.error(error);
+                        subscriber.complete();
+                    });
+                }
+            });
+        });
+    }
+
+    private storeCertificate(obj: ioBroker.StateObject | ioBroker.ChannelObject | ioBroker.DeviceObject | ioBroker.OtherObject,
+                             certificateKeys: { cert: string; key: string }, clientCert: ClientCert): Observable<void> {
+        return new Observable<void>(subscriber => {
+            // store information
+            obj.native.certificates[certificateKeys.cert] = clientCert.certificate;
+            obj.native.certificates[certificateKeys.key] = clientCert.privateKey;
+
+            this.setForeignObject('system.certificates', obj, (err: string | null, obj: { id: string }) => {
+                if (err || !obj) {
+                    subscriber.error(Utils.createError(this.log,
+                        'Could not store client certificate in system.certificates due to an error:' + err));
+                    subscriber.complete();
+                }
+                this.log.info('Client certificate stored in system.certificates.');
+                subscriber.next();
+                subscriber.complete();
+            });
+        });
+    }
+
+    private migration() {
+        // migration:
+        const certsPath: string = (this.config as any).certsPath;
+        if (!certsPath) {
+            // We abort if we could nof find the certificate path
+            return undefined;
+        }
+
+        this.log.info(`Found old configuration in certsPath: ${certsPath}. Try to read information`);
+
+        try {
+            const result = new ClientCert(Migration.loadCertificate(this, certsPath), Migration.loadPrivateKey(this, certsPath));
+            this.log.info(`Load client certificate from old configuration successful. Consider removing them from: ${certsPath}. They are not needed anymore`);
+            return result;
+        } catch (err) {
+            // something went wrong we abort. Logging was already done.
+            return undefined;
+        }
+    }
+
+    private static generateCertificate(identifier: string): ClientCert {
+        let certificateDefinition = BshbUtils.generateClientCertificate(identifier);
+        return new ClientCert(certificateDefinition.clientcert, certificateDefinition.clientprivate);
     }
 
     private init(bshbController: BshbController) {
@@ -92,7 +189,7 @@ export class Bshb extends utils.Adapter {
                         const information = infoResponse.parsedResponse;
 
                         information.result.forEach(deviceService => {
-                            if (this.log.level === 'debug') {
+                            if (Utils.isLevelActive(this.log.level, LogLevel.debug)) {
                                 this.log.debug(JSON.stringify(deviceService));
                             }
                             bshbController.setStateAck(deviceService);
@@ -148,7 +245,6 @@ export class Bshb extends utils.Adapter {
             // Currently we do not need this
         }
     }
-
 }
 
 if (module.parent) {

@@ -32,7 +32,11 @@
 
 		"sourceMap": false,
 		"inlineSourceMap": false,
-		"watch": false
+		"watch": false,
+		"typeRoots": [
+			"node_modules/@types",
+			"node_modules/bosch-smart-home-bridge/@types"
+		]
 	},
 	"include": [
 		"**/*.ts"
