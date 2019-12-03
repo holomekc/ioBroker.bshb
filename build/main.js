@@ -47,9 +47,9 @@ class Bshb extends utils.Adapter {
             this.log.debug('config systemPassword: ' + (this.config.systemPassword != undefined));
             this.log.debug('config pairingDelay: ' + this.config.pairingDelay);
             if (!this.config.identifier) {
-                utils_1.Utils.throwError(this.log, 'Identifier not defined but it is a mandatory parameter');
+                utils_1.Utils.createError(this.log, 'Identifier not defined but it is a mandatory parameter');
             }
-            this.loadCertificates(notPrefixedIdentifier).subscribe(clientCert => {
+            this.loadCertificates(notPrefixedIdentifier, this.config.identifier).subscribe(clientCert => {
                 // Create controller for bosch-smart-home-bridge
                 this.bshbController = new bshb_controller_1.BshbController(this, clientCert.certificate, clientCert.privateKey);
                 this.init(this.bshbController);
@@ -58,15 +58,26 @@ class Bshb extends utils.Adapter {
             });
         });
     }
-    loadCertificates(identifier) {
+    /**
+     * load certificates:<br/>
+     * 1. load from system.certificates<br/>
+     * 2. If not found search for old configuration to allow smooth migration<br/>
+     * 3. If not found generate a new certificate<br/>
+     *
+     * @param notPrefixedIdentifier
+     *        identifier without "ioBroker.bshb_" prefix which is used for system.certificates
+     * @param identifier
+     *        actual identifier including prefix
+     */
+    loadCertificates(notPrefixedIdentifier, identifier) {
         return new rxjs_1.Observable(subscriber => {
             this.getForeignObject('system.certificates', (err, obj) => {
                 if (err || !obj) {
-                    subscriber.error(utils_1.Utils.throwError(this.log, 'Could not load certificates. This should not happen. Error: ' + err));
+                    subscriber.error(utils_1.Utils.createError(this.log, 'Could not load certificates. This should not happen. Error: ' + err));
                     subscriber.complete();
                     return;
                 }
-                let certificateKeys = utils_1.Utils.getCertificateKeys(identifier);
+                let certificateKeys = utils_1.Utils.getCertificateKeys(notPrefixedIdentifier);
                 let clientCert = new client_cert_1.ClientCert(obj.native.certificates[certificateKeys.cert], obj.native.certificates[certificateKeys.key]);
                 if (clientCert.certificate && clientCert.privateKey) {
                     // found certificates
@@ -86,7 +97,7 @@ class Bshb extends utils.Adapter {
                         clientCert = Bshb.generateCertificate(identifier);
                     }
                     // store information
-                    this.storeCertificate(obj, certificateKeys, clientCert).subscribe(value => {
+                    this.storeCertificate(obj, certificateKeys, clientCert).subscribe(() => {
                         subscriber.next(clientCert);
                         subscriber.complete();
                     }, error => {
@@ -104,7 +115,7 @@ class Bshb extends utils.Adapter {
             obj.native.certificates[certificateKeys.key] = clientCert.privateKey;
             this.setForeignObject('system.certificates', obj, (err, obj) => {
                 if (err || !obj) {
-                    subscriber.error(utils_1.Utils.throwError(this.log, 'Could not store client certificate in system.certificates due to an error:' + err));
+                    subscriber.error(utils_1.Utils.createError(this.log, 'Could not store client certificate in system.certificates due to an error:' + err));
                     subscriber.complete();
                 }
                 this.log.info('Client certificate stored in system.certificates.');
@@ -133,7 +144,7 @@ class Bshb extends utils.Adapter {
     }
     static generateCertificate(identifier) {
         let certificateDefinition = bosch_smart_home_bridge_1.BshbUtils.generateClientCertificate(identifier);
-        return new client_cert_1.ClientCert(certificateDefinition.clientcert, certificateDefinition.clientprivate);
+        return new client_cert_1.ClientCert(certificateDefinition.cert, certificateDefinition.private);
     }
     init(bshbController) {
         // start pairing if needed
@@ -147,12 +158,12 @@ class Bshb extends utils.Adapter {
             // register for changes
             this.subscribeStates('*');
             // now we want to subscribe to BSHC for changes
-            return bshbController.getBshbClient().subscribe(this.config.mac);
+            return bshbController.getBshcClient().subscribe(this.config.mac);
         })).subscribe(response => {
             // subscribe to pollingTrigger which will trigger when the long polling connection completed or results in an error.
             this.pollingTrigger.subscribe(keepPolling => {
                 if (keepPolling) {
-                    bshbController.getBshbClient().longPolling(this.config.mac, response.parsedResponse.result).subscribe(infoResponse => {
+                    bshbController.getBshcClient().longPolling(this.config.mac, response.parsedResponse.result).subscribe(infoResponse => {
                         const information = infoResponse.parsedResponse;
                         information.result.forEach(deviceService => {
                             if (utils_1.Utils.isLevelActive(this.log.level, log_level_1.LogLevel.debug)) {
@@ -170,7 +181,7 @@ class Bshb extends utils.Adapter {
                 }
                 else {
                     // polling was stopped. We unsubscribe
-                    bshbController.getBshbClient().unsubscribe(this.config.mac, response.parsedResponse.result)
+                    bshbController.getBshcClient().unsubscribe(this.config.mac, response.parsedResponse.result)
                         .subscribe(() => {
                     });
                 }

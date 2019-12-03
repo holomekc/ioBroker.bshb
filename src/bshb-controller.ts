@@ -45,7 +45,7 @@ export class BshbController {
         }
     }
 
-    public getBshbClient() {
+    public getBshcClient() {
         return this.boschSmartHomeBridge.getBshcClient();
     }
 
@@ -83,7 +83,7 @@ export class BshbController {
         if (match) {
             this.bshb.log.debug(`Found scenario trigger with id=${match[1]} and value=${state.val}`);
             if (state.val) {
-                this.boschSmartHomeBridge.getBshcClient().triggerScenario(match[1]).subscribe(() => {
+                this.getBshcClient().triggerScenario(match[1]).subscribe(() => {
                     this.bshb.setState(id, {val: false, ack: true});
                 });
             }
@@ -105,7 +105,7 @@ export class BshbController {
             this.bshb.log.debug('Data which will be send: ' + JSON.stringify(data));
         }
 
-        this.boschSmartHomeBridge.getBshcClient().putState(cachedState.deviceService.path, data).subscribe(response => {
+        this.getBshcClient().putState(cachedState.deviceService.path, data).subscribe(response => {
             if (response) {
                 if (Utils.isLevelActive(this.bshb.log.level, LogLevel.debug)) {
                     this.bshb.log.debug(`HTTP response. status=${response.incomingMessage.statusCode},
@@ -153,7 +153,7 @@ export class BshbController {
 
     public detectScenarios(): Observable<void> {
         return new Observable<void>(subscriber => {
-            this.boschSmartHomeBridge.getBshcClient().getScenarios().subscribe(response => {
+            this.getBshcClient().getScenarios().subscribe(response => {
                 const scenarios = response.parsedResponse;
 
                 this.bshb.setObjectNotExists('scenarios', {
@@ -202,14 +202,14 @@ export class BshbController {
         this.bshb.log.info('Start detecting devices. This may take a while.');
 
         return new Observable(subscriber => {
-            this.boschSmartHomeBridge.getBshcClient().getRooms().pipe(switchMap(response => {
+            this.getBshcClient().getRooms().pipe(switchMap(response => {
                 const rooms: any[] = response.parsedResponse;
 
                 rooms.forEach(room => {
                     this.cachedRooms.set(room.id, room);
                 });
 
-                return this.boschSmartHomeBridge.getBshcClient().getDevices();
+                return this.getBshcClient().getDevices();
             }), switchMap(response => {
                 const devices: any[] = response.parsedResponse;
 
@@ -265,7 +265,7 @@ export class BshbController {
 
     private checkDeviceServices(): Observable<void> {
         return new Observable(observer => {
-            this.boschSmartHomeBridge.getBshcClient().getDevicesServices().subscribe(response => {
+            this.getBshcClient().getDevicesServices().subscribe(response => {
                 const deviceServices: any[] = response.parsedResponse;
 
                 deviceServices.forEach(deviceService => {

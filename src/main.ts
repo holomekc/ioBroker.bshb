@@ -71,7 +71,7 @@ export class Bshb extends utils.Adapter {
             Utils.createError(this.log, 'Identifier not defined but it is a mandatory parameter');
         }
 
-        this.loadCertificates(notPrefixedIdentifier).subscribe(clientCert => {
+        this.loadCertificates(notPrefixedIdentifier, this.config.identifier).subscribe(clientCert => {
             // Create controller for bosch-smart-home-bridge
             this.bshbController = new BshbController(this, clientCert.certificate, clientCert.privateKey);
             this.init(this.bshbController);
@@ -80,7 +80,18 @@ export class Bshb extends utils.Adapter {
         });
     }
 
-    private loadCertificates(identifier: string) {
+    /**
+     * load certificates:<br/>
+     * 1. load from system.certificates<br/>
+     * 2. If not found search for old configuration to allow smooth migration<br/>
+     * 3. If not found generate a new certificate<br/>
+     *
+     * @param notPrefixedIdentifier
+     *        identifier without "ioBroker.bshb_" prefix which is used for system.certificates
+     * @param identifier
+     *        actual identifier including prefix
+     */
+    private loadCertificates(notPrefixedIdentifier: string, identifier: string) {
         return new Observable<ClientCert>(subscriber => {
             this.getForeignObject('system.certificates', (err, obj) => {
                 if (err || !obj) {
@@ -89,7 +100,7 @@ export class Bshb extends utils.Adapter {
                     return;
                 }
 
-                let certificateKeys = Utils.getCertificateKeys(identifier);
+                let certificateKeys = Utils.getCertificateKeys(notPrefixedIdentifier);
 
                 let clientCert = new ClientCert(obj.native.certificates[certificateKeys.cert],
                     obj.native.certificates[certificateKeys.key]);
@@ -110,7 +121,7 @@ export class Bshb extends utils.Adapter {
                         clientCert = Bshb.generateCertificate(identifier);
                     }
                     // store information
-                    this.storeCertificate(obj, certificateKeys, clientCert).subscribe(value => {
+                    this.storeCertificate(obj, certificateKeys, clientCert).subscribe(() => {
                         subscriber.next(clientCert);
                         subscriber.complete();
                     }, error => {
@@ -164,7 +175,7 @@ export class Bshb extends utils.Adapter {
 
     private static generateCertificate(identifier: string): ClientCert {
         let certificateDefinition = BshbUtils.generateClientCertificate(identifier);
-        return new ClientCert(certificateDefinition.clientcert, certificateDefinition.clientprivate);
+        return new ClientCert(certificateDefinition.cert, certificateDefinition.private);
     }
 
     private init(bshbController: BshbController) {
@@ -180,12 +191,12 @@ export class Bshb extends utils.Adapter {
             this.subscribeStates('*');
 
             // now we want to subscribe to BSHC for changes
-            return bshbController.getBshbClient().subscribe(this.config.mac);
+            return bshbController.getBshcClient().subscribe(this.config.mac);
         })).subscribe(response => {
             // subscribe to pollingTrigger which will trigger when the long polling connection completed or results in an error.
             this.pollingTrigger.subscribe(keepPolling => {
                 if (keepPolling) {
-                    bshbController.getBshbClient().longPolling(this.config.mac, response.parsedResponse.result).subscribe(infoResponse => {
+                    bshbController.getBshcClient().longPolling(this.config.mac, response.parsedResponse.result).subscribe(infoResponse => {
                         const information = infoResponse.parsedResponse;
 
                         information.result.forEach(deviceService => {
@@ -203,7 +214,7 @@ export class Bshb extends utils.Adapter {
                     });
                 } else {
                     // polling was stopped. We unsubscribe
-                    bshbController.getBshbClient().unsubscribe(this.config.mac, response.parsedResponse.result)
+                    bshbController.getBshcClient().unsubscribe(this.config.mac, response.parsedResponse.result)
                         .subscribe(() => {
                         });
                 }
