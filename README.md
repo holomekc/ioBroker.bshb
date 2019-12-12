@@ -26,6 +26,10 @@ Work in progress. Feedback appreciated.
 
 ## Changelog
 
+### 0.1.0
+* (holomekc) certificate and private key are handled in ioBroker and can be content or file reference
+* (holomekc) update to newer bridge version
+
 ### 0.0.14
 * (holomekc) optimizations and cleanup
 

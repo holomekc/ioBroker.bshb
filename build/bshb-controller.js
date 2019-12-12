@@ -5,6 +5,8 @@ const bshb_logger_1 = require("./bshb-logger");
 const rxjs_1 = require("rxjs");
 const bshb_definition_1 = require("./bshb-definition");
 const operators_1 = require("rxjs/operators");
+const log_level_1 = require("./log-level");
+const utils_1 = require("./utils");
 /**
  * This controller encapsulates bosch-smart-home-bridge and provides it to iobroker.bshb
  *
@@ -17,8 +19,12 @@ class BshbController {
      *
      * @param bshb
      *        instance of {@link Bshb}
+     * @param clientCert
+     *        client certificate
+     * @param clientPrivateKey
+     *        client private key
      */
-    constructor(bshb) {
+    constructor(bshb, clientCert, clientPrivateKey) {
         this.bshb = bshb;
         this.cachedRooms = new Map();
         this.cachedDevices = new Map();
@@ -27,9 +33,19 @@ class BshbController {
         this.clientName = 'ioBroker.bshb';
         this.scenarioRegex = /bshb\.\d+\.scenarios\.(.*)/;
         this.chain = Promise.resolve();
-        this.boschSmartHomeBridge = new bosch_smart_home_bridge_1.BoschSmartHomeBridge(bshb.config.host, bshb.config.identifier, bshb.config.certsPath, new bshb_logger_1.BshbLogger(bshb));
+        try {
+            this.boschSmartHomeBridge = bosch_smart_home_bridge_1.BoschSmartHomeBridgeBuilder.builder()
+                .withHost(bshb.config.host)
+                .withClientCert(clientCert)
+                .withClientPrivateKey(clientPrivateKey)
+                .withLogger(new bshb_logger_1.BshbLogger(bshb))
+                .build();
+        }
+        catch (e) {
+            throw utils_1.Utils.createError(bshb.log, e);
+        }
     }
-    getBshbClient() {
+    getBshcClient() {
         return this.boschSmartHomeBridge.getBshcClient();
     }
     /**
@@ -43,7 +59,7 @@ class BshbController {
         if (this.bshb.config.pairingDelay && this.bshb.config.pairingDelay > 5000) {
             pairingDelay = this.bshb.config.pairingDelay;
         }
-        return this.boschSmartHomeBridge.pairIfNeeded(this.clientName, systemPassword, pairingDelay, 100);
+        return this.boschSmartHomeBridge.pairIfNeeded(this.clientName, this.bshb.config.identifier, systemPassword, pairingDelay, 100);
     }
     /**
      * iobroker state changed. Change it via bosch-smart-home-bridge
@@ -58,27 +74,28 @@ class BshbController {
         if (match) {
             this.bshb.log.debug(`Found scenario trigger with id=${match[1]} and value=${state.val}`);
             if (state.val) {
-                this.boschSmartHomeBridge.getBshcClient().triggerScenario(match[1]).subscribe(() => {
+                this.getBshcClient().triggerScenario(match[1]).subscribe(() => {
                     this.bshb.setState(id, { val: false, ack: true });
                 });
             }
             return;
         }
         let cachedState = this.cachedStates.get(id);
-        if (this.bshb.log.level === 'debug') {
+        if (utils_1.Utils.isLevelActive(this.bshb.log.level, log_level_1.LogLevel.debug)) {
             this.bshb.log.debug('Found cached state: ' + JSON.stringify(cachedState));
         }
         const data = {
             '@type': cachedState.deviceService.state['@type'],
         };
         data[cachedState.stateKey] = state.val;
-        if (this.bshb.log.level === 'debug') {
+        if (utils_1.Utils.isLevelActive(this.bshb.log.level, log_level_1.LogLevel.debug)) {
             this.bshb.log.debug('Data which will be send: ' + JSON.stringify(data));
         }
-        this.boschSmartHomeBridge.getBshcClient().putState(cachedState.deviceService.path, data).subscribe(response => {
+        this.getBshcClient().putState(cachedState.deviceService.path, data).subscribe(response => {
             if (response) {
-                if (this.bshb.log.level === 'debug') {
-                    this.bshb.log.debug(JSON.stringify(response));
+                if (utils_1.Utils.isLevelActive(this.bshb.log.level, log_level_1.LogLevel.debug)) {
+                    this.bshb.log.debug(`HTTP response. status=${response.incomingMessage.statusCode},
+                     body=${JSON.stringify(response.parsedResponse)}`);
                 }
             }
             else {
@@ -101,12 +118,12 @@ class BshbController {
                     if (stateKey === '@type') {
                         return;
                     }
-                    this.bshb.setState(this.getId(cachedDeviceService.device, cachedDeviceService.deviceService, stateKey), { val: deviceService.state[stateKey], ack: true });
+                    this.bshb.setState(BshbController.getId(cachedDeviceService.device, cachedDeviceService.deviceService, stateKey), { val: deviceService.state[stateKey], ack: true });
                 });
             }
         }
     }
-    getId(device, deviceService, stateKey) {
+    static getId(device, deviceService, stateKey) {
         let id;
         if (device) {
             id = device.id + '.' + deviceService.id;
@@ -118,7 +135,8 @@ class BshbController {
     }
     detectScenarios() {
         return new rxjs_1.Observable(subscriber => {
-            this.boschSmartHomeBridge.getBshcClient().getScenarios().subscribe(scenarios => {
+            this.getBshcClient().getScenarios().subscribe(response => {
+                const scenarios = response.parsedResponse;
                 this.bshb.setObjectNotExists('scenarios', {
                     type: 'group',
                     common: {
@@ -159,12 +177,14 @@ class BshbController {
     detectDevices() {
         this.bshb.log.info('Start detecting devices. This may take a while.');
         return new rxjs_1.Observable(subscriber => {
-            this.boschSmartHomeBridge.getBshcClient().getRooms().pipe(operators_1.switchMap((rooms) => {
+            this.getBshcClient().getRooms().pipe(operators_1.switchMap(response => {
+                const rooms = response.parsedResponse;
                 rooms.forEach(room => {
                     this.cachedRooms.set(room.id, room);
                 });
-                return this.boschSmartHomeBridge.getBshcClient().getDevices();
-            }), operators_1.switchMap((devices) => {
+                return this.getBshcClient().getDevices();
+            }), operators_1.switchMap(response => {
+                const devices = response.parsedResponse;
                 devices.forEach(device => {
                     // this.cachedDevices.set(device.id, device);
                     this.bshb.setObjectNotExists(device.id, {
@@ -207,7 +227,8 @@ class BshbController {
     }
     checkDeviceServices() {
         return new rxjs_1.Observable(observer => {
-            this.boschSmartHomeBridge.getBshcClient().getDevicesServices().subscribe((deviceServices) => {
+            this.getBshcClient().getDevicesServices().subscribe(response => {
+                const deviceServices = response.parsedResponse;
                 deviceServices.forEach(deviceService => {
                     this.bshb.getObject(deviceService.deviceId, (err, ioBrokerDevice) => {
                         if (err) {
