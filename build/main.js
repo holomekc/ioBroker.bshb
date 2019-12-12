@@ -18,6 +18,7 @@ const utils_1 = require("./utils");
 const client_cert_1 = require("./client-cert");
 const bosch_smart_home_bridge_1 = require("bosch-smart-home-bridge");
 const log_level_1 = require("./log-level");
+const fs = require("fs");
 class Bshb extends utils.Adapter {
     constructor(options = {}) {
         super(Object.assign(Object.assign({}, options), { name: 'bshb' }));
@@ -82,6 +83,10 @@ class Bshb extends utils.Adapter {
                 if (clientCert.certificate && clientCert.privateKey) {
                     // found certificates
                     this.log.info('Client certificate found in system.certificates');
+                    this.log.info('Check if certificate is file reference or actual content');
+                    const actualCert = this.loadFromFile(clientCert.certificate, 'certificate');
+                    const actualPrivateKey = this.loadFromFile(clientCert.privateKey, 'private key');
+                    clientCert = new client_cert_1.ClientCert(actualCert, actualPrivateKey);
                     subscriber.next(clientCert);
                     subscriber.complete();
                 }
@@ -107,6 +112,23 @@ class Bshb extends utils.Adapter {
                 }
             });
         });
+    }
+    loadFromFile(file, type) {
+        try {
+            if (fs.existsSync(file)) {
+                this.log.info(`${type} is a file reference. Read from file`);
+                return fs.readFileSync(file, 'utf-8');
+            }
+            else {
+                this.log.info(`${type} seems to be actual content. Use value from state.`);
+                return file;
+            }
+        }
+        catch (e) {
+            this.log.info(`${type} seems to be actual content or reading from file failed. Use value from state. For more details restart adapter with debug log level.`);
+            this.log.debug(`Error during reading file: ${e}`);
+            return file;
+        }
     }
     storeCertificate(obj, certificateKeys, clientCert) {
         return new rxjs_1.Observable(subscriber => {

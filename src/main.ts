@@ -7,6 +7,7 @@ import {Utils} from "./utils";
 import {ClientCert} from "./client-cert";
 import {BshbUtils} from "bosch-smart-home-bridge";
 import {LogLevel} from "./log-level";
+import * as fs from "fs";
 
 /**
  * @author Christopher Holomek
@@ -108,6 +109,12 @@ export class Bshb extends utils.Adapter {
                 if (clientCert.certificate && clientCert.privateKey) {
                     // found certificates
                     this.log.info('Client certificate found in system.certificates');
+
+                    this.log.info('Check if certificate is file reference or actual content');
+                    const actualCert = this.loadFromFile(clientCert.certificate, 'certificate');
+                    const actualPrivateKey =  this.loadFromFile(clientCert.privateKey, 'private key');
+                    clientCert = new ClientCert(actualCert, actualPrivateKey);
+
                     subscriber.next(clientCert);
                     subscriber.complete();
                 } else {
@@ -131,6 +138,22 @@ export class Bshb extends utils.Adapter {
                 }
             });
         });
+    }
+
+    private loadFromFile(file: string, type: string): string {
+        try {
+            if (fs.existsSync(file)) {
+                this.log.info(`${type} is a file reference. Read from file`);
+                return fs.readFileSync(file, 'utf-8');
+            } else{
+                this.log.info(`${type} seems to be actual content. Use value from state.`);
+                return file;
+            }
+        }catch (e) {
+            this.log.info(`${type} seems to be actual content or reading from file failed. Use value from state. For more details restart adapter with debug log level.`);
+            this.log.debug(`Error during reading file: ${e}`);
+            return file;
+        }
     }
 
     private storeCertificate(obj: ioBroker.StateObject | ioBroker.ChannelObject | ioBroker.DeviceObject | ioBroker.OtherObject,
