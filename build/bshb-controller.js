@@ -111,7 +111,7 @@ class BshbController {
      * @param deviceService object containing @type and values
      */
     setStateAck(deviceService) {
-        if (deviceService.path) {
+        if (deviceService.path && deviceService.state) {
             const cachedDeviceService = this.cachedDeviceServices.get(deviceService.path);
             if (cachedDeviceService) {
                 Object.keys(deviceService.state).forEach(stateKey => {

@@ -5,7 +5,7 @@ import {switchMap} from 'rxjs/operators';
 import {Migration} from "./migration";
 import {Utils} from "./utils";
 import {ClientCert} from "./client-cert";
-import {BshbUtils} from "bosch-smart-home-bridge";
+import {BshbError, BshbErrorType, BshbUtils} from "bosch-smart-home-bridge";
 import {LogLevel} from "./log-level";
 import * as fs from "fs";
 
@@ -20,7 +20,6 @@ declare global {
         interface AdapterConfig {
             // Define the shape of your options here (recommended)
             host: string;
-            mac: string;
             identifier: string;
             systemPassword: string;
             pairingDelay: number;
@@ -54,7 +53,6 @@ export class Bshb extends utils.Adapter {
         // Overwrite configuration
         // make sure that identifier is valid regarding Bosch T&C
         this.config.host = this.config.host.trim();
-        this.config.mac = this.config.mac.trim();
         const notPrefixedIdentifier = this.config.identifier.trim();
         this.config.identifier = 'ioBroker.bshb_' + notPrefixedIdentifier;
         this.config.systemPassword = this.config.systemPassword.trim();
@@ -63,7 +61,6 @@ export class Bshb extends utils.Adapter {
         // The adapters config (in the instance object everything under the attribute "native") is accessible via
         // this.config:
         this.log.debug('config host: ' + this.config.host);
-        this.log.debug('config mac: ' + this.config.mac);
         this.log.debug('config identifier: ' + this.config.identifier);
         this.log.debug('config systemPassword: ' + (this.config.systemPassword != undefined));
         this.log.debug('config pairingDelay: ' + this.config.pairingDelay);
@@ -72,7 +69,7 @@ export class Bshb extends utils.Adapter {
             Utils.createError(this.log, 'Identifier not defined but it is a mandatory parameter');
         }
 
-        this.loadCertificates(notPrefixedIdentifier, this.config.identifier).subscribe(clientCert => {
+        this.loadCertificates(notPrefixedIdentifier).subscribe(clientCert => {
             // Create controller for bosch-smart-home-bridge
             this.bshbController = new BshbController(this, clientCert.certificate, clientCert.privateKey);
             this.init(this.bshbController);
@@ -89,10 +86,8 @@ export class Bshb extends utils.Adapter {
      *
      * @param notPrefixedIdentifier
      *        identifier without "ioBroker.bshb_" prefix which is used for system.certificates
-     * @param identifier
-     *        actual identifier including prefix
      */
-    private loadCertificates(notPrefixedIdentifier: string, identifier: string) {
+    private loadCertificates(notPrefixedIdentifier: string) {
         return new Observable<ClientCert>(subscriber => {
             this.getForeignObject('system.certificates', (err, obj) => {
                 if (err || !obj) {
@@ -125,7 +120,7 @@ export class Bshb extends utils.Adapter {
                         clientCert = migrationResult;
                     } else {
                         this.log.info('No client certificate found in old configuration or it failed. Generate new certificate');
-                        clientCert = Bshb.generateCertificate(identifier);
+                        clientCert = Bshb.generateCertificate();
                     }
                     // store information
                     this.storeCertificate(obj, certificateKeys, clientCert).subscribe(() => {
@@ -196,8 +191,8 @@ export class Bshb extends utils.Adapter {
         }
     }
 
-    private static generateCertificate(identifier: string): ClientCert {
-        let certificateDefinition = BshbUtils.generateClientCertificate(identifier);
+    private static generateCertificate(): ClientCert {
+        let certificateDefinition = BshbUtils.generateClientCertificate();
         return new ClientCert(certificateDefinition.cert, certificateDefinition.private);
     }
 
@@ -209,41 +204,78 @@ export class Bshb extends utils.Adapter {
         }), switchMap(() => {
             // detect scenarios next
             return bshbController.detectScenarios();
-        }), switchMap(() => {
+        })).subscribe(() => {
             // register for changes
             this.subscribeStates('*');
 
             // now we want to subscribe to BSHC for changes
-            return bshbController.getBshcClient().subscribe(this.config.mac);
-        })).subscribe(response => {
-            // subscribe to pollingTrigger which will trigger when the long polling connection completed or results in an error.
+            this.startPolling(bshbController);
+        });
+    }
+
+    private poll = (delay?: number) => {
+        delay = delay ? delay : 0;
+        setTimeout(() => {
+            this.pollingTrigger.next(true);
+        }, delay);
+    };
+
+    private startPolling = (bshbController: BshbController, delay?: number) => {
+        this.log.info('Listen to changes');
+        delay = delay ? delay : 0;
+        setTimeout(() => {
+            this.subscribeAndPoll(bshbController);
+        }, delay);
+    };
+
+    private subscribeAndPoll = (bshbController: BshbController) => {
+        this.pollingTrigger.next(false);
+        this.pollingTrigger.complete();
+
+        this.pollingTrigger = new BehaviorSubject<boolean>(true);
+
+        bshbController.getBshcClient().subscribe().subscribe(response => {
             this.pollingTrigger.subscribe(keepPolling => {
                 if (keepPolling) {
-                    bshbController.getBshcClient().longPolling(this.config.mac, response.parsedResponse.result).subscribe(infoResponse => {
-                        const information = infoResponse.parsedResponse;
-
-                        information.result.forEach(deviceService => {
-                            if (Utils.isLevelActive(this.log.level, LogLevel.debug)) {
-                                this.log.debug(JSON.stringify(deviceService));
+                    bshbController.getBshcClient().longPolling(response.parsedResponse.result).subscribe(infoResponse => {
+                        if (infoResponse.incomingMessage.statusCode !== 200) {
+                            if (infoResponse.incomingMessage.statusCode === 503) {
+                                this.log.warn(`BSHC is starting. Try to reconnect asap. HTTP=${infoResponse.incomingMessage.statusCode}, data=${infoResponse.parsedResponse}`);
+                            } else {
+                                this.log.warn(`Something went wrong during long polling. HTTP=${infoResponse.incomingMessage.statusCode}, data=${infoResponse.parsedResponse}`);
                             }
-                            bshbController.setStateAck(deviceService);
-                        });
+                            // something went wrong we delay polling
+                            this.poll(10000);
+                        } else {
+                            const information = infoResponse.parsedResponse;
+
+                            // handle updates
+                            information.result.forEach(deviceService => {
+                                if (Utils.isLevelActive(this.log.level, LogLevel.debug)) {
+                                    this.log.debug(JSON.stringify(deviceService));
+                                }
+                                bshbController.setStateAck(deviceService);
+                            });
+
+                            // poll further data.
+                            this.poll();
+                        }
                     }, error => {
-                        this.log.warn(error);
-                        // we want to keep polling but complete will do that for us.
-                    }, () => {
-                        // we want to keep polling. So true
-                        this.pollingTrigger.next(true);
+                        if ((error as BshbError).errorType === BshbErrorType.POLLING) {
+                            this.log.warn(`Something went wrong during long polling. Try to reconnect.`);
+                            this.startPolling(bshbController, 5000);
+                        } else {
+                            this.log.warn(`Something went wrong during long polling. Try again later.`);
+                            this.poll(10000);
+                        }
                     });
                 } else {
-                    // polling was stopped. We unsubscribe
-                    bshbController.getBshcClient().unsubscribe(this.config.mac, response.parsedResponse.result)
-                        .subscribe(() => {
-                        });
+                    bshbController.getBshcClient().unsubscribe(response.parsedResponse.result).subscribe(() => {
+                    });
                 }
             });
         });
-    }
+    };
 
     /**
      * Is called when adapter shuts down - callback has to be called under any circumstances!

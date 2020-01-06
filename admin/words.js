@@ -14,30 +14,6 @@ systemDictionary = {
 		"pl": "Adres IP Bosch Smart Home Controller",
 		"zh-cn": "博世智能家居控制器IP地址"
 	},
-	"mac": {
-		"en": "Bosch Smart Home Controller Mac address",
-		"de": "Bosch Smart Home Controller Mac-Adresse",
-		"ru": "Мак-адрес Bosch Smart Home Controller",
-		"pt": "Endereço Mac da Bosch Smart Home Controller",
-		"nl": "Mac-adres van Bosch Smart Home Controller",
-		"fr": "Adresse Mac Bosch Smart Home Controller",
-		"it": "Indirizzo Mac del Bosch Smart Home Controller",
-		"es": "Bosch Smart Home Controller Dirección Mac",
-		"pl": "Adres Mac Bosch Smart Home Controller",
-		"zh-cn": "博世智能家居控制器Mac地址"
-	},
-	"mac-detail": {
-		"en": "In format: xx-xx-xx-xx-xx-xx",
-		"de": "Im Format: xx-xx-xx-xx-xx-xx",
-		"ru": "В формате: хх-хх-хх-хх-хх-хх",
-		"pt": "No formato: xx-xx-xx-xx-xx-xx",
-		"nl": "In formaat: xx-xx-xx-xx-xx-xx",
-		"fr": "Au format: xx-xx-xx-xx-xx-xx",
-		"it": "Nel formato: xx-xx-xx-xx-xx-xx",
-		"es": "En formato: xx-xx-xx-xx-xx-xx",
-		"pl": "W formacie: xx-xx-xx-xx-xx-xx",
-		"zh-cn": "格式：xx-xx-xx-xx-xx-xx"
-	},
 	"identifier": {
 		"en": "Unique identifier of created client",
 		"de": "Eindeutige Kennung des erstellten Clients",
@@ -85,30 +61,6 @@ systemDictionary = {
 		"es": "Se puede quitar después del emparejamiento",
 		"pl": "Może być usunięty po sparowaniu.",
 		"zh-cn": "配对后即可移除"
-	},
-	"certsPath": {
-		"en": "Client certificate directory",
-		"de": "Client-Zertifikatsverzeichnis",
-		"ru": "Каталог клиентских сертификатов",
-		"pt": "Diretório de certificados de cliente",
-		"nl": "Klant certificaat directory",
-		"fr": "Répertoire des certificats clients",
-		"it": "Elenco dei certificati dei clienti",
-		"es": "Directorio de certificados de clientes",
-		"pl": "Katalog certyfikatów klientów",
-		"zh-cn": "客户端证书目录"
-	},
-	"certsPath-detail": {
-		"en": "Absolute path with corresponding access rights. E.g. /home/iobroker/certs",
-		"de": "Absoluter Pfad mit entsprechenden Zugriffsrechten. Z.B. /home/iobroker/certs",
-		"ru": "Абсолютный путь с соответствующими правами доступа. Например, /home/iobroker/certs",
-		"pt": "Caminho absoluto com direitos de acesso correspondentes. Por exemplo, /home/iobroker/certs",
-		"nl": "Absoluut pad met bijbehorende toegangsrechten. Bijvoorbeeld /home/iobroker/certs",
-		"fr": "Chemin absolu avec les droits d'accès correspondants. p. ex. /home/iobroker/certs",
-		"it": "Percorso assoluto con i relativi diritti di accesso. Ad esempio /home/iobroker/certs",
-		"es": "Trayectoria absoluta con los correspondientes derechos de acceso. Por ejemplo /home/iobroker/certs",
-		"pl": "Ścieżka bezwzględna z odpowiednimi prawami dostępu. Np. /home/iobroker/certs",
-		"zh-cn": "具有相应访问权限的绝对路径  例如 /home/iobroker/certs"
 	},
 	"pairingDelay": {
 		"en": "Delay during pairing attempts in ms",

@@ -21,7 +21,9 @@ class BshbLogger {
         this.log('info', message, optionalParams);
     }
     error(message, ...optionalParams) {
-        this.log('error', message, optionalParams);
+        // debug may look strange here but we do not care about the logs of errors during http calls because we handle
+        // them in the adapter. Errors would only confuse users.
+        this.log('debug', message, optionalParams);
     }
     warn(message, ...optionalParams) {
         this.log('warn', message, optionalParams);
