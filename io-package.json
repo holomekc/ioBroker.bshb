@@ -1,8 +1,32 @@
 {
     "common": {
         "name": "bshb",
-        "version": "0.1.0",
+        "version": "0.1.2",
         "news": {
+			"0.1.2": {
+				"en": "Adapter core library updated",
+				"de": "Adapterkernbibliothek aktualisiert",
+				"ru": "Обновлённая библиотека ядра адаптера",
+				"pt": "Biblioteca central do adaptador atualizado",
+				"nl": "Adapterkernbibliotheek geüpdatet",
+				"fr": "Mise à jour de la bibliothèque de base de l'adaptateur",
+				"it": "Aggiornamento della libreria di base dell'adattatore",
+				"es": "Actualización de la biblioteca de adaptadores de núcleo",
+				"pl": "Aktualizacja biblioteki rdzeni adapterów",
+				"zh-cn": "适配器核心库已更新"
+			},
+			"0.1.1": {
+				"en": "Improve connection and usability",
+				"de": "Verbindung und Benutzerfreundlichkeit verbessert",
+				"ru": "Улучшение связи и удобства использования",
+				"pt": "Melhorar a conexão e a usabilidade",
+				"nl": "Verbinding en bruikbaarheid verbeteren",
+				"fr": "Améliorer la connexion et la facilité d'utilisation",
+				"it": "Migliorare la connessione e l'usabilità",
+				"es": "Mejorar la conexión y la usabilidad",
+				"pl": "Poprawa połączeń i użyteczności",
+				"zh-cn": "改善连接和可用性"
+			},
 			"0.1.0": {
 				"en": "Certificates are stored in ioBroker now",
 				"de": "Zertifikat werden jetzt in ioBroker gespeichert",

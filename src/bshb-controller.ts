@@ -122,20 +122,34 @@ export class BshbController {
     /**
      * Set a state with ack. All values of deviceService - state type are set
      *
-     * @param deviceService object containing @type and values
+     * @param resultEntry object containing @type and values
      */
-    public setStateAck(deviceService: any) {
-        if (deviceService.path) {
-            const cachedDeviceService = this.cachedDeviceServices.get(deviceService.path);
+    public setStateAck(resultEntry: any) {
+        if (resultEntry.path) {
+            const cachedDeviceService = this.cachedDeviceServices.get(resultEntry.path);
 
             if (cachedDeviceService) {
-                Object.keys(deviceService.state).forEach(stateKey => {
-                    if (stateKey === '@type') {
-                        return;
-                    }
-                    this.bshb.setState(BshbController.getId(cachedDeviceService.device, cachedDeviceService.deviceService, stateKey),
-                        {val: deviceService.state[stateKey], ack: true});
-                });
+                // found cached device
+                if (resultEntry.state) {
+                    Object.keys(resultEntry.state).forEach(stateKey => {
+                        if (stateKey === '@type') {
+                            return;
+                        }
+                        this.bshb.setState(BshbController.getId(cachedDeviceService.device, cachedDeviceService.deviceService, stateKey),
+                            {val: resultEntry.state[stateKey], ack: true});
+                    });
+                }
+
+                // fault handling
+                if (resultEntry.faults && resultEntry.faults.entries && resultEntry.faults.entries.length > 0) {
+                    // set faults
+                    this.bshb.setState(BshbController.getId(cachedDeviceService.device, cachedDeviceService.deviceService, 'faults'),
+                        {val: this.getFaults(resultEntry), ack: true});
+                } else {
+                    // clear faults
+                    this.bshb.setState(BshbController.getId(cachedDeviceService.device, cachedDeviceService.deviceService, 'faults'),
+                        {val: this.getFaults(undefined), ack: true});
+                }
             }
         }
     }
@@ -216,10 +230,12 @@ export class BshbController {
                 devices.forEach(device => {
                     // this.cachedDevices.set(device.id, device);
 
+                    const name = this.getDeviceName(device);
+
                     this.bshb.setObjectNotExists(device.id, {
                         type: 'device',
                         common: {
-                            name: device.id,
+                            name: name,
                             read: true
                         },
                         native: {device: device},
@@ -227,20 +243,21 @@ export class BshbController {
 
                     this.cachedDevices.set(this.bshb.namespace + '.' + device.id, device);
 
-
+                    const rootDeviceName = 'BSHC';
 
                     // root device. This should be the bosch smart home controller only. It does not exist as a
                     // separate device so we add it multiple times but due to unique id this should be ok
                     this.bshb.setObjectNotExists(device.rootDeviceId, {
                         type: 'device',
                         common: {
-                            name: device.rootDeviceId,
+                            name: rootDeviceName,
                             read: true
                         },
                         native: {
                             device: {
                                 id: device.rootDeviceId,
-                                roomId: device.roomId
+                                roomId: device.roomId,
+                                name: rootDeviceName
                             }
                         },
                     });
@@ -278,6 +295,7 @@ export class BshbController {
                             this.bshb.log.error('Found device but value is undefined. This should not happen: deviceId=' + deviceService.deviceId);
                             return;
                         }
+
                         this.importChannels(ioBrokerDevice.native.device, deviceService);
                     });
                 });
@@ -296,7 +314,7 @@ export class BshbController {
             id = deviceService.id;
         }
 
-        const name = deviceService.id;
+        const name = this.getDeviceName(device) + '.' + deviceService.id;
 
         this.bshb.setObjectNotExists(id, {
             type: 'channel',
@@ -307,8 +325,10 @@ export class BshbController {
             native: {device: device, deviceService: deviceService},
         });
 
-        this.addRoom(device.id, deviceService.id, undefined as unknown as string, device.roomId);
+        // add fault holder
+        this.importSimpleState(id, device, deviceService, 'faults', this.getFaults(deviceService), false);
 
+        this.addRoom(device.id, deviceService.id, undefined as unknown as string, device.roomId);
         this.addFunction(device.id, deviceService.id, undefined as unknown as string);
 
         if (deviceService.state) {
@@ -329,17 +349,24 @@ export class BshbController {
         this.cachedDeviceServices.set(deviceService.path, {device: device, deviceService: deviceService});
     }
 
-    private importSimpleState(idPrefix: string, device: any, deviceService: any, stateKey: string, stateValue: any): void {
+    private importSimpleState(idPrefix: string, device: any, deviceService: any, stateKey: string, stateValue: any, write?: boolean): void {
         const id = idPrefix + '.' + stateKey;
+
+        let name = '';
+        if (deviceService) {
+            name = this.getDeviceName(device) + '.' + deviceService.id + '.' + stateKey
+        } else {
+            name = this.getDeviceName(device) + '.' + stateKey;
+        }
 
         this.bshb.setObjectNotExists(id, {
             type: 'state',
             common: {
-                name: stateKey,
+                name: name,
                 type: BshbDefinition.determineType(stateValue),
-                role: BshbDefinition.determineRole(deviceService.state ? deviceService.state['@type'] : null, stateKey),
+                role: BshbDefinition.determineRole(deviceService && deviceService.state ? deviceService.state['@type'] : null, stateKey),
                 read: true,
-                write: true,
+                write: typeof write === 'undefined' ? true : write,
             },
             native: {device: device, deviceService: deviceService, state: stateKey},
         });
@@ -370,7 +397,7 @@ export class BshbController {
 
     private addRoom(deviceId: string, deviceServiceId: string, itemId: string, roomId: string) {
         if (roomId) {
-            const room = this.cachedRooms.get(roomId);
+            const room = this.getRoomById(roomId);
 
             if (room) {
                 let name = room.name;
@@ -381,6 +408,7 @@ export class BshbController {
                     if (name && name.length > 0) {
                         // we need to make sure that the value exists to prevent crashing ioBroker
                         if (itemId) {
+
                             this.chain = this.chain.then(() => this.bshb.addStateToEnumAsync('rooms', name, deviceId, deviceServiceId, itemId));
                         } else {
                             this.chain = this.chain.then(() => this.bshb.addChannelToEnumAsync('rooms', name, deviceId, deviceServiceId));
@@ -405,6 +433,33 @@ export class BshbController {
                     this.chain = this.chain.then(() => this.bshb.addChannelToEnumAsync('functions', name, deviceId, deviceServiceId));
                 }
             }
+        }
+    }
+
+    private getDeviceName(device: any): string {
+        let name = device.name;
+        if (device.deviceModel === 'ROOM_CLIMATE_CONTROL') {
+            const room = this.getRoomById(device.roomId);
+            name = 'RCC.' + room.name;
+        } else if (device.deviceModel === 'INTRUSION_DETECTION_SYSTEM') {
+            name = 'IDS';
+        } else if (device.deviceModel === 'SMOKE_DETECTION_SYSTEM') {
+            name = 'SDS';
+        } else if (device.deviceModel === 'VENTILATION_SERVICE') {
+            name = 'VS';
+        }
+        return name;
+    }
+
+    private getRoomById(roomId: string) {
+        return this.cachedRooms.get(roomId);
+    }
+
+    private getFaults(object: any) {
+        if (object && object.faults && object.faults.entries && object.faults.entries.length > 0) {
+            return object.faults.entries;
+        } else {
+            return [];
         }
     }
 }

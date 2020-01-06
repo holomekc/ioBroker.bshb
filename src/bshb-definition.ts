@@ -21,16 +21,16 @@ export class BshbDefinition {
         } else if (value === 'IntrusionDetectionControl' ||
             value === 'SurveillanceAlarm') {
             return 'security';
-        } else if(value === 'VentilationDelay') {
+        } else if (value === 'VentilationDelay') {
             // not sure...
             return 'heating';
-        } else if(value === 'CommunicationQuality') {
+        } else if (value === 'CommunicationQuality') {
             return 'communicationQuality';
-        } else if(value === 'BatteryLevel') {
+        } else if (value === 'BatteryLevel') {
             return 'battery';
-        } else if(value === 'AirQualityLevel') {
+        } else if (value === 'AirQualityLevel') {
             return 'airQuality';
-        } else if(value === 'SmokeSensitivity') {
+        } else if (value === 'SmokeSensitivity') {
             return 'smokeSensitivity';
         }
         return undefined as unknown as string;
@@ -53,6 +53,11 @@ export class BshbDefinition {
      *        key of a device state
      */
     public static determineRole(type: string, key: string): string {
+        // faults are always a list. Does not matter which service.
+        if (key === 'faults') {
+            return 'list';
+        }
+
         if (type === 'binarySwitchState') {
             if (key === 'on') {
                 return 'switch';
