@@ -250,11 +250,11 @@ export class Bshb extends utils.Adapter {
                             const information = infoResponse.parsedResponse;
 
                             // handle updates
-                            information.result.forEach(deviceService => {
+                            information.result.forEach(resultEntry => {
                                 if (Utils.isLevelActive(this.log.level, LogLevel.debug)) {
-                                    this.log.debug(JSON.stringify(deviceService));
+                                    this.log.debug(JSON.stringify(resultEntry));
                                 }
-                                bshbController.setStateAck(deviceService);
+                                bshbController.setStateAck(resultEntry);
                             });
 
                             // poll further data.

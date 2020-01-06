@@ -59,6 +59,10 @@ class BshbDefinition {
      *        key of a device state
      */
     static determineRole(type, key) {
+        // faults are always a list. Does not matter which service.
+        if (key === 'faults') {
+            return 'list';
+        }
         if (type === 'binarySwitchState') {
             if (key === 'on') {
                 return 'switch';

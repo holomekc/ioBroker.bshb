@@ -57,11 +57,11 @@ class Bshb extends utils.Adapter {
                             else {
                                 const information = infoResponse.parsedResponse;
                                 // handle updates
-                                information.result.forEach(deviceService => {
+                                information.result.forEach(resultEntry => {
                                     if (utils_1.Utils.isLevelActive(this.log.level, log_level_1.LogLevel.debug)) {
-                                        this.log.debug(JSON.stringify(deviceService));
+                                        this.log.debug(JSON.stringify(resultEntry));
                                     }
-                                    bshbController.setStateAck(deviceService);
+                                    bshbController.setStateAck(resultEntry);
                                 });
                                 // poll further data.
                                 this.poll();
