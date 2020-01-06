@@ -26,6 +26,9 @@ Work in progress. Feedback appreciated.
 
 ## Changelog
 
+### 0.1.2
+* (holomekc) Adapter core library updated
+
 ### 0.1.1
 * (holomekc) update to new bridge version
 * (holomekc) allows adapter to reconnect in case bshc is restarting
