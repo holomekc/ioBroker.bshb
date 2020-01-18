@@ -200,10 +200,7 @@ export class Bshb extends utils.Adapter {
         // start pairing if needed
         bshbController.pairDeviceIfNeeded(this.config.systemPassword).pipe(switchMap(() => {
             // Everything is ok. We check for devices first
-            return bshbController.detectDevices();
-        }), switchMap(() => {
-            // detect scenarios next
-            return bshbController.detectScenarios();
+            return bshbController.startDetection();
         })).subscribe(() => {
             // register for changes
             this.subscribeStates('*');

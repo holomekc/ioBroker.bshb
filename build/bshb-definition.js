@@ -248,6 +248,35 @@ class BshbDefinition {
                 return 'level';
             }
         }
+        else if (type === 'powerMeterState') {
+            if (key === 'powerConsumption' || key === 'energyConsumption') {
+                return 'value.power.consumption';
+            }
+            else if (key === 'energyConsumption') {
+                return 'level';
+            }
+        }
+        else if (type === 'powerSwitchState') {
+            if (key === 'switchState') {
+                return 'text';
+            }
+            else if (key === 'automaticPowerOffTime') {
+                return 'value';
+            }
+        }
+        else if ('powerSwitchProgramState') {
+            if (key === 'operationMode') {
+                return 'text';
+            }
+            else if (key === 'schedule') {
+                return 'state';
+            }
+        }
+        else if ('routingState') {
+            if (key === 'value') {
+                return 'text';
+            }
+        }
         // else if (type === '') {
         //     if (key === '') {
         //
