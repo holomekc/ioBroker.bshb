@@ -249,10 +249,8 @@
     },
     "native": {
 		"host": "192.168.178.10",
-		"mac": "xx-xx-xx-xx-xx-xx",
 		"identifier": "",
 		"systemPassword": "",
-		"certsPath": "/home/iobroker/certs",
 		"pairingDelay": 10000
     },
     "objects": [],
