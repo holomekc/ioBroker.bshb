@@ -95,11 +95,11 @@ class Bshb extends utils.Adapter {
         return __awaiter(this, void 0, void 0, function* () {
             // Overwrite configuration
             // make sure that identifier is valid regarding Bosch T&C
-            this.config.host = this.config.host.trim();
-            const notPrefixedIdentifier = this.config.identifier.trim();
+            this.config.host = this.config.host ? this.config.host.trim() : '';
+            const notPrefixedIdentifier = this.config.identifier ? this.config.identifier.trim() : '';
             this.config.identifier = 'ioBroker.bshb_' + notPrefixedIdentifier;
-            this.config.systemPassword = this.config.systemPassword.trim();
-            this.config.certsPath = this.config.certsPath.trim();
+            this.config.systemPassword = this.config.systemPassword ? this.config.systemPassword.trim() : '';
+            this.config.certsPath = this.config.certsPath ? this.config.certsPath.trim() : '';
             // The adapters config (in the instance object everything under the attribute "native") is accessible via
             // this.config:
             this.log.debug('config host: ' + this.config.host);
