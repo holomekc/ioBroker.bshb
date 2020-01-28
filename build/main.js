@@ -95,6 +95,7 @@ class Bshb extends utils.Adapter {
         return __awaiter(this, void 0, void 0, function* () {
             // Overwrite configuration
             // make sure that identifier is valid regarding Bosch T&C
+            this.log.silly('onReady called. Load configuration');
             this.config.host = this.config.host ? this.config.host.trim() : '';
             const notPrefixedIdentifier = this.config.identifier ? this.config.identifier.trim() : '';
             this.config.identifier = 'ioBroker.bshb_' + notPrefixedIdentifier;
@@ -107,7 +108,7 @@ class Bshb extends utils.Adapter {
             this.log.debug('config systemPassword: ' + (this.config.systemPassword != undefined));
             this.log.debug('config pairingDelay: ' + this.config.pairingDelay);
             if (!this.config.identifier) {
-                utils_1.Utils.createError(this.log, 'Identifier not defined but it is a mandatory parameter');
+                throw utils_1.Utils.createError(this.log, 'Identifier not defined but it is a mandatory parameter');
             }
             this.loadCertificates(notPrefixedIdentifier).subscribe(clientCert => {
                 // Create controller for bosch-smart-home-bridge
@@ -138,37 +139,43 @@ class Bshb extends utils.Adapter {
                 let certificateKeys = utils_1.Utils.getCertificateKeys(notPrefixedIdentifier);
                 let clientCert = new client_cert_1.ClientCert(obj.native.certificates[certificateKeys.cert], obj.native.certificates[certificateKeys.key]);
                 if (clientCert.certificate && clientCert.privateKey) {
-                    // found certificates
-                    this.log.info('Client certificate found in system.certificates');
-                    this.log.info('Check if certificate is file reference or actual content');
-                    const actualCert = this.loadFromFile(clientCert.certificate, 'certificate');
-                    const actualPrivateKey = this.loadFromFile(clientCert.privateKey, 'private key');
-                    clientCert = new client_cert_1.ClientCert(actualCert, actualPrivateKey);
-                    subscriber.next(clientCert);
-                    subscriber.complete();
+                    this.readCertificate(clientCert, subscriber);
                 }
                 else {
-                    // no certificates found.
-                    this.log.info('Could not find client certificate. Check for old configuration');
-                    const migrationResult = this.migration();
-                    if (migrationResult) {
-                        clientCert = migrationResult;
-                    }
-                    else {
-                        this.log.info('No client certificate found in old configuration or it failed. Generate new certificate');
-                        clientCert = Bshb.generateCertificate();
-                    }
-                    // store information
-                    this.storeCertificate(obj, certificateKeys, clientCert).subscribe(() => {
-                        subscriber.next(clientCert);
-                        subscriber.complete();
-                    }, error => {
-                        subscriber.error(error);
-                        subscriber.complete();
-                    });
+                    this.generateCertificate(clientCert, obj, certificateKeys, subscriber);
                 }
             });
         });
+    }
+    generateCertificate(clientCert, obj, certificateKeys, subscriber) {
+        // no certificates found.
+        this.log.info('Could not find client certificate. Check for old configuration');
+        const migrationResult = this.migration();
+        if (migrationResult) {
+            clientCert = migrationResult;
+        }
+        else {
+            this.log.info('No client certificate found in old configuration or it failed. Generate new certificate');
+            clientCert = Bshb.generateCertificate();
+        }
+        // store information
+        this.storeCertificate(obj, certificateKeys, clientCert).subscribe(() => {
+            subscriber.next(clientCert);
+            subscriber.complete();
+        }, error => {
+            subscriber.error(error);
+            subscriber.complete();
+        });
+    }
+    readCertificate(clientCert, subscriber) {
+        // found certificates
+        this.log.info('Client certificate found in system.certificates');
+        this.log.info('Check if certificate is file reference or actual content');
+        const actualCert = this.loadFromFile(clientCert.certificate, 'certificate');
+        const actualPrivateKey = this.loadFromFile(clientCert.privateKey, 'private key');
+        clientCert = new client_cert_1.ClientCert(actualCert, actualPrivateKey);
+        subscriber.next(clientCert);
+        subscriber.complete();
     }
     loadFromFile(file, type) {
         try {
