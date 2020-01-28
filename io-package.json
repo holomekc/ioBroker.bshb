@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "bshb",
-        "version": "0.1.3",
+        "version": "0.1.4",
         "news": {
+			"0.1.4": {
+				"en": "More roles defined for ioBroker states",
+				"de": "Mehr Rollen für ioBroker-Zustände definiert",
+				"ru": "Больше ролей определено для ioBroker состояний",
+				"pt": "Mais papéis definidos para os estados ioBroker",
+				"nl": "Meer rollen gedefinieerd voor ioBroker staten",
+				"fr": "Davantage de rôles définis pour les États ioBroker",
+				"it": "Altri ruoli definiti per gli stati ioBroker",
+				"es": "Se definen más papeles para los estados ioBroker",
+				"pl": "Więcej ról zdefiniowanych dla stanów ioBroker",
+				"zh-cn": "为ioBroker状态定义了更多角色"
+			},
 			"0.1.3": {
 				"en": "Added support for messages and further improvements",
 				"de": "Unterstützung für Nachrichten und weitere Verbesserungen hinzugefügt",
