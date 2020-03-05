@@ -67,7 +67,7 @@ export class Bshb extends utils.Adapter {
         this.log.debug('config systemPassword: ' + (this.config.systemPassword != undefined));
         this.log.debug('config pairingDelay: ' + this.config.pairingDelay);
 
-        if (!this.config.identifier) {
+        if (!notPrefixedIdentifier) {
             throw Utils.createError(this.log, 'Identifier not defined but it is a mandatory parameter');
         }
 
