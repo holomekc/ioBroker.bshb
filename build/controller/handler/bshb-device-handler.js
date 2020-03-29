@@ -177,23 +177,14 @@ class BshbDeviceHandler extends bshb_handler_1.BshbHandler {
             },
             native: { device: device, deviceService: deviceService },
         }, (err, obj) => {
-            if (err) {
-                this.bshb.log.info(JSON.stringify(err));
-            }
-            else {
-                this.bshb.log.info('No err is set');
-            }
             if (obj) {
-                this.bshb.log.info(JSON.stringify(obj));
-            }
-            else {
-                this.bshb.log.info('No obj is set');
+                // a new object was created we add room and function
+                this.addRoom(device.id, deviceService.id, undefined, device.roomId);
+                this.addFunction(device.id, deviceService.id, undefined);
             }
         });
         // add fault holder
         this.importSimpleState(id, device, deviceService, 'faults', BshbDeviceHandler.getFaults(deviceService), false);
-        this.addRoom(device.id, deviceService.id, undefined, device.roomId);
-        this.addFunction(device.id, deviceService.id, undefined);
         if (deviceService.state) {
             this.importStates(id, device, deviceService);
         }

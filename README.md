@@ -31,6 +31,10 @@ Work in progress. Feedback appreciated.
 
 ## Changelog
 
+### 0.1.5
+* (holomekc) functions and rooms are only added for new channels 
+* (holomekc) increase timeout for requests which expect to contain more data
+
 ### 0.1.4
 * (holomekc) issue fixed in loading configuration
 * (holomekc) minor restructuring
