@@ -40,7 +40,7 @@ class BshbMessagesHandler extends bshb_handler_1.BshbHandler {
     }
     detectMessages() {
         return new rxjs_1.Observable(subscriber => {
-            this.getBshcClient().getMessages().subscribe(response => {
+            this.getBshcClient().getMessages({ timeout: this.long_timeout }).subscribe(response => {
                 const messages = response.parsedResponse;
                 this.bshb.setObjectNotExists('messages', {
                     type: 'state',

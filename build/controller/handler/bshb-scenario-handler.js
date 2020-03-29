@@ -56,7 +56,7 @@ class BshbScenarioHandler extends bshb_handler_1.BshbHandler {
     }
     detectScenarios() {
         return new rxjs_1.Observable(subscriber => {
-            this.getBshcClient().getScenarios().subscribe(response => {
+            this.getBshcClient().getScenarios({ timeout: this.long_timeout }).subscribe(response => {
                 const scenarios = response.parsedResponse;
                 this.bshb.setObjectNotExists('scenarios', {
                     type: 'group',

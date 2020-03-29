@@ -93,14 +93,14 @@ export class BshbDeviceHandler extends BshbHandler{
         this.bshb.log.info('Start detecting devices...');
 
         return new Observable(subscriber => {
-            this.getBshcClient().getRooms().pipe(switchMap(response => {
+            this.getBshcClient().getRooms({timeout: this.long_timeout}).pipe(switchMap(response => {
                 const rooms: any[] = response.parsedResponse;
 
                 rooms.forEach(room => {
                     this.cachedRooms.set(room.id, room);
                 });
 
-                return this.getBshcClient().getDevices();
+                return this.getBshcClient().getDevices({timeout: this.long_timeout});
             }), switchMap(response => {
                 const devices: any[] = response.parsedResponse;
 
@@ -153,13 +153,17 @@ export class BshbDeviceHandler extends BshbHandler{
 
                 subscriber.next();
                 subscriber.complete();
+            }, (err) => {
+                if (err) {
+                    this.bshb.log.info(JSON.stringify(err));
+                }
             });
         });
     }
 
     private checkDeviceServices(): Observable<void> {
         return new Observable(observer => {
-            this.getBshcClient().getDevicesServices().subscribe(response => {
+            this.getBshcClient().getDevicesServices({timeout: this.long_timeout}).subscribe(response => {
                 const deviceServices: any[] = response.parsedResponse;
 
                 deviceServices.forEach(deviceService => {
@@ -199,6 +203,17 @@ export class BshbDeviceHandler extends BshbHandler{
                 read: true,
             },
             native: {device: device, deviceService: deviceService},
+        }, (err, obj) => {
+            if (err) {
+                this.bshb.log.info(JSON.stringify(err));
+            } else {
+                this.bshb.log.info('No err is set');
+            }
+            if (obj) {
+                this.bshb.log.info(JSON.stringify(obj));
+            } else {
+                this.bshb.log.info('No obj is set');
+            }
         });
 
         // add fault holder

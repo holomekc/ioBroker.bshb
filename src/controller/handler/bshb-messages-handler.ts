@@ -47,7 +47,7 @@ export class BshbMessagesHandler extends BshbHandler {
 
     private detectMessages(): Observable<void> {
         return new Observable<void>(subscriber => {
-            this.getBshcClient().getMessages().subscribe(response => {
+            this.getBshcClient().getMessages({timeout: this.long_timeout}).subscribe(response => {
                 const messages = response.parsedResponse;
 
                 this.bshb.setObjectNotExists('messages', {
