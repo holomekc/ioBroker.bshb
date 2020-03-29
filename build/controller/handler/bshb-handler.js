@@ -21,6 +21,7 @@ class BshbHandler {
     constructor(bshb, boschSmartHomeBridge) {
         this.bshb = bshb;
         this.boschSmartHomeBridge = boschSmartHomeBridge;
+        this.long_timeout = 5000;
         this.chain = Promise.resolve();
     }
     /**

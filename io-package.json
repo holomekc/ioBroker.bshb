@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "bshb",
-        "version": "0.1.4",
+        "version": "0.1.5",
         "news": {
+			"0.1.5": {
+				"en": "Improvements for functions and rooms",
+				"de": "Verbesserungen für Funktionen und Räume",
+				"ru": "Улучшения для функций и комнат",
+				"pt": "Melhorias para as funções e salas",
+				"nl": "Verbeteringen voor functies en kamers",
+				"fr": "Améliorations pour les fonctions et les salles",
+				"it": "Miglioramenti per le funzioni e gli ambienti",
+				"es": "Mejoras para las funciones y las salas",
+				"pl": "Ulepszenia w zakresie funkcji i pomieszczeń",
+				"zh-cn": "功能和房间的改进"
+			},
 			"0.1.4": {
 				"en": "More roles defined for ioBroker states",
 				"de": "Mehr Rollen für ioBroker-Zustände definiert",
@@ -253,6 +265,8 @@
         "type": "iot-systems",
         "compact": true,
         "materialize": true,
+		"connectionType ": "local",
+		"dataSource": "push",
         "dependencies": [
             {
                 "js-controller": ">=1.4.2"

@@ -93,14 +93,14 @@ export class BshbDeviceHandler extends BshbHandler{
         this.bshb.log.info('Start detecting devices...');
 
         return new Observable(subscriber => {
-            this.getBshcClient().getRooms().pipe(switchMap(response => {
+            this.getBshcClient().getRooms({timeout: this.long_timeout}).pipe(switchMap(response => {
                 const rooms: any[] = response.parsedResponse;
 
                 rooms.forEach(room => {
                     this.cachedRooms.set(room.id, room);
                 });
 
-                return this.getBshcClient().getDevices();
+                return this.getBshcClient().getDevices({timeout: this.long_timeout});
             }), switchMap(response => {
                 const devices: any[] = response.parsedResponse;
 
@@ -153,13 +153,15 @@ export class BshbDeviceHandler extends BshbHandler{
 
                 subscriber.next();
                 subscriber.complete();
+            }, (err) => {
+                subscriber.error(err);
             });
         });
     }
 
     private checkDeviceServices(): Observable<void> {
         return new Observable(observer => {
-            this.getBshcClient().getDevicesServices().subscribe(response => {
+            this.getBshcClient().getDevicesServices({timeout: this.long_timeout}).subscribe(response => {
                 const deviceServices: any[] = response.parsedResponse;
 
                 deviceServices.forEach(deviceService => {
@@ -177,6 +179,8 @@ export class BshbDeviceHandler extends BshbHandler{
                 });
                 observer.next();
                 observer.complete();
+            }, err => {
+                observer.error(err);
             });
         });
     }
@@ -199,13 +203,16 @@ export class BshbDeviceHandler extends BshbHandler{
                 read: true,
             },
             native: {device: device, deviceService: deviceService},
+        }, (err, obj) => {
+            if (obj) {
+                // a new object was created we add room and function
+                this.addRoom(device.id, deviceService.id, undefined as unknown as string, device.roomId);
+                this.addFunction(device.id, deviceService.id, undefined as unknown as string);
+            }
         });
 
         // add fault holder
         this.importSimpleState(id, device, deviceService, 'faults', BshbDeviceHandler.getFaults(deviceService), false);
-
-        this.addRoom(device.id, deviceService.id, undefined as unknown as string, device.roomId);
-        this.addFunction(device.id, deviceService.id, undefined as unknown as string);
 
         if (deviceService.state) {
             this.importStates(id, device, deviceService);

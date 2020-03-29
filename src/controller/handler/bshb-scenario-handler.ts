@@ -20,6 +20,8 @@ export class BshbScenarioHandler extends BshbHandler {
 
                 subscriber.next();
                 subscriber.complete();
+            }, err => {
+                subscriber.error(err);
             });
         });
     }
@@ -62,7 +64,7 @@ export class BshbScenarioHandler extends BshbHandler {
 
     private detectScenarios(): Observable<void> {
         return new Observable<void>(subscriber => {
-            this.getBshcClient().getScenarios().subscribe(response => {
+            this.getBshcClient().getScenarios({timeout: this.long_timeout}).subscribe(response => {
                 const scenarios = response.parsedResponse;
 
                 this.bshb.setObjectNotExists('scenarios', {
@@ -103,6 +105,8 @@ export class BshbScenarioHandler extends BshbHandler {
 
                 subscriber.next();
                 subscriber.complete();
+            }, err => {
+                subscriber.error(err);
             });
         });
     }

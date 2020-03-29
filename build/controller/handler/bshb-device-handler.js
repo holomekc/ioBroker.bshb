@@ -83,12 +83,12 @@ class BshbDeviceHandler extends bshb_handler_1.BshbHandler {
     detectDevices() {
         this.bshb.log.info('Start detecting devices...');
         return new rxjs_1.Observable(subscriber => {
-            this.getBshcClient().getRooms().pipe(operators_1.switchMap(response => {
+            this.getBshcClient().getRooms({ timeout: this.long_timeout }).pipe(operators_1.switchMap(response => {
                 const rooms = response.parsedResponse;
                 rooms.forEach(room => {
                     this.cachedRooms.set(room.id, room);
                 });
-                return this.getBshcClient().getDevices();
+                return this.getBshcClient().getDevices({ timeout: this.long_timeout });
             }), operators_1.switchMap(response => {
                 const devices = response.parsedResponse;
                 devices.forEach(device => {
@@ -131,12 +131,16 @@ class BshbDeviceHandler extends bshb_handler_1.BshbHandler {
                 this.bshb.log.info('Detecting devices finished');
                 subscriber.next();
                 subscriber.complete();
+            }, (err) => {
+                if (err) {
+                    this.bshb.log.info(JSON.stringify(err));
+                }
             });
         });
     }
     checkDeviceServices() {
         return new rxjs_1.Observable(observer => {
-            this.getBshcClient().getDevicesServices().subscribe(response => {
+            this.getBshcClient().getDevicesServices({ timeout: this.long_timeout }).subscribe(response => {
                 const deviceServices = response.parsedResponse;
                 deviceServices.forEach(deviceService => {
                     this.bshb.getObject(deviceService.deviceId, (err, ioBrokerDevice) => {
@@ -172,11 +176,15 @@ class BshbDeviceHandler extends bshb_handler_1.BshbHandler {
                 read: true,
             },
             native: { device: device, deviceService: deviceService },
+        }, (err, obj) => {
+            if (obj) {
+                // a new object was created we add room and function
+                this.addRoom(device.id, deviceService.id, undefined, device.roomId);
+                this.addFunction(device.id, deviceService.id, undefined);
+            }
         });
         // add fault holder
         this.importSimpleState(id, device, deviceService, 'faults', BshbDeviceHandler.getFaults(deviceService), false);
-        this.addRoom(device.id, deviceService.id, undefined, device.roomId);
-        this.addFunction(device.id, deviceService.id, undefined);
         if (deviceService.state) {
             this.importStates(id, device, deviceService);
         }

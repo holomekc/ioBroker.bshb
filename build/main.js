@@ -107,7 +107,7 @@ class Bshb extends utils.Adapter {
             this.log.debug('config identifier: ' + this.config.identifier);
             this.log.debug('config systemPassword: ' + (this.config.systemPassword != undefined));
             this.log.debug('config pairingDelay: ' + this.config.pairingDelay);
-            if (!this.config.identifier) {
+            if (!notPrefixedIdentifier) {
                 throw utils_1.Utils.createError(this.log, 'Identifier not defined but it is a mandatory parameter');
             }
             this.loadCertificates(notPrefixedIdentifier).subscribe(clientCert => {
