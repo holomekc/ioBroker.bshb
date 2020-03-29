@@ -204,23 +204,15 @@ export class BshbDeviceHandler extends BshbHandler{
             },
             native: {device: device, deviceService: deviceService},
         }, (err, obj) => {
-            if (err) {
-                this.bshb.log.info(JSON.stringify(err));
-            } else {
-                this.bshb.log.info('No err is set');
-            }
             if (obj) {
-                this.bshb.log.info(JSON.stringify(obj));
-            } else {
-                this.bshb.log.info('No obj is set');
+                // a new object was created we add room and function
+                this.addRoom(device.id, deviceService.id, undefined as unknown as string, device.roomId);
+                this.addFunction(device.id, deviceService.id, undefined as unknown as string);
             }
         });
 
         // add fault holder
         this.importSimpleState(id, device, deviceService, 'faults', BshbDeviceHandler.getFaults(deviceService), false);
-
-        this.addRoom(device.id, deviceService.id, undefined as unknown as string, device.roomId);
-        this.addFunction(device.id, deviceService.id, undefined as unknown as string);
 
         if (deviceService.state) {
             this.importStates(id, device, deviceService);
