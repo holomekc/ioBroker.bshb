@@ -20,6 +20,8 @@ export class BshbScenarioHandler extends BshbHandler {
 
                 subscriber.next();
                 subscriber.complete();
+            }, err => {
+                subscriber.error(err);
             });
         });
     }
@@ -103,6 +105,8 @@ export class BshbScenarioHandler extends BshbHandler {
 
                 subscriber.next();
                 subscriber.complete();
+            }, err => {
+                subscriber.error(err);
             });
         });
     }

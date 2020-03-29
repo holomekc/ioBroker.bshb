@@ -154,9 +154,7 @@ export class BshbDeviceHandler extends BshbHandler{
                 subscriber.next();
                 subscriber.complete();
             }, (err) => {
-                if (err) {
-                    this.bshb.log.info(JSON.stringify(err));
-                }
+                subscriber.error(err);
             });
         });
     }
@@ -181,6 +179,8 @@ export class BshbDeviceHandler extends BshbHandler{
                 });
                 observer.next();
                 observer.complete();
+            }, err => {
+                observer.error(err);
             });
         });
     }
