@@ -21,6 +21,8 @@ class BshbScenarioHandler extends bshb_handler_1.BshbHandler {
                 this.bshb.log.info('Detecting scenarios finished');
                 subscriber.next();
                 subscriber.complete();
+            }, err => {
+                subscriber.error(err);
             });
         });
     }
@@ -91,6 +93,8 @@ class BshbScenarioHandler extends bshb_handler_1.BshbHandler {
                 });
                 subscriber.next();
                 subscriber.complete();
+            }, err => {
+                subscriber.error(err);
             });
         });
     }

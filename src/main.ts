@@ -1,7 +1,7 @@
 import * as utils from '@iobroker/adapter-core';
 import {BshbController} from './bshb-controller';
-import {BehaviorSubject, Observable, Subscriber} from 'rxjs';
-import {switchMap} from 'rxjs/operators';
+import {BehaviorSubject, EMPTY, Observable, Subscriber} from 'rxjs';
+import {catchError, switchMap} from 'rxjs/operators';
 import {Migration} from "./migration";
 import {Utils} from "./utils";
 import {ClientCert} from "./client-cert";
@@ -208,7 +208,11 @@ export class Bshb extends utils.Adapter {
 
     private init(bshbController: BshbController) {
         // start pairing if needed
-        bshbController.pairDeviceIfNeeded(this.config.systemPassword).pipe(switchMap(() => {
+        bshbController.pairDeviceIfNeeded(this.config.systemPassword).pipe(catchError((err: any) => {
+            this.log.error('Something went wrong during initialization');
+            this.log.error(err);
+            return EMPTY;
+        }), switchMap(() => {
             // Everything is ok. We check for devices first
             return bshbController.startDetection();
         })).subscribe(() => {

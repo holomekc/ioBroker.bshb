@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "bshb",
-        "version": "0.1.5",
+        "version": "0.1.6",
         "news": {
+			"0.1.6": {
+				"en": "Added open doors and windows feature",
+				"de": "Funktion für offene Türen und Fenster hinzugefügt",
+				"ru": "Добавлена функция открытых дверей и окон",
+				"pt": "Adicionada a funcionalidade de portas e janelas abertas",
+				"nl": "Toegevoegd: open deuren en ramen",
+				"fr": "Ajout de la fonction portes et fenêtres ouvertes",
+				"it": "Aggiunta la funzione porte e finestre aperte",
+				"es": "Se añadió la característica de puertas y ventanas abiertas",
+				"pl": "Dodano funkcję otwartych drzwi i okien",
+				"zh-cn": "新增了开门和开窗功能"
+			},
 			"0.1.5": {
 				"en": "Improvements for functions and rooms",
 				"de": "Verbesserungen für Funktionen und Räume",

@@ -59,6 +59,8 @@ class BshbMessagesHandler extends bshb_handler_1.BshbHandler {
                 this.bshb.setState('messages', { val: messages, ack: true });
                 subscriber.next();
                 subscriber.complete();
+            }, err => {
+                subscriber.error(err);
             });
         });
     }
