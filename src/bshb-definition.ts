@@ -23,6 +23,9 @@ export class BshbDefinition {
      * @param value value to determine type for
      */
     public static determineType(value: any): string {
+        if (Array.isArray(value)) {
+            return 'array';
+        }
         return typeof value;
     }
 
