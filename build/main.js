@@ -234,7 +234,11 @@ class Bshb extends utils.Adapter {
     }
     init(bshbController) {
         // start pairing if needed
-        bshbController.pairDeviceIfNeeded(this.config.systemPassword).pipe(operators_1.switchMap(() => {
+        bshbController.pairDeviceIfNeeded(this.config.systemPassword).pipe(operators_1.catchError((err) => {
+            this.log.error('Something went wrong during initialization');
+            this.log.error(err);
+            return rxjs_1.EMPTY;
+        }), operators_1.switchMap(() => {
             // Everything is ok. We check for devices first
             return bshbController.startDetection();
         })).subscribe(() => {

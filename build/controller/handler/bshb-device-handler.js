@@ -132,9 +132,7 @@ class BshbDeviceHandler extends bshb_handler_1.BshbHandler {
                 subscriber.next();
                 subscriber.complete();
             }, (err) => {
-                if (err) {
-                    this.bshb.log.info(JSON.stringify(err));
-                }
+                subscriber.error(err);
             });
         });
     }
@@ -157,6 +155,8 @@ class BshbDeviceHandler extends bshb_handler_1.BshbHandler {
                 });
                 observer.next();
                 observer.complete();
+            }, err => {
+                observer.error(err);
             });
         });
     }

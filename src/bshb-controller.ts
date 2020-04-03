@@ -8,6 +8,7 @@ import {BshbHandler} from "./controller/handler/bshb-handler";
 import {BshbScenarioHandler} from "./controller/handler/bshb-scenario-handler";
 import {BshbDeviceHandler} from "./controller/handler/bshb-device-handler";
 import {BshbMessagesHandler} from "./controller/handler/bshb-messages-handler";
+import {BshbOpenDoorWindowHandler} from "./controller/handler/bshb-open-door-window-handler";
 
 /**
  * This controller encapsulates bosch-smart-home-bridge and provides it to iobroker.bshb
@@ -45,6 +46,7 @@ export class BshbController {
             this.handlers.push(new BshbScenarioHandler(this.bshb, this.boschSmartHomeBridge));
             this.handlers.push(new BshbMessagesHandler(this.bshb, this.boschSmartHomeBridge));
             this.handlers.push(new BshbDeviceHandler(this.bshb, this.boschSmartHomeBridge));
+            this.handlers.push(new BshbOpenDoorWindowHandler(this.bshb, this.boschSmartHomeBridge));
 
         } catch (e) {
             throw Utils.createError(bshb.log, e);
@@ -91,8 +93,9 @@ export class BshbController {
      */
     public setState(id: string, state: ioBroker.State) {
         for (let i = 0; i < this.handlers.length; i++) {
-            if (this.handlers[i].sendUpdateToBshc(id, state)) {
-                break;
+            let handled = this.handlers[i].sendUpdateToBshc(id, state);
+            if (handled) {
+                this.bshb.log.silly(`Handler "${this.handlers[i].constructor.name}" send message to controller with state id=${id} and value=${state.val}`);
             }
         }
     }
@@ -105,8 +108,9 @@ export class BshbController {
      */
     public setStateAck(resultEntry: any) {
         for (let i = 0; i < this.handlers.length; i++) {
-            if (this.handlers[i].handleBshcUpdate(resultEntry)) {
-                break;
+            let handled = this.handlers[i].handleBshcUpdate(resultEntry);
+            if (handled) {
+                this.bshb.log.silly(`Handler "${this.handlers[i].constructor.name}" handled update form controller with result entry: ${JSON.stringify(resultEntry)} `)
             }
         }
     }

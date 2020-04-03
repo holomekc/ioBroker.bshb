@@ -8,6 +8,7 @@ const utils_1 = require("./utils");
 const bshb_scenario_handler_1 = require("./controller/handler/bshb-scenario-handler");
 const bshb_device_handler_1 = require("./controller/handler/bshb-device-handler");
 const bshb_messages_handler_1 = require("./controller/handler/bshb-messages-handler");
+const bshb_open_door_window_handler_1 = require("./controller/handler/bshb-open-door-window-handler");
 /**
  * This controller encapsulates bosch-smart-home-bridge and provides it to iobroker.bshb
  *
@@ -39,6 +40,7 @@ class BshbController {
             this.handlers.push(new bshb_scenario_handler_1.BshbScenarioHandler(this.bshb, this.boschSmartHomeBridge));
             this.handlers.push(new bshb_messages_handler_1.BshbMessagesHandler(this.bshb, this.boschSmartHomeBridge));
             this.handlers.push(new bshb_device_handler_1.BshbDeviceHandler(this.bshb, this.boschSmartHomeBridge));
+            this.handlers.push(new bshb_open_door_window_handler_1.BshbOpenDoorWindowHandler(this.bshb, this.boschSmartHomeBridge));
         }
         catch (e) {
             throw utils_1.Utils.createError(bshb.log, e);
@@ -78,8 +80,9 @@ class BshbController {
      */
     setState(id, state) {
         for (let i = 0; i < this.handlers.length; i++) {
-            if (this.handlers[i].sendUpdateToBshc(id, state)) {
-                break;
+            let handled = this.handlers[i].sendUpdateToBshc(id, state);
+            if (handled) {
+                this.bshb.log.silly(`Handler "${this.handlers[i].constructor.name}" send message to controller with state id=${id} and value=${state.val}`);
             }
         }
     }
@@ -91,8 +94,9 @@ class BshbController {
      */
     setStateAck(resultEntry) {
         for (let i = 0; i < this.handlers.length; i++) {
-            if (this.handlers[i].handleBshcUpdate(resultEntry)) {
-                break;
+            let handled = this.handlers[i].handleBshcUpdate(resultEntry);
+            if (handled) {
+                this.bshb.log.silly(`Handler "${this.handlers[i].constructor.name}" handled update form controller with result entry: ${JSON.stringify(resultEntry)} `);
             }
         }
     }
