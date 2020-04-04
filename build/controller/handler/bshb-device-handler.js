@@ -185,19 +185,21 @@ class BshbDeviceHandler extends bshb_handler_1.BshbHandler {
         });
         // add fault holder
         this.importSimpleState(id, device, deviceService, 'faults', BshbDeviceHandler.getFaults(deviceService), false);
-        if (deviceService.state) {
-            this.importStates(id, device, deviceService);
-        }
+        this.cachedDeviceServices.set(deviceService.path, { device: device, deviceService: deviceService });
+        // add states
+        this.importStates(id, device, deviceService);
     }
     importStates(idPrefix, device, deviceService) {
         // device service has a state
-        Object.keys(deviceService.state).forEach(stateKey => {
-            if (stateKey === '@type') {
-                return;
-            }
-            this.importSimpleState(idPrefix, device, deviceService, stateKey, deviceService.state[stateKey]);
-        });
-        this.cachedDeviceServices.set(deviceService.path, { device: device, deviceService: deviceService });
+        // Only in case we have states
+        if (deviceService.state) {
+            Object.keys(deviceService.state).forEach(stateKey => {
+                if (stateKey === '@type') {
+                    return;
+                }
+                this.importSimpleState(idPrefix, device, deviceService, stateKey, deviceService.state[stateKey]);
+            });
+        }
     }
     importSimpleState(idPrefix, device, deviceService, stateKey, stateValue, write) {
         const id = idPrefix + '.' + stateKey;

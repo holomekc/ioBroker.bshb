@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "bshb",
-        "version": "0.1.6",
+        "version": "0.1.7",
         "news": {
+			"0.1.7": {
+				"en": "Improved error handling",
+				"de": "Verbessertes Fehlerhandling",
+				"ru": "Улучшенная обработка ошибок",
+				"pt": "Melhoria do tratamento de erros",
+				"nl": "Verbeterde foutafhandeling",
+				"fr": "Amélioration du traitement des erreurs",
+				"it": "Miglioramento della gestione degli errori",
+				"es": "Mejor manejo de los errores",
+				"pl": "Lepsza obsługa błędów",
+				"zh-cn": "改进的错误处理"
+			},
 			"0.1.6": {
 				"en": "Added open doors and windows feature",
 				"de": "Funktion für offene Türen und Fenster hinzugefügt",
