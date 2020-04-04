@@ -217,21 +217,21 @@ export class BshbDeviceHandler extends BshbHandler{
         this.cachedDeviceServices.set(deviceService.path, {device: device, deviceService: deviceService});
 
         // add states
-        if (deviceService.state) {
-            this.importStates(id, device, deviceService);
-        }
+        this.importStates(id, device, deviceService);
     }
 
     private importStates(idPrefix: string, device: any, deviceService: any) {
         // device service has a state
 
         // Only in case we have states
-        Object.keys(deviceService.state).forEach(stateKey => {
-            if (stateKey === '@type') {
-                return;
-            }
-            this.importSimpleState(idPrefix, device, deviceService, stateKey, deviceService.state[stateKey]);
-        });
+        if (deviceService.state) {
+            Object.keys(deviceService.state).forEach(stateKey => {
+                if (stateKey === '@type') {
+                    return;
+                }
+                this.importSimpleState(idPrefix, device, deviceService, stateKey, deviceService.state[stateKey]);
+            });
+        }
     }
 
     private importSimpleState(idPrefix: string, device: any, deviceService: any, stateKey: string, stateValue: any, write?: boolean): void {
