@@ -31,6 +31,9 @@ Work in progress. Feedback appreciated.
 
 ## Changelog
 
+### 0.1.7
+* (holomekc) Improved error handling
+
 ### 0.1.6
 * (holomekc) Added open doors and windows feature
 

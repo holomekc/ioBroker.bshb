@@ -22,6 +22,9 @@ class BshbDefinition {
      * @param value value to determine type for
      */
     static determineType(value) {
+        if (Array.isArray(value)) {
+            return 'array';
+        }
         return typeof value;
     }
     /**
