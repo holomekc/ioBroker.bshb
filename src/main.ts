@@ -8,6 +8,7 @@ import {ClientCert} from "./client-cert";
 import {BshbError, BshbErrorType, BshbUtils} from "bosch-smart-home-bridge";
 import {LogLevel} from "./log-level";
 import * as fs from "fs";
+import Timeout = NodeJS.Timeout;
 
 /**
  * @author Christopher Holomek
@@ -35,6 +36,8 @@ export class Bshb extends utils.Adapter {
 
     private bshbController: BshbController | undefined;
     private pollingTrigger = new BehaviorSubject(true);
+    private pollTimeout:Timeout | undefined = undefined;
+    private startPollingTimeout:Timeout | undefined = undefined;
 
     public constructor(options: Partial<ioBroker.AdapterOptions> = {}) {
         super({
@@ -226,7 +229,7 @@ export class Bshb extends utils.Adapter {
 
     private poll = (delay?: number) => {
         delay = delay ? delay : 0;
-        setTimeout(() => {
+        this.pollTimeout = setTimeout(() => {
             this.pollingTrigger.next(true);
         }, delay);
     };
@@ -234,7 +237,7 @@ export class Bshb extends utils.Adapter {
     private startPolling = (bshbController: BshbController, delay?: number) => {
         this.log.info('Listen to changes');
         delay = delay ? delay : 0;
-        setTimeout(() => {
+        this.startPollingTimeout = setTimeout(() => {
             this.subscribeAndPoll(bshbController);
         }, delay);
     };
@@ -296,6 +299,14 @@ export class Bshb extends utils.Adapter {
             // we want to stop polling. So false
             this.pollingTrigger.next(false);
             this.pollingTrigger.complete();
+
+            // and we clear timeouts as well
+            if (typeof this.pollTimeout !== 'undefined') {
+                clearTimeout(this.pollTimeout);
+            }
+            if (typeof this.startPollingTimeout !== 'undefined') {
+                clearTimeout(this.startPollingTimeout);
+            }
             this.log.info('cleaned everything up...');
             callback();
         } catch (e) {
