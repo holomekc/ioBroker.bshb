@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "bshb",
-        "version": "0.1.7",
+        "version": "0.1.8",
         "news": {
+			"0.1.8": {
+				"en": "Minor improvements",
+				"de": "Kleinere Verbesserungen",
+				"ru": "Незначительные улучшения",
+				"pt": "Pequenas melhorias",
+				"nl": "Kleine verbeteringen",
+				"fr": "Améliorations mineures",
+				"it": "Miglioramenti minori",
+				"es": "Mejoras menores",
+				"pl": "Drobne ulepszenia",
+				"zh-cn": "小改进"
+			},
 			"0.1.7": {
 				"en": "Improved error handling",
 				"de": "Verbessertes Fehlerhandling",

@@ -31,6 +31,9 @@ Work in progress. Feedback appreciated.
 
 ## Changelog
 
+### 0.1.8
+* (holomekc) Minor improvements
+
 ### 0.1.7
 * (holomekc) Improved error handling
 

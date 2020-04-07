@@ -23,16 +23,18 @@ class Bshb extends utils.Adapter {
     constructor(options = {}) {
         super(Object.assign(Object.assign({}, options), { name: 'bshb' }));
         this.pollingTrigger = new rxjs_1.BehaviorSubject(true);
+        this.pollTimeout = undefined;
+        this.startPollingTimeout = undefined;
         this.poll = (delay) => {
             delay = delay ? delay : 0;
-            setTimeout(() => {
+            this.pollTimeout = setTimeout(() => {
                 this.pollingTrigger.next(true);
             }, delay);
         };
         this.startPolling = (bshbController, delay) => {
             this.log.info('Listen to changes');
             delay = delay ? delay : 0;
-            setTimeout(() => {
+            this.startPollingTimeout = setTimeout(() => {
                 this.subscribeAndPoll(bshbController);
             }, delay);
         };
@@ -256,6 +258,13 @@ class Bshb extends utils.Adapter {
             // we want to stop polling. So false
             this.pollingTrigger.next(false);
             this.pollingTrigger.complete();
+            // and we clear timeouts as well
+            if (typeof this.pollTimeout !== 'undefined') {
+                clearTimeout(this.pollTimeout);
+            }
+            if (typeof this.startPollingTimeout !== 'undefined') {
+                clearTimeout(this.startPollingTimeout);
+            }
             this.log.info('cleaned everything up...');
             callback();
         }
