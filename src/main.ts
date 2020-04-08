@@ -36,8 +36,8 @@ export class Bshb extends utils.Adapter {
 
     private bshbController: BshbController | undefined;
     private pollingTrigger = new BehaviorSubject(true);
-    private pollTimeout:Timeout | undefined = undefined;
-    private startPollingTimeout:Timeout | undefined = undefined;
+    private pollTimeout:Timeout | null = null;
+    private startPollingTimeout:Timeout | null = null;
 
     public constructor(options: Partial<ioBroker.AdapterOptions> = {}) {
         super({
@@ -230,6 +230,7 @@ export class Bshb extends utils.Adapter {
     private poll = (delay?: number) => {
         delay = delay ? delay : 0;
         this.pollTimeout = setTimeout(() => {
+            this.pollTimeout = null;
             this.pollingTrigger.next(true);
         }, delay);
     };
@@ -238,6 +239,7 @@ export class Bshb extends utils.Adapter {
         this.log.info('Listen to changes');
         delay = delay ? delay : 0;
         this.startPollingTimeout = setTimeout(() => {
+            this.startPollingTimeout = null;
             this.subscribeAndPoll(bshbController);
         }, delay);
     };
@@ -301,11 +303,13 @@ export class Bshb extends utils.Adapter {
             this.pollingTrigger.complete();
 
             // and we clear timeouts as well
-            if (typeof this.pollTimeout !== 'undefined') {
+            if (this.pollTimeout) {
                 clearTimeout(this.pollTimeout);
+                this.pollTimeout = null;
             }
-            if (typeof this.startPollingTimeout !== 'undefined') {
+            if (this.startPollingTimeout) {
                 clearTimeout(this.startPollingTimeout);
+                this.startPollingTimeout = null;
             }
             this.log.info('cleaned everything up...');
             callback();
