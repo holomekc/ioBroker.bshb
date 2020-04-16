@@ -47,6 +47,7 @@ class BshbScenarioHandler extends bshb_handler_1.BshbHandler {
             this.bshb.log.debug(`Found scenario trigger with id=${match[1]} and value=${state.val}`);
             if (state.val) {
                 this.getBshcClient().triggerScenario(match[1]).subscribe(() => {
+                    this.bshb.log.info(`Scenario with id=${match[1]} triggered`);
                     this.bshb.setState(id, { val: false, ack: true });
                 }, error => {
                     this.bshb.log.warn(`Could not send trigger for scenario with id=${match[1]} and value=${state.val}`);
@@ -112,7 +113,12 @@ class BshbScenarioHandler extends bshb_handler_1.BshbHandler {
                     }
                     if (!found) {
                         // removed scenario
-                        this.bshb.deleteState(object.native.id);
+                        //this.bshb.namespace +
+                        this.bshb.deleteState('scenarios', undefined, object.native.id, undefined, (err) => {
+                            if (err) {
+                                this.bshb.log.error(`Could not delete scenario with id=${object.native.id} because: ` + err);
+                            }
+                        });
                         this.bshb.log.info(`scenario with id=${object.native.id} removed because it does not exist anymore.`);
                     }
                 });

@@ -47,19 +47,19 @@ export class Utils {
         let result = false;
         switch (level) {
             case 'silly':
-                result = toCheck <= LogLevel.silly;
+                result = toCheck >= LogLevel.silly;
                 break;
             case 'debug':
-                result = toCheck <= LogLevel.debug;
+                result = toCheck >= LogLevel.debug;
                 break;
             case 'info':
-                result = toCheck <= LogLevel.info;
+                result = toCheck >= LogLevel.info;
                 break;
             case 'warn':
-                result = toCheck <= LogLevel.warn;
+                result = toCheck >= LogLevel.warn;
                 break;
             case 'error':
-                result = toCheck <= LogLevel.error;
+                result = toCheck >= LogLevel.error;
                 break;
         }
         return result;
