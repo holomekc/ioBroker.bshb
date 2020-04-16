@@ -31,6 +31,9 @@ Work in progress. Feedback appreciated.
 
 ## Changelog
 
+### 0.1.9
+* (holomekc) Error in scenario handling fixed
+
 ### 0.1.8
 * (holomekc) Minor improvements
 

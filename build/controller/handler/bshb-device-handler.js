@@ -55,27 +55,30 @@ class BshbDeviceHandler extends bshb_handler_1.BshbHandler {
         if (utils_1.Utils.isLevelActive(this.bshb.log.level, log_level_1.LogLevel.debug)) {
             this.bshb.log.debug('Found cached state: ' + JSON.stringify(cachedState));
         }
-        const data = {
-            '@type': cachedState.deviceService.state['@type'],
-        };
-        data[cachedState.stateKey] = state.val;
-        if (utils_1.Utils.isLevelActive(this.bshb.log.level, log_level_1.LogLevel.debug)) {
-            this.bshb.log.debug('Data which will be send: ' + JSON.stringify(data));
-        }
-        this.getBshcClient().putState(cachedState.deviceService.path, data).subscribe(response => {
-            if (response) {
-                if (utils_1.Utils.isLevelActive(this.bshb.log.level, log_level_1.LogLevel.debug)) {
-                    this.bshb.log.debug(`HTTP response. status=${response.incomingMessage.statusCode},
+        if (cachedState && cachedState.deviceService && cachedState.deviceService.state && cachedState.deviceService.state['@type']) {
+            const data = {
+                '@type': cachedState.deviceService.state['@type'],
+            };
+            data[cachedState.stateKey] = state.val;
+            if (utils_1.Utils.isLevelActive(this.bshb.log.level, log_level_1.LogLevel.debug)) {
+                this.bshb.log.debug('Data which will be send: ' + JSON.stringify(data));
+            }
+            this.getBshcClient().putState(cachedState.deviceService.path, data).subscribe(response => {
+                if (response) {
+                    if (utils_1.Utils.isLevelActive(this.bshb.log.level, log_level_1.LogLevel.debug)) {
+                        this.bshb.log.debug(`HTTP response. status=${response.incomingMessage.statusCode},
                      body=${JSON.stringify(response.parsedResponse)}`);
+                    }
                 }
-            }
-            else {
-                this.bshb.log.debug('no response');
-            }
-        }, error => {
-            this.bshb.log.error(error);
-        });
-        return true;
+                else {
+                    this.bshb.log.debug('no response');
+                }
+            }, error => {
+                this.bshb.log.error(error);
+            });
+            return true;
+        }
+        return false;
     }
     /**
      * detect devices will search for all devices and device states and load them to iobroker.
