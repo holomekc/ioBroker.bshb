@@ -31,6 +31,9 @@ Work in progress. Feedback appreciated.
 
 ## Changelog
 
+### 0.1.10
+* (holomekc) Add .npmignore to cleanup installation files
+
 ### 0.1.9
 * (holomekc) Error in scenario handling fixed
 

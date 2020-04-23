@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "bshb",
-        "version": "0.1.9",
+        "version": "0.1.10",
         "news": {
+			"0.1.10": {
+				"en": "Cleanup installation files",
+				"de": "Bereinigen von Installationsdateien",
+				"ru": "Очистка установочных файлов",
+				"pt": "Limpeza dos ficheiros de instalação",
+				"nl": "Schoonmaakinstallatiebestanden",
+				"fr": "Nettoyage des fichiers d'installation",
+				"it": "File di installazione per la pulizia",
+				"es": "Limpieza de los archivos de instalación",
+				"pl": "Czyszczenie plików instalacyjnych",
+				"zh-cn": "清理安装文件"
+			},
 			"0.1.9": {
 				"en": "Error in scenario handling fixed",
 				"de": "Fehler in der Szenariobehandlung behoben",
