@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.BshbDeviceHandler = void 0;
 const bshb_handler_1 = require("./bshb-handler");
 const rxjs_1 = require("rxjs");
 const operators_1 = require("rxjs/operators");
@@ -100,8 +101,7 @@ class BshbDeviceHandler extends bshb_handler_1.BshbHandler {
                     this.bshb.setObjectNotExists(device.id, {
                         type: 'device',
                         common: {
-                            name: name,
-                            read: true
+                            name: name
                         },
                         native: { device: device },
                     });
@@ -112,8 +112,7 @@ class BshbDeviceHandler extends bshb_handler_1.BshbHandler {
                     this.bshb.setObjectNotExists(device.rootDeviceId, {
                         type: 'device',
                         common: {
-                            name: rootDeviceName,
-                            read: true
+                            name: rootDeviceName
                         },
                         native: {
                             device: {
@@ -175,8 +174,7 @@ class BshbDeviceHandler extends bshb_handler_1.BshbHandler {
         this.bshb.setObjectNotExists(id, {
             type: 'channel',
             common: {
-                name: name,
-                read: true,
+                name: name
             },
             native: { device: device, deviceService: deviceService },
         }, (err, obj) => {

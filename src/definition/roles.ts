@@ -12,7 +12,7 @@ export const ROLES: { [TypeName: string]: { [KeyName: string]: string } } = {
         setpointTemperature: 'level.temperature',
         setpointTemperatureForLevelEco: 'level.temperature',
         setpointTemperatureForLevelComfort: 'level.temperature',
-        low: 'indicator.lowbat',
+        low: 'indicator',
         boostMode: 'switch.boost',
         operationMode: 'text',
         showSetpointTemperature: 'switch',

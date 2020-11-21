@@ -69,7 +69,7 @@ export class BshbScenarioHandler extends BshbHandler {
                 const scenarios = response.parsedResponse;
 
                 this.bshb.setObjectNotExists('scenarios', {
-                    type: 'group',
+                    type: 'folder',
                     common: {
                         name: 'scenarios',
                         read: true

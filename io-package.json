@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "bshb",
-        "version": "0.1.10",
+        "version": "0.1.11",
         "news": {
+			"0.1.11": {
+				"de": "Abhängigkeiten aktualisiert und Verbindungsanzeige hinzugefügt",
+				"en": "Updated dependencies and add connection indication",
+				"ru": "Обновленные зависимости и добавить индикацию подключения",
+				"pt": "Dependências actualizadas e indicação de ligação adicional",
+				"nl": "Bijgewerkte afhankelijkheden en verbindingsindicatie toevoegen",
+				"fr": "Mise à jour des dépendances et ajout d'une indication de connexion",
+				"it": "Aggiornare le dipendenze e aggiungere l'indicazione di connessione",
+				"es": "Actualizar las dependencias y añadir la indicación de conexión",
+				"pl": "Aktualizacja zależności i dodanie wskazania połączenia",
+				"zh-cn": "更新了依赖性并添加了连接指示"
+			},
 			"0.1.10": {
 				"en": "Cleanup installation files",
 				"de": "Bereinigen von Installationsdateien",
@@ -122,18 +134,6 @@
 				"es": "Mejorar la conexión y la usabilidad",
 				"pl": "Poprawa połączeń i użyteczności",
 				"zh-cn": "改善连接和可用性"
-			},
-			"0.1.0": {
-				"en": "Certificates are stored in ioBroker now",
-				"de": "Zertifikat werden jetzt in ioBroker gespeichert",
-				"ru": "Сертификаты хранятся в ioBroker сейчас",
-				"pt": "Certificados são armazenados no ioBroker agora",
-				"nl": "De certificaten zijn nu opgeslagen in ioBroker",
-				"fr": "Les certificats sont maintenant stockés dans ioBroker",
-				"it": "I certificati sono memorizzati in ioBroker ora",
-				"es": "Los certificados se almacenan en ioBroker ahora",
-				"pl": "Certyfikaty są teraz przechowywane w ioBroker",
-				"zh-cn": "证书现在存储在ioBroker中"
 			}
         },
         "title": "Bosch Smart Home Bridge",

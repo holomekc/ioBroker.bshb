@@ -9,6 +9,7 @@ import {BshbError, BshbErrorType, BshbUtils} from "bosch-smart-home-bridge";
 import {LogLevel} from "./log-level";
 import * as fs from "fs";
 import Timeout = NodeJS.Timeout;
+import {BshbDefinition} from "./bshb-definition";
 
 /**
  * @author Christopher Holomek
@@ -36,10 +37,10 @@ export class Bshb extends utils.Adapter {
 
     private bshbController: BshbController | undefined;
     private pollingTrigger = new BehaviorSubject(true);
-    private pollTimeout:Timeout | null = null;
-    private startPollingTimeout:Timeout | null = null;
+    private pollTimeout: Timeout | null = null;
+    private startPollingTimeout: Timeout | null = null;
 
-    public constructor(options: Partial<ioBroker.AdapterOptions> = {}) {
+    public constructor(options: Partial<utils.AdapterOptions> = {}) {
         super({
             ...options,
             name: 'bshb',
@@ -75,6 +76,7 @@ export class Bshb extends utils.Adapter {
         }
 
         this.loadCertificates(notPrefixedIdentifier).subscribe(clientCert => {
+            this.handleAdapterInformation();
             // Create controller for bosch-smart-home-bridge
             this.bshbController = new BshbController(this, clientCert.certificate, clientCert.privateKey);
             this.init(this.bshbController);
@@ -115,7 +117,7 @@ export class Bshb extends utils.Adapter {
         });
     }
 
-    private generateCertificate(clientCert: ClientCert, obj: ioBroker.StateObject | ioBroker.ChannelObject | ioBroker.DeviceObject | ioBroker.OtherObject, certificateKeys: { cert: string; key: string }, subscriber: Subscriber<ClientCert>) {
+    private generateCertificate(clientCert: ClientCert, obj: ioBroker.Object, certificateKeys: { cert: string; key: string }, subscriber: Subscriber<ClientCert>) {
         // no certificates found.
         this.log.info('Could not find client certificate. Check for old configuration');
         const migrationResult = this.migration();
@@ -153,18 +155,18 @@ export class Bshb extends utils.Adapter {
             if (fs.existsSync(file)) {
                 this.log.info(`${type} is a file reference. Read from file`);
                 return fs.readFileSync(file, 'utf-8');
-            } else{
+            } else {
                 this.log.info(`${type} seems to be actual content. Use value from state.`);
                 return file;
             }
-        }catch (e) {
+        } catch (e) {
             this.log.info(`${type} seems to be actual content or reading from file failed. Use value from state. For more details restart adapter with debug log level.`);
             this.log.debug(`Error during reading file: ${e}`);
             return file;
         }
     }
 
-    private storeCertificate(obj: ioBroker.StateObject | ioBroker.ChannelObject | ioBroker.DeviceObject | ioBroker.OtherObject,
+    private storeCertificate(obj: ioBroker.Object,
                              certificateKeys: { cert: string; key: string }, clientCert: ClientCert): Observable<void> {
         return new Observable<void>(subscriber => {
             // store information
@@ -244,6 +246,49 @@ export class Bshb extends utils.Adapter {
         }, delay);
     };
 
+
+    private handleAdapterInformation() {
+        this.setObjectNotExists('info', {
+            type: 'channel',
+            common: {
+                name: 'Information'
+            },
+            native: {},
+        }, (err, obj) => {
+            if (obj) {
+                // channel created we create all other stuff now.
+                this.setObjectNotExists('info.connection', {
+                    type: 'state',
+                    common: {
+                        name: 'If connected to BSHC',
+                        type: 'boolean',
+                        role: 'indicator.connected',
+                        read: true,
+                        write: false,
+                        def: false
+                    },
+                    native: {},
+                }, (err, obj) => {
+                    if (obj) {
+                        // we start with disconnected
+                        this.setState('info.connection', {val: false, ack: true});
+                    }
+                });
+            }
+        });
+    }
+
+    private updateInfoConnectionState(connected: boolean) {
+        this.getState('info.connection', (err, state) => {
+            if (state) {
+                if (state.val === connected) {
+                    return;
+                }
+            }
+            this.setState('info.connection', {val: connected, ack: true});
+        });
+    }
+
     private subscribeAndPoll = (bshbController: BshbController) => {
         this.pollingTrigger.next(false);
         this.pollingTrigger.complete();
@@ -253,8 +298,10 @@ export class Bshb extends utils.Adapter {
         bshbController.getBshcClient().subscribe().subscribe(response => {
             this.pollingTrigger.subscribe(keepPolling => {
                 if (keepPolling) {
-                    bshbController.getBshcClient().longPolling(response.parsedResponse.result).subscribe(infoResponse => {
+                    bshbController.getBshcClient().longPolling(response.parsedResponse.result, 30000, 2000).subscribe(infoResponse => {
                         if (infoResponse.incomingMessage.statusCode !== 200) {
+                            this.updateInfoConnectionState(false);
+
                             if (infoResponse.incomingMessage.statusCode === 503) {
                                 this.log.warn(`BSHC is starting. Try to reconnect asap. HTTP=${infoResponse.incomingMessage.statusCode}, data=${infoResponse.parsedResponse}`);
                             } else {
@@ -263,6 +310,8 @@ export class Bshb extends utils.Adapter {
                             // something went wrong we delay polling
                             this.poll(10000);
                         } else {
+                            this.updateInfoConnectionState(true);
+
                             const information = infoResponse.parsedResponse;
 
                             // handle updates
@@ -277,8 +326,22 @@ export class Bshb extends utils.Adapter {
                             this.poll();
                         }
                     }, error => {
+                        this.updateInfoConnectionState(false);
+
                         if ((error as BshbError).errorType === BshbErrorType.POLLING) {
-                            this.log.warn(`Something went wrong during long polling. Try to reconnect.`);
+                            const bshbError = (error as BshbError);
+                            if (bshbError.cause && bshbError.cause instanceof BshbError) {
+                                if (bshbError.errorType === BshbErrorType.TIMEOUT) {
+                                    this.log.info(`LongPolling connection timed-out before BSHC closed connection.  Try to reconnect.`)
+                                } else if (bshbError.errorType === BshbErrorType.ABORT) {
+                                    this.log.warn(`Connection to BSHC closed by adapter. Try to reconnect.`);
+                                } else {
+                                    this.log.warn(`Something went wrong during long polling. Try to reconnect.`);
+                                }
+                            } else {
+                                this.log.warn(`Something went wrong during long polling. Try to reconnect.`);
+                            }
+
                             this.startPolling(bshbController, 5000);
                         } else {
                             this.log.warn(`Something went wrong during long polling. Try again later.`);
@@ -287,6 +350,7 @@ export class Bshb extends utils.Adapter {
                     });
                 } else {
                     bshbController.getBshcClient().unsubscribe(response.parsedResponse.result).subscribe(() => {
+                        this.updateInfoConnectionState(false);
                     });
                 }
             });
@@ -341,7 +405,7 @@ export class Bshb extends utils.Adapter {
 
 if (module.parent) {
     // Export the constructor in compact mode
-    module.exports = (options: Partial<ioBroker.AdapterOptions> | undefined) => new Bshb(options);
+    module.exports = (options: Partial<utils.AdapterOptions> | undefined) => new Bshb(options);
 } else {
     // otherwise start the instance directly
     (() => new Bshb())();

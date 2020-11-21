@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.BshbOpenDoorWindowHandler = void 0;
 const bshb_handler_1 = require("./bshb-handler");
 const rxjs_1 = require("rxjs");
 const operators_1 = require("rxjs/operators");
@@ -45,7 +46,7 @@ class BshbOpenDoorWindowHandler extends bshb_handler_1.BshbHandler {
             this.getBshcClient().getOpenWindows({ timeout: this.long_timeout }).subscribe(result => {
                 // create group
                 this.bshb.setObjectNotExists('openDoorsAndWindows', {
-                    type: 'group',
+                    type: 'folder',
                     common: {
                         name: 'Open Doors / Windows',
                         read: true
@@ -85,7 +86,7 @@ class BshbOpenDoorWindowHandler extends bshb_handler_1.BshbHandler {
     createGroup(idPrefix, id, name) {
         return new rxjs_1.Observable(subscriber => {
             this.bshb.setObjectNotExists(idPrefix + id, {
-                type: 'group',
+                type: 'folder',
                 common: {
                     name: name,
                     read: true

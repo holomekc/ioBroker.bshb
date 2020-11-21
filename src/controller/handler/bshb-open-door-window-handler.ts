@@ -55,7 +55,7 @@ export class BshbOpenDoorWindowHandler extends BshbHandler{
 
                 // create group
                 this.bshb.setObjectNotExists('openDoorsAndWindows', {
-                    type: 'group',
+                    type: 'folder',
                     common: {
                         name: 'Open Doors / Windows',
                         read: true
@@ -108,7 +108,7 @@ export class BshbOpenDoorWindowHandler extends BshbHandler{
     private createGroup(idPrefix: string, id: string, name: string): Observable<void> {
         return new Observable<void>(subscriber => {
             this.bshb.setObjectNotExists(idPrefix + id, {
-                type: 'group',
+                type: 'folder',
                 common: {
                     name: name,
                     read: true

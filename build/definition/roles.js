@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.ROLES = void 0;
 exports.ROLES = {
     binarySwitchState: {
         on: 'switch'
@@ -14,7 +15,7 @@ exports.ROLES = {
         setpointTemperature: 'level.temperature',
         setpointTemperatureForLevelEco: 'level.temperature',
         setpointTemperatureForLevelComfort: 'level.temperature',
-        low: 'indicator.lowbat',
+        low: 'indicator',
         boostMode: 'switch.boost',
         operationMode: 'text',
         showSetpointTemperature: 'switch',
