@@ -18,7 +18,7 @@ import {BshbOpenDoorWindowHandler} from "./controller/handler/bshb-open-door-win
  */
 export class BshbController {
 
-    private boschSmartHomeBridge: BoschSmartHomeBridge;
+    private readonly boschSmartHomeBridge: BoschSmartHomeBridge;
     private clientName = 'ioBroker.bshb';
 
     private handlers: BshbHandler[];

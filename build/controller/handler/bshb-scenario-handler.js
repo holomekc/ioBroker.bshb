@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.BshbScenarioHandler = void 0;
 const bshb_handler_1 = require("./bshb-handler");
 const rxjs_1 = require("rxjs");
 /**
@@ -62,7 +63,7 @@ class BshbScenarioHandler extends bshb_handler_1.BshbHandler {
             this.getBshcClient().getScenarios({ timeout: this.long_timeout }).subscribe(response => {
                 const scenarios = response.parsedResponse;
                 this.bshb.setObjectNotExists('scenarios', {
-                    type: 'group',
+                    type: 'folder',
                     common: {
                         name: 'scenarios',
                         read: true

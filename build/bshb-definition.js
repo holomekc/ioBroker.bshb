@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.BshbDefinition = void 0;
 /**
  * This class contains definitions for iobroker based on bshb data
  *
@@ -25,7 +26,7 @@ class BshbDefinition {
         if (Array.isArray(value)) {
             return 'array';
         }
-        return typeof value;
+        return (typeof value);
     }
     /**
      * Get role of bsh device state

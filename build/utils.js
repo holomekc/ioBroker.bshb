@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Utils = void 0;
 const log_level_1 = require("./log-level");
 /**
  * This class contains helpful methods for the adapter

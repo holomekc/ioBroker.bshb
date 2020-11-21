@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.BshbHandler = void 0;
 /**
  * Abstract handler which can be used to handle the following things:<br/>
  * 1. detecting devices etc.<br/>

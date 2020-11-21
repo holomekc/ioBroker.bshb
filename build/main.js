@@ -9,6 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Bshb = void 0;
 const utils = require("@iobroker/adapter-core");
 const bshb_controller_1 = require("./bshb-controller");
 const rxjs_1 = require("rxjs");
@@ -47,8 +48,9 @@ class Bshb extends utils.Adapter {
             bshbController.getBshcClient().subscribe().subscribe(response => {
                 this.pollingTrigger.subscribe(keepPolling => {
                     if (keepPolling) {
-                        bshbController.getBshcClient().longPolling(response.parsedResponse.result).subscribe(infoResponse => {
+                        bshbController.getBshcClient().longPolling(response.parsedResponse.result, 30, 2).subscribe(infoResponse => {
                             if (infoResponse.incomingMessage.statusCode !== 200) {
+                                this.updateInfoConnectionState(false);
                                 if (infoResponse.incomingMessage.statusCode === 503) {
                                     this.log.warn(`BSHC is starting. Try to reconnect asap. HTTP=${infoResponse.incomingMessage.statusCode}, data=${infoResponse.parsedResponse}`);
                                 }
@@ -59,6 +61,7 @@ class Bshb extends utils.Adapter {
                                 this.poll(10000);
                             }
                             else {
+                                this.updateInfoConnectionState(true);
                                 const information = infoResponse.parsedResponse;
                                 // handle updates
                                 information.result.forEach(resultEntry => {
@@ -71,8 +74,23 @@ class Bshb extends utils.Adapter {
                                 this.poll();
                             }
                         }, error => {
+                            this.updateInfoConnectionState(false);
                             if (error.errorType === bosch_smart_home_bridge_1.BshbErrorType.POLLING) {
-                                this.log.warn(`Something went wrong during long polling. Try to reconnect.`);
+                                const bshbError = error;
+                                if (bshbError.cause && bshbError.cause instanceof bosch_smart_home_bridge_1.BshbError) {
+                                    if (bshbError.errorType === bosch_smart_home_bridge_1.BshbErrorType.TIMEOUT) {
+                                        this.log.info(`LongPolling connection timed-out before BSHC closed connection.  Try to reconnect.`);
+                                    }
+                                    else if (bshbError.errorType === bosch_smart_home_bridge_1.BshbErrorType.ABORT) {
+                                        this.log.warn(`Connection to BSHC closed by adapter. Try to reconnect.`);
+                                    }
+                                    else {
+                                        this.log.warn(`Something went wrong during long polling. Try to reconnect.`);
+                                    }
+                                }
+                                else {
+                                    this.log.warn(`Something went wrong during long polling. Try to reconnect.`);
+                                }
                                 this.startPolling(bshbController, 5000);
                             }
                             else {
@@ -83,6 +101,7 @@ class Bshb extends utils.Adapter {
                     }
                     else {
                         bshbController.getBshcClient().unsubscribe(response.parsedResponse.result).subscribe(() => {
+                            this.updateInfoConnectionState(false);
                         });
                     }
                 });
@@ -115,6 +134,7 @@ class Bshb extends utils.Adapter {
                 throw utils_1.Utils.createError(this.log, 'Identifier not defined but it is a mandatory parameter');
             }
             this.loadCertificates(notPrefixedIdentifier).subscribe(clientCert => {
+                this.handleAdapterInformation();
                 // Create controller for bosch-smart-home-bridge
                 this.bshbController = new bshb_controller_1.BshbController(this, clientCert.certificate, clientCert.privateKey);
                 this.init(this.bshbController);
@@ -250,6 +270,46 @@ class Bshb extends utils.Adapter {
             this.subscribeStates('*');
             // now we want to subscribe to BSHC for changes
             this.startPolling(bshbController);
+        });
+    }
+    handleAdapterInformation() {
+        this.setObjectNotExists('info', {
+            type: 'channel',
+            common: {
+                name: 'Information'
+            },
+            native: {},
+        }, (err, obj) => {
+            if (obj) {
+                // channel created we create all other stuff now.
+                this.setObjectNotExists('info.connection', {
+                    type: 'state',
+                    common: {
+                        name: 'If connected to BSHC',
+                        type: 'boolean',
+                        role: 'indicator.connected',
+                        read: true,
+                        write: false,
+                        def: false
+                    },
+                    native: {},
+                }, (err, obj) => {
+                    if (obj) {
+                        // we start with disconnected
+                        this.setState('info.connection', { val: false, ack: true });
+                    }
+                });
+            }
+        });
+    }
+    updateInfoConnectionState(connected) {
+        this.getState('info.connection', (err, state) => {
+            if (state) {
+                if (state.val === connected) {
+                    return;
+                }
+            }
+            this.setState('info.connection', { val: connected, ack: true });
         });
     }
     /**

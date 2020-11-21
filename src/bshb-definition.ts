@@ -22,11 +22,11 @@ export class BshbDefinition {
      *
      * @param value value to determine type for
      */
-    public static determineType(value: any): string {
+    public static determineType(value: any): 'number' | 'string' | 'boolean' | 'array' | 'object' | 'mixed' | 'file' {
         if (Array.isArray(value)) {
             return 'array';
         }
-        return typeof value;
+        return (typeof value) as 'number' | 'string' | 'boolean' | 'array' | 'object' | 'mixed' | 'file';
     }
 
 

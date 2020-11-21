@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Migration = void 0;
 const fs = require("fs");
 const utils_1 = require("./utils");
 /**

@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.BshbLogger = void 0;
 /**
  * This class implements the logger of bosch-smart-home-bridge and forward it to iobroker
  *

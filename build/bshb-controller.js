@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.BshbController = void 0;
 const bosch_smart_home_bridge_1 = require("bosch-smart-home-bridge");
 const bshb_logger_1 = require("./bshb-logger");
 const rxjs_1 = require("rxjs");

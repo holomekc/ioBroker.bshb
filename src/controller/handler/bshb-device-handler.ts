@@ -115,8 +115,7 @@ export class BshbDeviceHandler extends BshbHandler{
                     this.bshb.setObjectNotExists(device.id, {
                         type: 'device',
                         common: {
-                            name: name,
-                            read: true
+                            name: name
                         },
                         native: {device: device},
                     });
@@ -130,8 +129,7 @@ export class BshbDeviceHandler extends BshbHandler{
                     this.bshb.setObjectNotExists(device.rootDeviceId, {
                         type: 'device',
                         common: {
-                            name: rootDeviceName,
-                            read: true
+                            name: rootDeviceName
                         },
                         native: {
                             device: {
@@ -202,8 +200,7 @@ export class BshbDeviceHandler extends BshbHandler{
         this.bshb.setObjectNotExists(id, {
             type: 'channel',
             common: {
-                name: name,
-                read: true,
+                name: name
             },
             native: {device: device, deviceService: deviceService},
         }, (err, obj) => {
