@@ -61,7 +61,30 @@ class BshbController {
         if (this.bshb.config.pairingDelay && this.bshb.config.pairingDelay > 5000) {
             pairingDelay = this.bshb.config.pairingDelay;
         }
-        return this.boschSmartHomeBridge.pairIfNeeded(this.clientName, this.bshb.config.identifier, systemPassword, pairingDelay, 100);
+        // Retry pairIfNeeded logic. It is a bit more complicated compared to before because pairIfNeeded completes stream after attempts.
+        // Community wants that it reconnects all the time. But pairIfNeeded might not be suitable because client may be paired already but
+        // connection is broken. Then pairIfNeeded never goes back to test if client is paired and is stuck.
+        // Here we retry the pairIfNeeded without attempts configured. So we try once. If something is not ok we wait
+        // for pairing delay before we try again. We use takeUntil to make sure that we stop streams if adapter shuts-down
+        // takeUntil must be last in pipe to prevent issues.
+        return new rxjs_1.Observable(subscriber => {
+            const retry = new rxjs_1.BehaviorSubject(true);
+            retry.pipe(operators_1.catchError(err => err.pipe(operators_1.delay(pairingDelay))), operators_1.tap(() => {
+                this.boschSmartHomeBridge.pairIfNeeded(this.clientName, this.bshb.config.identifier, systemPassword, pairingDelay, -1).pipe(operators_1.takeUntil(this.bshb.alive)).subscribe(response => {
+                    // Everything is ok. We can stop all.
+                    subscriber.next(response);
+                    subscriber.complete();
+                    retry.complete();
+                }, () => {
+                    // Something went wrong. Already logged by lib. We just wait and retry.
+                    rxjs_1.timer(pairingDelay).pipe(operators_1.takeUntil(this.bshb.alive)).subscribe(value => {
+                        retry.next(true);
+                    });
+                });
+            }), operators_1.takeUntil(this.bshb.alive)).subscribe(() => {
+                // We do not care
+            });
+        });
     }
     /**
      * Start overall detection

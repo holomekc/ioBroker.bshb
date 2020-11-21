@@ -26,6 +26,7 @@ class Bshb extends utils.Adapter {
         this.pollingTrigger = new rxjs_1.BehaviorSubject(true);
         this.pollTimeout = null;
         this.startPollingTimeout = null;
+        this.alive = new rxjs_1.Subject();
         this.poll = (delay) => {
             delay = delay ? delay : 0;
             this.pollTimeout = setTimeout(() => {
@@ -265,7 +266,7 @@ class Bshb extends utils.Adapter {
         }), operators_1.switchMap(() => {
             // Everything is ok. We check for devices first
             return bshbController.startDetection();
-        })).subscribe(() => {
+        }), operators_1.takeUntil(this.alive)).subscribe(() => {
             // register for changes
             this.subscribeStates('*');
             // now we want to subscribe to BSHC for changes
@@ -317,6 +318,8 @@ class Bshb extends utils.Adapter {
      */
     onUnload(callback) {
         try {
+            this.alive.next(false);
+            this.alive.complete();
             // we want to stop polling. So false
             this.pollingTrigger.next(false);
             this.pollingTrigger.complete();

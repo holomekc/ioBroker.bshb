@@ -1,7 +1,7 @@
 import * as utils from '@iobroker/adapter-core';
 import {BshbController} from './bshb-controller';
-import {BehaviorSubject, EMPTY, Observable, Subscriber} from 'rxjs';
-import {catchError, switchMap} from 'rxjs/operators';
+import {BehaviorSubject, EMPTY, Observable, Subject, Subscriber} from 'rxjs';
+import {catchError, switchMap, takeUntil} from 'rxjs/operators';
 import {Migration} from "./migration";
 import {Utils} from "./utils";
 import {ClientCert} from "./client-cert";
@@ -39,6 +39,7 @@ export class Bshb extends utils.Adapter {
     private pollingTrigger = new BehaviorSubject(true);
     private pollTimeout: Timeout | null = null;
     private startPollingTimeout: Timeout | null = null;
+    public alive = new Subject<boolean>();
 
     public constructor(options: Partial<utils.AdapterOptions> = {}) {
         super({
@@ -220,7 +221,7 @@ export class Bshb extends utils.Adapter {
         }), switchMap(() => {
             // Everything is ok. We check for devices first
             return bshbController.startDetection();
-        })).subscribe(() => {
+        }), takeUntil(this.alive)).subscribe(() => {
             // register for changes
             this.subscribeStates('*');
 
@@ -362,6 +363,9 @@ export class Bshb extends utils.Adapter {
      */
     private onUnload(callback: () => void): void {
         try {
+            this.alive.next(false);
+            this.alive.complete();
+
             // we want to stop polling. So false
             this.pollingTrigger.next(false);
             this.pollingTrigger.complete();
