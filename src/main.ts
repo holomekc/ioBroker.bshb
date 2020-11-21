@@ -298,7 +298,7 @@ export class Bshb extends utils.Adapter {
         bshbController.getBshcClient().subscribe().subscribe(response => {
             this.pollingTrigger.subscribe(keepPolling => {
                 if (keepPolling) {
-                    bshbController.getBshcClient().longPolling(response.parsedResponse.result, 30, 2).subscribe(infoResponse => {
+                    bshbController.getBshcClient().longPolling(response.parsedResponse.result, 30000, 2000).subscribe(infoResponse => {
                         if (infoResponse.incomingMessage.statusCode !== 200) {
                             this.updateInfoConnectionState(false);
 
