@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "bshb",
-        "version": "0.1.11",
+        "version": "0.1.12",
         "news": {
+			"0.1.12": {
+				"de": "Zustände, Einheiten und Bereinigung",
+				"en": "States, units and cleanup",
+				"ru": "Государства, подразделения и очистка",
+				"pt": "Estados, unidades e limpeza",
+				"nl": "Staten, eenheden en opruiming",
+				"fr": "États, unités et nettoyage",
+				"it": "Stati, unità e pulizia",
+				"es": "Estados, unidades y limpieza",
+				"pl": "Państwa, jednostki i czyszczenie",
+				"zh-cn": "国家、单位和清理"
+			},
 			"0.1.11": {
 				"de": "Abhängigkeiten aktualisiert und Verbindungsanzeige hinzugefügt",
 				"en": "Updated dependencies and add connection indication",
@@ -110,30 +122,6 @@
 				"es": "Añadido soporte para mensajes y otras mejoras",
 				"pl": "Dodano wsparcie dla wiadomości i dalsze ulepszenia",
 				"zh-cn": "增加了对消息的支持和进一步的改进"
-			},
-			"0.1.2": {
-				"en": "Adapter core library updated",
-				"de": "Adapterkernbibliothek aktualisiert",
-				"ru": "Обновлённая библиотека ядра адаптера",
-				"pt": "Biblioteca central do adaptador atualizado",
-				"nl": "Adapterkernbibliotheek geüpdatet",
-				"fr": "Mise à jour de la bibliothèque de base de l'adaptateur",
-				"it": "Aggiornamento della libreria di base dell'adattatore",
-				"es": "Actualización de la biblioteca de adaptadores de núcleo",
-				"pl": "Aktualizacja biblioteki rdzeni adapterów",
-				"zh-cn": "适配器核心库已更新"
-			},
-			"0.1.1": {
-				"en": "Improve connection and usability",
-				"de": "Verbindung und Benutzerfreundlichkeit verbessert",
-				"ru": "Улучшение связи и удобства использования",
-				"pt": "Melhorar a conexão e a usabilidade",
-				"nl": "Verbinding en bruikbaarheid verbeteren",
-				"fr": "Améliorer la connexion et la facilité d'utilisation",
-				"it": "Migliorare la connessione e l'usabilità",
-				"es": "Mejorar la conexión y la usabilidad",
-				"pl": "Poprawa połączeń i użyteczności",
-				"zh-cn": "改善连接和可用性"
 			}
         },
         "title": "Bosch Smart Home Bridge",
@@ -182,7 +170,7 @@
         "type": "iot-systems",
         "compact": true,
         "materialize": true,
-		"connectionType ": "local",
+		"connectionType": "local",
 		"dataSource": "push",
         "dependencies": [
             {
