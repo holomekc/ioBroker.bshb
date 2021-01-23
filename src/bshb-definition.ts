@@ -6,6 +6,8 @@
  */
 import {ROLES} from "./definition/roles";
 import {FUNCTIONS} from "./definition/function";
+import {UNITS} from "./definition/units";
+import {STATES} from "./definition/states";
 
 export class BshbDefinition {
 
@@ -54,6 +56,34 @@ export class BshbDefinition {
         }
 
         return 'state';
+    }
+
+    public static determineUnit(type: string, key: string): string | undefined {
+        const unitType = UNITS[type];
+
+        if (unitType !== null && typeof unitType !== 'undefined') {
+            const unit = unitType[key];
+
+            if (unit !== null && typeof unit !== 'undefined') {
+                return unit;
+            }
+        }
+
+        return undefined;
+    }
+
+    static determineStates(type: any, key: string): Record<string, string> | string | undefined {
+        const stateType = STATES[type];
+
+        if (stateType !== null && typeof stateType !== 'undefined') {
+            const state = stateType[key];
+
+            if (state !== null && typeof state !== 'undefined') {
+                return state;
+            }
+        }
+
+        return undefined;
     }
 }
 

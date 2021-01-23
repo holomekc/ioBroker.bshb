@@ -211,14 +211,20 @@ class BshbDeviceHandler extends bshb_handler_1.BshbHandler {
         else {
             name = this.getDeviceName(device) + '.' + stateKey;
         }
+        const deviceType = deviceService && deviceService.state ? deviceService.state['@type'] : null;
+        const role = bshb_definition_1.BshbDefinition.determineRole(deviceType, stateKey);
+        const unit = bshb_definition_1.BshbDefinition.determineUnit(deviceType, stateKey);
+        const states = bshb_definition_1.BshbDefinition.determineStates(deviceType, stateKey);
         this.bshb.setObjectNotExists(id, {
             type: 'state',
             common: {
                 name: name,
                 type: bshb_definition_1.BshbDefinition.determineType(stateValue),
-                role: bshb_definition_1.BshbDefinition.determineRole(deviceService && deviceService.state ? deviceService.state['@type'] : null, stateKey),
+                role: role,
                 read: true,
                 write: typeof write === 'undefined' ? true : write,
+                unit: unit,
+                states: states
             },
             native: { device: device, deviceService: deviceService, state: stateKey },
         });
