@@ -51,7 +51,7 @@ class BshbScenarioHandler extends bshb_handler_1.BshbHandler {
                     this.bshb.log.info(`Scenario with id=${match[1]} triggered`);
                     this.bshb.setState(id, { val: false, ack: true });
                 }, error => {
-                    this.bshb.log.warn(`Could not send trigger for scenario with id=${match[1]} and value=${state.val}`);
+                    this.bshb.log.warn(`Could not send trigger for scenario with id=${match[1]} and value=${state.val}: ` + error);
                 });
             }
             return true;

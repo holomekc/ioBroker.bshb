@@ -53,7 +53,7 @@ export class BshbOpenDoorWindowHandler extends BshbHandler{
         return new Observable<void>(subscriber => {
             this.getBshcClient().getOpenWindows({timeout: this.long_timeout}).subscribe(result => {
 
-                // create group
+                // create folder
                 this.bshb.setObjectNotExists('openDoorsAndWindows', {
                     type: 'folder',
                     common: {

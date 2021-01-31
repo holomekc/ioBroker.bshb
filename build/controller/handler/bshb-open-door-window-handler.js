@@ -44,7 +44,7 @@ class BshbOpenDoorWindowHandler extends bshb_handler_1.BshbHandler {
     detectOpenDoorsAndWindows() {
         return new rxjs_1.Observable(subscriber => {
             this.getBshcClient().getOpenWindows({ timeout: this.long_timeout }).subscribe(result => {
-                // create group
+                // create folder
                 this.bshb.setObjectNotExists('openDoorsAndWindows', {
                     type: 'folder',
                     common: {
