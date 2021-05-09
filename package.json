@@ -21,7 +21,8 @@
   "dependencies": {
     "@iobroker/adapter-core": "^2.4.0",
     "bosch-smart-home-bridge": "^0.2.15",
-    "rxjs": "^6.6.3"
+    "rxjs": "^6.6.3",
+    "uuid": "^8.3.2"
   },
   "devDependencies": {
     "@iobroker/testing": "^2.3.0",

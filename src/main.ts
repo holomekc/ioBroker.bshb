@@ -9,7 +9,7 @@ import {BshbError, BshbErrorType, BshbUtils} from "bosch-smart-home-bridge";
 import {LogLevel} from "./log-level";
 import * as fs from "fs";
 import Timeout = NodeJS.Timeout;
-import {BshbDefinition} from "./bshb-definition";
+const { v4: uuidv4 } = require('uuid'); // Used commonjs because es did not work for some reason...
 
 /**
  * @author Christopher Holomek
@@ -59,6 +59,10 @@ export class Bshb extends utils.Adapter {
         // make sure that identifier is valid regarding Bosch T&C
         this.log.silly('onReady called. Load configuration');
 
+        if(!this.config.identifier) {
+            this.config.identifier = uuidv4();
+        }
+
         this.config.host = this.config.host ? this.config.host.trim() : '';
         const notPrefixedIdentifier = this.config.identifier ? this.config.identifier.trim() : '';
         this.config.identifier = 'ioBroker.bshb_' + notPrefixedIdentifier;
@@ -73,7 +77,7 @@ export class Bshb extends utils.Adapter {
         this.log.debug('config pairingDelay: ' + this.config.pairingDelay);
 
         if (!notPrefixedIdentifier) {
-            throw Utils.createError(this.log, 'Identifier not defined but it is a mandatory parameter');
+            throw Utils.createError(this.log, 'Identifier not defined but it is a mandatory parameter.');
         }
 
         this.loadCertificates(notPrefixedIdentifier).subscribe(clientCert => {
