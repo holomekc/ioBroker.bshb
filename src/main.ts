@@ -9,7 +9,8 @@ import {BshbError, BshbErrorType, BshbUtils} from "bosch-smart-home-bridge";
 import {LogLevel} from "./log-level";
 import * as fs from "fs";
 import Timeout = NodeJS.Timeout;
-const { v4: uuidv4 } = require('uuid'); // Used commonjs because es did not work for some reason...
+
+const {v4: uuidv4} = require('uuid'); // Used commonjs because es did not work for some reason...
 
 /**
  * @author Christopher Holomek
@@ -59,7 +60,7 @@ export class Bshb extends utils.Adapter {
         // make sure that identifier is valid regarding Bosch T&C
         this.log.silly('onReady called. Load configuration');
 
-        if(!this.config.identifier) {
+        if (!this.config.identifier) {
             this.config.identifier = uuidv4();
         }
 
@@ -133,12 +134,15 @@ export class Bshb extends utils.Adapter {
             clientCert = Bshb.generateCertificate();
         }
         // store information
-        this.storeCertificate(obj, certificateKeys, clientCert).subscribe(() => {
-            subscriber.next(clientCert);
-            subscriber.complete();
-        }, error => {
-            subscriber.error(error);
-            subscriber.complete();
+        this.storeCertificate(obj, certificateKeys, clientCert).subscribe({
+            next: () => {
+                subscriber.next(clientCert);
+                subscriber.complete();
+            },
+            error: error => {
+                subscriber.error(error);
+                subscriber.complete();
+            }
         });
     }
 
@@ -178,7 +182,7 @@ export class Bshb extends utils.Adapter {
             obj.native.certificates[certificateKeys.cert] = clientCert.certificate;
             obj.native.certificates[certificateKeys.key] = clientCert.privateKey;
 
-            this.setForeignObject('system.certificates', obj, (err: string | null, obj: { id: string }) => {
+            this.setForeignObject('system.certificates', obj as any, (err: string | null, obj: { id: string }) => {
                 if (err || !obj) {
                     subscriber.error(Utils.createError(this.log,
                         'Could not store client certificate in system.certificates due to an error:' + err));

@@ -188,12 +188,15 @@ class Bshb extends utils.Adapter {
             clientCert = Bshb.generateCertificate();
         }
         // store information
-        this.storeCertificate(obj, certificateKeys, clientCert).subscribe(() => {
-            subscriber.next(clientCert);
-            subscriber.complete();
-        }, error => {
-            subscriber.error(error);
-            subscriber.complete();
+        this.storeCertificate(obj, certificateKeys, clientCert).subscribe({
+            next: () => {
+                subscriber.next(clientCert);
+                subscriber.complete();
+            },
+            error: error => {
+                subscriber.error(error);
+                subscriber.complete();
+            }
         });
     }
     readCertificate(clientCert, subscriber) {
