@@ -8,6 +8,7 @@ import {ROLES} from "./definition/roles";
 import {FUNCTIONS} from "./definition/function";
 import {UNITS} from "./definition/units";
 import {STATES} from "./definition/states";
+import {WRITE} from "./definition/write";
 
 export class BshbDefinition {
 
@@ -17,6 +18,28 @@ export class BshbDefinition {
             return func;
         }
         return undefined as unknown as string;
+    }
+
+    /**
+     * Check if value can be written by type and key. Default is true.
+     *
+     * @param type
+     *        '@type' of bsh
+     * @param key
+     *        key of a device state
+     */
+    public static determineWrite(type: string, key: string): boolean {
+        const writeType = WRITE[type];
+
+        if (writeType !== null && typeof writeType !== 'undefined') {
+            const write = writeType[key];
+
+            if (write !== null && typeof write !== 'undefined') {
+                return write;
+            }
+        }
+
+        return true;
     }
 
     /**

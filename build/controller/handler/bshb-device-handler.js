@@ -37,13 +37,17 @@ class BshbDeviceHandler extends bshb_handler_1.BshbHandler {
                         const id = BshbDeviceHandler.getId(cachedDeviceService.device, cachedDeviceService.deviceService, stateKey);
                         this.bshb.getObject(id, (error, object) => {
                             if (object) {
-                                this.bshb.setState(BshbDeviceHandler.getId(cachedDeviceService.device, cachedDeviceService.deviceService, stateKey), { val: this.mapValueToStorage(resultEntry.state[stateKey]), ack: true });
+                                this.bshb.setState(id, {
+                                    val: this.mapValueToStorage(resultEntry.state[stateKey]),
+                                    ack: true
+                                });
                             }
                             else {
                                 // dynamically create objects in case it was missing. This might occur when values are not always set.
                                 // setState is also handled in state creation, so no additional setState necessary.
                                 this.importSimpleState(BshbDeviceHandler.getId(cachedDeviceService.device, cachedDeviceService.deviceService), cachedDeviceService.device, cachedDeviceService.deviceService, stateKey, resultEntry.state[stateKey]);
                             }
+                            this.handleBshcUpdateSpecialCases(id, cachedDeviceService.device, cachedDeviceService.deviceService, resultEntry.state[stateKey]);
                         });
                     });
                 }
@@ -75,18 +79,20 @@ class BshbDeviceHandler extends bshb_handler_1.BshbHandler {
                 if (utils_1.Utils.isLevelActive(this.bshb.log.level, log_level_1.LogLevel.debug)) {
                     this.bshb.log.debug('Data which will be send: ' + JSON.stringify(data));
                 }
-                this.getBshcClient().putState(cachedState.deviceService.path, data).subscribe(response => {
-                    if (response) {
-                        if (utils_1.Utils.isLevelActive(this.bshb.log.level, log_level_1.LogLevel.debug)) {
-                            this.bshb.log.debug(`HTTP response. status=${response.incomingMessage.statusCode},
+                this.getBshcClient().putState(cachedState.deviceService.path, data).subscribe({
+                    next: response => {
+                        if (response) {
+                            if (utils_1.Utils.isLevelActive(this.bshb.log.level, log_level_1.LogLevel.debug)) {
+                                this.bshb.log.debug(`HTTP response. status=${response.incomingMessage.statusCode},
                      body=${JSON.stringify(response.parsedResponse)}`);
+                            }
                         }
+                        else {
+                            this.bshb.log.debug('no response');
+                        }
+                    }, error: error => {
+                        this.bshb.log.error(error);
                     }
-                    else {
-                        this.bshb.log.debug('no response');
-                    }
-                }, error => {
-                    this.bshb.log.error(error);
                 });
             });
             return true;
@@ -141,36 +147,40 @@ class BshbDeviceHandler extends bshb_handler_1.BshbHandler {
                     });
                 });
                 return this.checkDeviceServices();
-            })).subscribe(() => {
-                this.bshb.log.info('Detecting devices finished');
-                subscriber.next();
-                subscriber.complete();
-            }, (err) => {
-                subscriber.error(err);
+            })).subscribe({
+                next: () => {
+                    this.bshb.log.info('Detecting devices finished');
+                    subscriber.next();
+                    subscriber.complete();
+                }, error: (err) => {
+                    subscriber.error(err);
+                }
             });
         });
     }
     checkDeviceServices() {
         return new rxjs_1.Observable(observer => {
-            this.getBshcClient().getDevicesServices({ timeout: this.long_timeout }).subscribe(response => {
-                const deviceServices = response.parsedResponse;
-                deviceServices.forEach(deviceService => {
-                    this.bshb.getObject(deviceService.deviceId, (err, ioBrokerDevice) => {
-                        if (err) {
-                            this.bshb.log.error('Could not find device. This should not happen: deviceId=' + deviceService.deviceId + ', error=' + err);
-                            return;
-                        }
-                        else if (!ioBrokerDevice) {
-                            this.bshb.log.error('Found device but value is undefined. This should not happen: deviceId=' + deviceService.deviceId);
-                            return;
-                        }
-                        this.importChannels(ioBrokerDevice.native.device, deviceService);
+            this.getBshcClient().getDevicesServices({ timeout: this.long_timeout }).subscribe({
+                next: response => {
+                    const deviceServices = response.parsedResponse;
+                    deviceServices.forEach(deviceService => {
+                        this.bshb.getObject(deviceService.deviceId, (err, ioBrokerDevice) => {
+                            if (err) {
+                                this.bshb.log.error('Could not find device. This should not happen: deviceId=' + deviceService.deviceId + ', error=' + err);
+                                return;
+                            }
+                            else if (!ioBrokerDevice) {
+                                this.bshb.log.error('Found device but value is undefined. This should not happen: deviceId=' + deviceService.deviceId);
+                                return;
+                            }
+                            this.importChannels(ioBrokerDevice.native.device, deviceService);
+                        });
                     });
-                });
-                observer.next();
-                observer.complete();
-            }, err => {
-                observer.error(err);
+                    observer.next();
+                    observer.complete();
+                }, error: err => {
+                    observer.error(err);
+                }
             });
         });
     }
@@ -234,30 +244,33 @@ class BshbDeviceHandler extends bshb_handler_1.BshbHandler {
                 type: bshb_definition_1.BshbDefinition.determineType(stateValue),
                 role: role,
                 read: true,
-                write: typeof write === 'undefined' ? true : write,
+                write: typeof write === 'undefined' ? bshb_definition_1.BshbDefinition.determineWrite(deviceType, stateKey) : write,
                 unit: unit,
                 states: states
             },
             native: { device: device, deviceService: deviceService, state: stateKey },
-        });
-        this.cachedStates.set(this.bshb.namespace + '.' + id, {
-            device: device,
-            deviceService: deviceService,
-            id: id,
-            stateKey: stateKey
-        });
-        this.bshb.getState(id, (err, state) => {
-            if (state) {
-                this.mapValueFromStorage(id, state).subscribe(value => {
-                    if (value !== stateValue) {
-                        // only set again if a change is detected.
+        }, (error, obj) => {
+            if (obj) {
+                this.cachedStates.set(this.bshb.namespace + '.' + id, {
+                    device: device,
+                    deviceService: deviceService,
+                    id: id,
+                    stateKey: stateKey
+                });
+                this.bshb.getState(id, (err, state) => {
+                    if (state) {
+                        this.mapValueFromStorage(id, state).subscribe(value => {
+                            if (value !== stateValue) {
+                                // only set again if a change is detected.
+                                this.bshb.setState(id, { val: this.mapValueToStorage(stateValue), ack: true });
+                            }
+                        });
+                    }
+                    else {
+                        // no previous state so we set it
                         this.bshb.setState(id, { val: this.mapValueToStorage(stateValue), ack: true });
                     }
                 });
-            }
-            else {
-                // no previous state so we set it
-                this.bshb.setState(id, { val: this.mapValueToStorage(stateValue), ack: true });
             }
         });
     }
@@ -340,6 +353,23 @@ class BshbDeviceHandler extends bshb_handler_1.BshbHandler {
         }
         else {
             return id;
+        }
+    }
+    // This are very special cases where values are not expected/visible/temporary/etc.
+    handleBshcUpdateSpecialCases(id, device, deviceService, value) {
+        if (id.includes('intrusionDetectionSystem.IntrusionDetectionControl.value')) {
+            if (value === 'SYSTEM_DISARMED') {
+                this.bshb.setState(id, {
+                    val: -1,
+                    ack: true
+                });
+            }
+            else if (value === 'SYSTEM_ARMED') {
+                this.bshb.setState(id, {
+                    val: 0,
+                    ack: true
+                });
+            }
         }
     }
 }

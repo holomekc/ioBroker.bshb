@@ -11,6 +11,7 @@ const roles_1 = require("./definition/roles");
 const function_1 = require("./definition/function");
 const units_1 = require("./definition/units");
 const states_1 = require("./definition/states");
+const write_1 = require("./definition/write");
 class BshbDefinition {
     static determineFunction(value) {
         const func = function_1.FUNCTIONS[value];
@@ -18,6 +19,24 @@ class BshbDefinition {
             return func;
         }
         return undefined;
+    }
+    /**
+     * Check if value can be written by type and key. Default is true.
+     *
+     * @param type
+     *        '@type' of bsh
+     * @param key
+     *        key of a device state
+     */
+    static determineWrite(type, key) {
+        const writeType = write_1.WRITE[type];
+        if (writeType !== null && typeof writeType !== 'undefined') {
+            const write = writeType[key];
+            if (write !== null && typeof write !== 'undefined') {
+                return write;
+            }
+        }
+        return true;
     }
     /**
      * Get type of a value from bsh

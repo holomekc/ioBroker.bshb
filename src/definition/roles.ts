@@ -75,7 +75,8 @@ export const ROLES: { [TypeName: string]: { [KeyName: string]: string } } = {
         triggers: 'list',
         actuators: 'list',
         armActivationDelayTime: 'level',
-        alarmActivationDelayTime: 'level'
+        alarmActivationDelayTime: 'level',
+        remainingTimeUntilArmed: 'value'
     },
     hueBridgeSearcherState: {
         searcherState: 'text',

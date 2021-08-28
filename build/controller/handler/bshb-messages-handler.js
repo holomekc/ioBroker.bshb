@@ -14,12 +14,14 @@ class BshbMessagesHandler extends bshb_handler_1.BshbHandler {
         if (resultEntry['@type'] === 'message') {
             this.bshb.log.debug('Updating messages...');
             // we just trigger detection on changes of scenarios
-            this.detectMessages().subscribe(() => {
-                // we do nothing here because we do not need to.
-                this.bshb.log.debug('Updating messages finished');
-            }, error => {
-                this.bshb.log.warn('something went wrong during message detection');
-                this.bshb.log.warn(error);
+            this.detectMessages().subscribe({
+                next: () => {
+                    // we do nothing here because we do not need to.
+                    this.bshb.log.debug('Updating messages finished');
+                }, error: error => {
+                    this.bshb.log.warn('something went wrong during message detection');
+                    this.bshb.log.warn(error);
+                }
             });
             return true;
         }
@@ -41,27 +43,29 @@ class BshbMessagesHandler extends bshb_handler_1.BshbHandler {
     }
     detectMessages() {
         return new rxjs_1.Observable(subscriber => {
-            this.getBshcClient().getMessages({ timeout: this.long_timeout }).subscribe(response => {
-                const messages = response.parsedResponse;
-                this.bshb.setObjectNotExists('messages', {
-                    type: 'state',
-                    common: {
-                        name: 'messages',
-                        type: 'array',
-                        role: 'list',
-                        write: false,
-                        read: true
-                    },
-                    native: {
-                        id: 'messages',
-                        name: 'messages'
-                    },
-                });
-                this.bshb.setState('messages', { val: this.mapValueToStorage(messages), ack: true });
-                subscriber.next();
-                subscriber.complete();
-            }, err => {
-                subscriber.error(err);
+            this.getBshcClient().getMessages({ timeout: this.long_timeout }).subscribe({
+                next: response => {
+                    const messages = response.parsedResponse;
+                    this.bshb.setObjectNotExists('messages', {
+                        type: 'state',
+                        common: {
+                            name: 'messages',
+                            type: 'array',
+                            role: 'list',
+                            write: false,
+                            read: true
+                        },
+                        native: {
+                            id: 'messages',
+                            name: 'messages'
+                        },
+                    });
+                    this.bshb.setState('messages', { val: this.mapValueToStorage(messages), ack: true });
+                    subscriber.next();
+                    subscriber.complete();
+                }, error: err => {
+                    subscriber.error(err);
+                }
             });
         });
     }

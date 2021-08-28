@@ -78,7 +78,8 @@ exports.ROLES = {
         triggers: 'list',
         actuators: 'list',
         armActivationDelayTime: 'level',
-        alarmActivationDelayTime: 'level'
+        alarmActivationDelayTime: 'level',
+        remainingTimeUntilArmed: 'value'
     },
     hueBridgeSearcherState: {
         searcherState: 'text',
