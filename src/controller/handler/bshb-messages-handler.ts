@@ -54,8 +54,8 @@ export class BshbMessagesHandler extends BshbHandler {
                     type: 'state',
                     common: {
                         name: 'messages',
-                        type: 'object',
-                        role: 'state',
+                        type: 'array',
+                        role: 'list',
                         write: false,
                         read: true
                     },
@@ -65,7 +65,7 @@ export class BshbMessagesHandler extends BshbHandler {
                     },
                 });
 
-                this.bshb.setState('messages', {val: messages, ack: true});
+                this.bshb.setState('messages', {val: this.mapValueToStorage(messages), ack: true});
 
                 subscriber.next();
                 subscriber.complete();

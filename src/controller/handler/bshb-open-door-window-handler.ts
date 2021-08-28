@@ -152,7 +152,7 @@ export class BshbOpenDoorWindowHandler extends BshbHandler{
                     name: id
                 },
             }, () => {
-                this.bshb.setState(idPrefix + id, {val: list, ack: true});
+                this.bshb.setState(idPrefix + id, {val: this.mapValueToStorage(list), ack: true});
 
                 subscriber.next();
                 subscriber.complete();
@@ -222,7 +222,7 @@ export class BshbOpenDoorWindowHandler extends BshbHandler{
                     name: 'openDoorsAndWindows'
                 },
             }, () => {
-                this.bshb.setState(idPrefix + 'raw', {val: result.parsedResponse, ack: true});
+                this.bshb.setState(idPrefix + 'raw', {val: this.mapValueToStorage(result.parsedResponse), ack: true});
 
                 subscriber.next();
                 subscriber.complete();

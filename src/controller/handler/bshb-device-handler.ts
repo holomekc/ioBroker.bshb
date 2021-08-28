@@ -33,8 +33,9 @@ export class BshbDeviceHandler extends BshbHandler{
                         if (stateKey === '@type') {
                             return;
                         }
+                        if(resultEntry.state[stateKey])
                         this.bshb.setState(BshbDeviceHandler.getId(cachedDeviceService.device, cachedDeviceService.deviceService, stateKey),
-                            {val: resultEntry.state[stateKey], ack: true});
+                            {val: this.mapValueToStorage(resultEntry.state[stateKey]), ack: true});
                     });
                 }
 
@@ -42,11 +43,11 @@ export class BshbDeviceHandler extends BshbHandler{
                 if (resultEntry.faults && resultEntry.faults.entries && resultEntry.faults.entries.length > 0) {
                     // set faults
                     this.bshb.setState(BshbDeviceHandler.getId(cachedDeviceService.device, cachedDeviceService.deviceService, 'faults'),
-                        {val: BshbDeviceHandler.getFaults(resultEntry), ack: true});
+                        {val: this.mapValueToStorage(BshbDeviceHandler.getFaults(resultEntry)), ack: true});
                 } else {
                     // clear faults
                     this.bshb.setState(BshbDeviceHandler.getId(cachedDeviceService.device, cachedDeviceService.deviceService, 'faults'),
-                        {val: BshbDeviceHandler.getFaults(undefined), ack: true});
+                        {val: this.mapValueToStorage(BshbDeviceHandler.getFaults(undefined)), ack: true});
                 }
             }
             return true;
@@ -65,23 +66,26 @@ export class BshbDeviceHandler extends BshbHandler{
             const data: any = {
                 '@type': cachedState.deviceService.state['@type'],
             };
-            data[cachedState.stateKey] = state.val;
 
-            if (Utils.isLevelActive(this.bshb.log.level, LogLevel.debug)) {
-                this.bshb.log.debug('Data which will be send: ' + JSON.stringify(data));
-            }
+            this.mapValueFromStorage(id, state.val).subscribe(value => {
+                data[cachedState.stateKey] = value;
 
-            this.getBshcClient().putState(cachedState.deviceService.path, data).subscribe(response => {
-                if (response) {
-                    if (Utils.isLevelActive(this.bshb.log.level, LogLevel.debug)) {
-                        this.bshb.log.debug(`HTTP response. status=${response.incomingMessage.statusCode},
-                     body=${JSON.stringify(response.parsedResponse)}`);
-                    }
-                } else {
-                    this.bshb.log.debug('no response');
+                if (Utils.isLevelActive(this.bshb.log.level, LogLevel.debug)) {
+                    this.bshb.log.debug('Data which will be send: ' + JSON.stringify(data));
                 }
-            }, error => {
-                this.bshb.log.error(error);
+
+                this.getBshcClient().putState(cachedState.deviceService.path, data).subscribe(response => {
+                    if (response) {
+                        if (Utils.isLevelActive(this.bshb.log.level, LogLevel.debug)) {
+                            this.bshb.log.debug(`HTTP response. status=${response.incomingMessage.statusCode},
+                     body=${JSON.stringify(response.parsedResponse)}`);
+                        }
+                    } else {
+                        this.bshb.log.debug('no response');
+                    }
+                }, error => {
+                    this.bshb.log.error(error);
+                });
             });
 
             return true;
@@ -246,7 +250,7 @@ export class BshbDeviceHandler extends BshbHandler{
 
         const deviceType = deviceService && deviceService.state ? deviceService.state['@type'] : null;
 
-        const role = BshbDefinition.determineRole(deviceType, stateKey);
+        const role = BshbDefinition.determineRole(deviceType, stateKey, stateValue);
         const unit = BshbDefinition.determineUnit(deviceType, stateKey);
         const states = BshbDefinition.determineStates(deviceType, stateKey)
 
@@ -274,16 +278,17 @@ export class BshbDeviceHandler extends BshbHandler{
         this.bshb.getState(id, (err, state) => {
 
             if (state) {
-                if (state.val === stateValue) {
-                    return;
-                }
+                this.mapValueFromStorage(id, state).subscribe(value => {
+                    if (value !== stateValue) {
+                        // only set again if a change is detected.
+                        this.bshb.setState(id, {val: this.mapValueToStorage(stateValue), ack: true});
+                    }
+                });
+            } else {
+                // no previous state so we set it
+                this.bshb.setState(id, {val: this.mapValueToStorage(stateValue), ack: true});
             }
-
-            this.bshb.setState(id, {val: stateValue, ack: true});
         });
-
-        // We do not need to set it for every state. Set it for channel is enough
-        // this.addRoom(device.id, deviceService.id, id, device.roomId);
     }
 
     private addRoom(deviceId: string, deviceServiceId: string, itemId: string, roomId: string) {

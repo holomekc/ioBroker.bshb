@@ -1,6 +1,7 @@
 import {Bshb} from "../../main";
 import {BoschSmartHomeBridge} from "bosch-smart-home-bridge";
 import {Observable} from "rxjs";
+import {ClientCert} from "../../client-cert";
 
 /**
  * Abstract handler which can be used to handle the following things:<br/>
@@ -54,5 +55,40 @@ export abstract class BshbHandler {
      */
     public getBshcClient() {
         return this.boschSmartHomeBridge.getBshcClient();
+    }
+
+    public mapValueToStorage(value: any): any {
+        if (typeof value === "object") {
+            return JSON.stringify(value);
+        } else if (Array.isArray(value)) {
+            return JSON.stringify(value);
+        }
+        return value;
+    }
+
+    public mapValueFromStorage(id: string, value: any): Observable<any> {
+        return new Observable<any>(subscriber => {
+            if (typeof value === "string") {
+                // in case we see a string we check object.common.type for array or object.
+                this.bshb.getObject(id, (error,object) => {
+                    if (object && object.common && (object.common.type === 'array' || object.common.type === 'object')) {
+                        try {
+                            subscriber.next(JSON.parse(value));
+                            subscriber.complete();
+                            return;
+                        } catch (e) {
+                            this.bshb.log.info(`Could not parse value "${value}" for id "${id}". Continue with actual value: ${e.message}`);
+                        }
+                    }
+                    // If condition does not apply or something went wrong we continue with untouched value.
+                    subscriber.next(value);
+                    subscriber.complete();
+                });
+            } else {
+                // No string so no mapping
+                subscriber.next(value);
+                subscriber.complete();
+            }
+        });
     }
 }

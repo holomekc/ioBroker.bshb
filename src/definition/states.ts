@@ -212,6 +212,12 @@ export const STATES: { [TypeName: string]: { [KeyName: string]: { [Key: string]:
             "AUTOMATIC": "AUTOMATIC",
             "OFF": "OFF",
             "UNKNOWN": "UNKNOWN"
+        },
+        roomControlMode: {
+            "OFF": "OFF",
+            "HEATING": "HEATING",
+            "COOLING": "COOLING",
+            "UNKNOWN": "UNKNOWN"
         }
     },
 };

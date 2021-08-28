@@ -34,17 +34,18 @@ class BshbDeviceHandler extends bshb_handler_1.BshbHandler {
                         if (stateKey === '@type') {
                             return;
                         }
-                        this.bshb.setState(BshbDeviceHandler.getId(cachedDeviceService.device, cachedDeviceService.deviceService, stateKey), { val: resultEntry.state[stateKey], ack: true });
+                        if (resultEntry.state[stateKey])
+                            this.bshb.setState(BshbDeviceHandler.getId(cachedDeviceService.device, cachedDeviceService.deviceService, stateKey), { val: this.mapValueToStorage(resultEntry.state[stateKey]), ack: true });
                     });
                 }
                 // fault handling
                 if (resultEntry.faults && resultEntry.faults.entries && resultEntry.faults.entries.length > 0) {
                     // set faults
-                    this.bshb.setState(BshbDeviceHandler.getId(cachedDeviceService.device, cachedDeviceService.deviceService, 'faults'), { val: BshbDeviceHandler.getFaults(resultEntry), ack: true });
+                    this.bshb.setState(BshbDeviceHandler.getId(cachedDeviceService.device, cachedDeviceService.deviceService, 'faults'), { val: this.mapValueToStorage(BshbDeviceHandler.getFaults(resultEntry)), ack: true });
                 }
                 else {
                     // clear faults
-                    this.bshb.setState(BshbDeviceHandler.getId(cachedDeviceService.device, cachedDeviceService.deviceService, 'faults'), { val: BshbDeviceHandler.getFaults(undefined), ack: true });
+                    this.bshb.setState(BshbDeviceHandler.getId(cachedDeviceService.device, cachedDeviceService.deviceService, 'faults'), { val: this.mapValueToStorage(BshbDeviceHandler.getFaults(undefined)), ack: true });
                 }
             }
             return true;
@@ -60,22 +61,24 @@ class BshbDeviceHandler extends bshb_handler_1.BshbHandler {
             const data = {
                 '@type': cachedState.deviceService.state['@type'],
             };
-            data[cachedState.stateKey] = state.val;
-            if (utils_1.Utils.isLevelActive(this.bshb.log.level, log_level_1.LogLevel.debug)) {
-                this.bshb.log.debug('Data which will be send: ' + JSON.stringify(data));
-            }
-            this.getBshcClient().putState(cachedState.deviceService.path, data).subscribe(response => {
-                if (response) {
-                    if (utils_1.Utils.isLevelActive(this.bshb.log.level, log_level_1.LogLevel.debug)) {
-                        this.bshb.log.debug(`HTTP response. status=${response.incomingMessage.statusCode},
+            this.mapValueFromStorage(id, state.val).subscribe(value => {
+                data[cachedState.stateKey] = value;
+                if (utils_1.Utils.isLevelActive(this.bshb.log.level, log_level_1.LogLevel.debug)) {
+                    this.bshb.log.debug('Data which will be send: ' + JSON.stringify(data));
+                }
+                this.getBshcClient().putState(cachedState.deviceService.path, data).subscribe(response => {
+                    if (response) {
+                        if (utils_1.Utils.isLevelActive(this.bshb.log.level, log_level_1.LogLevel.debug)) {
+                            this.bshb.log.debug(`HTTP response. status=${response.incomingMessage.statusCode},
                      body=${JSON.stringify(response.parsedResponse)}`);
+                        }
                     }
-                }
-                else {
-                    this.bshb.log.debug('no response');
-                }
-            }, error => {
-                this.bshb.log.error(error);
+                    else {
+                        this.bshb.log.debug('no response');
+                    }
+                }, error => {
+                    this.bshb.log.error(error);
+                });
             });
             return true;
         }
@@ -212,7 +215,7 @@ class BshbDeviceHandler extends bshb_handler_1.BshbHandler {
             name = this.getDeviceName(device) + '.' + stateKey;
         }
         const deviceType = deviceService && deviceService.state ? deviceService.state['@type'] : null;
-        const role = bshb_definition_1.BshbDefinition.determineRole(deviceType, stateKey);
+        const role = bshb_definition_1.BshbDefinition.determineRole(deviceType, stateKey, stateValue);
         const unit = bshb_definition_1.BshbDefinition.determineUnit(deviceType, stateKey);
         const states = bshb_definition_1.BshbDefinition.determineStates(deviceType, stateKey);
         this.bshb.setObjectNotExists(id, {
@@ -236,14 +239,18 @@ class BshbDeviceHandler extends bshb_handler_1.BshbHandler {
         });
         this.bshb.getState(id, (err, state) => {
             if (state) {
-                if (state.val === stateValue) {
-                    return;
-                }
+                this.mapValueFromStorage(id, state).subscribe(value => {
+                    if (value !== stateValue) {
+                        // only set again if a change is detected.
+                        this.bshb.setState(id, { val: this.mapValueToStorage(stateValue), ack: true });
+                    }
+                });
             }
-            this.bshb.setState(id, { val: stateValue, ack: true });
+            else {
+                // no previous state so we set it
+                this.bshb.setState(id, { val: this.mapValueToStorage(stateValue), ack: true });
+            }
         });
-        // We do not need to set it for every state. Set it for channel is enough
-        // this.addRoom(device.id, deviceService.id, id, device.roomId);
     }
     addRoom(deviceId, deviceServiceId, itemId, roomId) {
         if (roomId) {

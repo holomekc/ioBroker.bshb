@@ -20,7 +20,7 @@ const client_cert_1 = require("./client-cert");
 const bosch_smart_home_bridge_1 = require("bosch-smart-home-bridge");
 const log_level_1 = require("./log-level");
 const fs = require("fs");
-const { v4: uuidv4 } = require('uuid');
+const { v4: uuidv4 } = require('uuid'); // Used commonjs because es did not work for some reason...
 class Bshb extends utils.Adapter {
     constructor(options = {}) {
         super(Object.assign(Object.assign({}, options), { name: 'bshb' }));
@@ -136,7 +136,7 @@ class Bshb extends utils.Adapter {
             this.log.debug('config systemPassword: ' + (this.config.systemPassword != undefined));
             this.log.debug('config pairingDelay: ' + this.config.pairingDelay);
             if (!notPrefixedIdentifier) {
-                throw utils_1.Utils.createError(this.log, 'Identifier not defined but it is a mandatory parameter. Test?');
+                throw utils_1.Utils.createError(this.log, 'Identifier not defined but it is a mandatory parameter.');
             }
             this.loadCertificates(notPrefixedIdentifier).subscribe(clientCert => {
                 this.handleAdapterInformation();
