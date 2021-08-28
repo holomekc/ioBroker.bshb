@@ -287,7 +287,7 @@ export class BshbDeviceHandler extends BshbHandler {
             },
             native: {device: device, deviceService: deviceService, state: stateKey},
         }, (error, obj) => {
-            if (obj) {
+            if (obj || !error) {
                 this.cachedStates.set(this.bshb.namespace + '.' + id, {
                     device: device,
                     deviceService: deviceService,
