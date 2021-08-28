@@ -1,5 +1,5 @@
 import {BshbHandler} from "./bshb-handler";
-import {concat, Observable} from "rxjs";
+import {concat, Observable, tap} from "rxjs";
 
 export class BshbIntrusionDetection extends BshbHandler {
     private readonly folderName: string = 'intrusionDetectionControl'
@@ -14,15 +14,9 @@ export class BshbIntrusionDetection extends BshbHandler {
     handleDetection(): Observable<void> {
         this.bshb.log.info('Start detecting intrusion detection system...');
 
-        // we need to do that because of concat
-        return new Observable<void>(subscriber => {
-            this.detectIntrusionDetectionSystem().subscribe(() => {
-                this.bshb.log.info('Detecting intrusion detection system finished');
-
-                subscriber.next();
-                subscriber.complete();
-            });
-        });
+        return this.detectIntrusionDetectionSystem().pipe(tap({
+            complete: () => this.bshb.log.info('Detecting intrusion detection system finished')
+        }));
     }
 
     sendUpdateToBshc(id: string, state: ioBroker.State): boolean {

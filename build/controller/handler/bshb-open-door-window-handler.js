@@ -7,18 +7,9 @@ const operators_1 = require("rxjs/operators");
 class BshbOpenDoorWindowHandler extends bshb_handler_1.BshbHandler {
     handleDetection() {
         this.bshb.log.info('Start detecting open doors/windows...');
-        // we need to do that because of concat
-        return new rxjs_1.Observable(subscriber => {
-            this.detectOpenDoorsAndWindows().subscribe({
-                next: () => {
-                    this.bshb.log.info('Detecting open doors/windows finished');
-                    subscriber.next();
-                    subscriber.complete();
-                }, error: err => {
-                    subscriber.error(err);
-                }
-            });
-        });
+        return this.detectOpenDoorsAndWindows().pipe((0, rxjs_1.tap)({
+            complete: () => this.bshb.log.info('Detecting open doors/windows finished')
+        }));
     }
     handleBshcUpdate(resultEntry) {
         // we do something in case the state of a shutter contact changed

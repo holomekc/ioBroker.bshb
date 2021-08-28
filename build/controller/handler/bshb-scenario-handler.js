@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.BshbScenarioHandler = void 0;
 const bshb_handler_1 = require("./bshb-handler");
 const rxjs_1 = require("rxjs");
+const operators_1 = require("rxjs/operators");
 /**
  * This handler is used to detect scenarios of bshc
  *
@@ -16,18 +17,9 @@ class BshbScenarioHandler extends bshb_handler_1.BshbHandler {
     }
     handleDetection() {
         this.bshb.log.info('Start detecting scenarios...');
-        // we need to do that because of concat
-        return new rxjs_1.Observable(subscriber => {
-            this.detectScenarios().subscribe({
-                next: () => {
-                    this.bshb.log.info('Detecting scenarios finished');
-                    subscriber.next();
-                    subscriber.complete();
-                }, error: err => {
-                    subscriber.error(err);
-                }
-            });
-        });
+        return this.detectScenarios().pipe((0, rxjs_1.tap)({
+            complete: () => this.bshb.log.info('Detecting scenarios finished')
+        }));
     }
     handleBshcUpdate(resultEntry) {
         if (resultEntry['@type'] === 'scenario') {
@@ -65,74 +57,54 @@ class BshbScenarioHandler extends bshb_handler_1.BshbHandler {
         return false;
     }
     detectScenarios() {
-        return new rxjs_1.Observable(subscriber => {
-            this.getBshcClient().getScenarios({ timeout: this.long_timeout }).subscribe({
-                next: response => {
-                    const scenarios = response.parsedResponse;
-                    this.bshb.setObjectNotExists('scenarios', {
-                        type: 'folder',
-                        common: {
-                            name: 'scenarios',
-                            read: true
-                        },
-                        native: {
-                            id: 'scenarios'
-                        },
-                    });
-                    this.deleteMissingScenarios(scenarios);
-                    scenarios.forEach(scenario => {
-                        // hmm do we want to see more?
-                        const id = 'scenarios.' + scenario.id;
-                        // we overwrite object here on purpose because we reflect 1-1 the data from controller here.
-                        this.bshb.setObject(id, {
-                            type: 'state',
-                            common: {
-                                name: scenario.name,
-                                type: 'boolean',
-                                role: 'button',
-                                write: true,
-                                read: false
-                            },
-                            native: {
-                                id: scenario.id,
-                                name: scenario.name
-                            },
-                        });
-                        this.bshb.setState(id, { val: false, ack: true });
-                    });
-                    subscriber.next();
-                    subscriber.complete();
-                }, error: err => {
-                    subscriber.error(err);
-                }
-            });
-        });
+        return (0, rxjs_1.from)(this.bshb.setObjectNotExistsAsync('scenarios', {
+            type: 'folder',
+            common: {
+                name: 'scenarios',
+                read: true
+            },
+            native: {
+                id: 'scenarios'
+            },
+        })).pipe((0, rxjs_1.switchMap)(() => this.getBshcClient().getScenarios({ timeout: this.long_timeout })), (0, rxjs_1.switchMap)(response => this.deleteMissingScenarios((response.parsedResponse)).pipe((0, rxjs_1.switchMap)(() => (0, rxjs_1.from)(response.parsedResponse)))), (0, rxjs_1.mergeMap)(scenario => {
+            const id = 'scenarios.' + scenario.id;
+            // we overwrite object here on purpose because we reflect 1-1 the data from controller here.
+            return (0, rxjs_1.from)(this.bshb.setObjectAsync(id, {
+                type: 'state',
+                common: {
+                    name: scenario.name,
+                    type: 'boolean',
+                    role: 'button',
+                    write: true,
+                    read: false
+                },
+                native: {
+                    id: scenario.id,
+                    name: scenario.name
+                },
+            })).pipe((0, rxjs_1.tap)(() => this.bshb.setState(id, { val: false, ack: true })));
+        }), (0, rxjs_1.switchMap)(() => (0, rxjs_1.of)(undefined)));
     }
     deleteMissingScenarios(scenarios) {
-        this.bshb.getStatesOf('scenarios', undefined, (err, objects) => {
-            if (objects) {
-                objects.forEach(object => {
-                    let found = false;
-                    for (let i = 0; i < scenarios.length; i++) {
-                        if (object.native.id === scenarios[i].id) {
-                            // found scenario
-                            found = true;
-                            break;
-                        }
-                    }
-                    if (!found) {
-                        // removed scenario
-                        //this.bshb.namespace +
-                        this.bshb.deleteState('scenarios', undefined, object.native.id, undefined, (err) => {
-                            if (err) {
-                                this.bshb.log.error(`Could not delete scenario with id=${object.native.id} because: ` + err);
-                            }
-                        });
-                        this.bshb.log.info(`scenario with id=${object.native.id} removed because it does not exist anymore.`);
-                    }
-                });
+        return (0, rxjs_1.from)(this.bshb.getStatesOfAsync('scenarios', undefined)).pipe((0, rxjs_1.switchMap)(objects => (0, rxjs_1.from)(objects)), (0, rxjs_1.switchMap)(object => {
+            let found = false;
+            for (let i = 0; i < scenarios.length; i++) {
+                if (object.native.id === scenarios[i].id) {
+                    // found scenario
+                    found = true;
+                    break;
+                }
             }
-        });
+            if (!found) {
+                return (0, rxjs_1.from)(this.bshb.deleteStateAsync('scenarios', undefined, object.native.id)).pipe((0, rxjs_1.tap)(() => this.bshb.log.info(`scenario with id=${object.native.id} removed because it does not exist anymore.`)), (0, operators_1.catchError)(err => {
+                    this.bshb.log.error(`Could not delete scenario with id=${object.native.id} because: ` + err);
+                    return (0, rxjs_1.of)(undefined);
+                }));
+            }
+            else {
+                return (0, rxjs_1.of)(undefined);
+            }
+        }));
     }
 }
 exports.BshbScenarioHandler = BshbScenarioHandler;

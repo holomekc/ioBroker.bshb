@@ -1,5 +1,5 @@
 import {BshbHandler} from "./bshb-handler";
-import {concat, Observable} from "rxjs";
+import {concat, Observable, tap} from "rxjs";
 import {BshbResponse} from "bosch-smart-home-bridge";
 import {switchMap} from "rxjs/operators";
 
@@ -8,19 +8,9 @@ export class BshbOpenDoorWindowHandler extends BshbHandler {
     public handleDetection(): Observable<void> {
         this.bshb.log.info('Start detecting open doors/windows...');
 
-        // we need to do that because of concat
-        return new Observable<void>(subscriber => {
-            this.detectOpenDoorsAndWindows().subscribe({
-                next: () => {
-                    this.bshb.log.info('Detecting open doors/windows finished');
-
-                    subscriber.next();
-                    subscriber.complete();
-                }, error: err => {
-                    subscriber.error(err);
-                }
-            });
-        });
+        return this.detectOpenDoorsAndWindows().pipe(tap({
+            complete: () => this.bshb.log.info('Detecting open doors/windows finished')
+        }));
     }
 
     public handleBshcUpdate(resultEntry: any): boolean {

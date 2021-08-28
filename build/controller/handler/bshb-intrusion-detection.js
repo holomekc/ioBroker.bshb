@@ -15,14 +15,9 @@ class BshbIntrusionDetection extends bshb_handler_1.BshbHandler {
     }
     handleDetection() {
         this.bshb.log.info('Start detecting intrusion detection system...');
-        // we need to do that because of concat
-        return new rxjs_1.Observable(subscriber => {
-            this.detectIntrusionDetectionSystem().subscribe(() => {
-                this.bshb.log.info('Detecting intrusion detection system finished');
-                subscriber.next();
-                subscriber.complete();
-            });
-        });
+        return this.detectIntrusionDetectionSystem().pipe((0, rxjs_1.tap)({
+            complete: () => this.bshb.log.info('Detecting intrusion detection system finished')
+        }));
     }
     sendUpdateToBshc(id, state) {
         const match = this.intrusionDetectionControlRegex.exec(id);

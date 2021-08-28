@@ -1,5 +1,6 @@
 import {BshbHandler} from "./bshb-handler";
-import {Observable} from "rxjs";
+import {Observable, tap, of, from, map} from "rxjs";
+import {switchMap} from "rxjs/operators";
 
 /**
  * This handler is used to detect messages from bshc
@@ -32,15 +33,9 @@ export class BshbMessagesHandler extends BshbHandler {
     public handleDetection(): Observable<void> {
         this.bshb.log.info('Start detecting messages...');
 
-        // we need to do that because of concat
-        return new Observable<void>(subscriber => {
-            this.detectMessages().subscribe(() => {
-                this.bshb.log.info('Detecting messages finished');
-
-                subscriber.next();
-                subscriber.complete();
-            });
-        });
+        return this.detectMessages().pipe(tap({
+            complete: () => this.bshb.log.info('Detecting messages finished')
+        }));
     }
 
     public sendUpdateToBshc(id: string, state: ioBroker.State): boolean {
@@ -48,35 +43,25 @@ export class BshbMessagesHandler extends BshbHandler {
     }
 
     private detectMessages(): Observable<void> {
-        return new Observable<void>(subscriber => {
-            this.getBshcClient().getMessages({timeout: this.long_timeout}).subscribe({
-                next: response => {
-                    const messages = response.parsedResponse;
-
-                    this.bshb.setObjectNotExists('messages', {
-                        type: 'state',
-                        common: {
-                            name: 'messages',
-                            type: 'array',
-                            role: 'list',
-                            write: false,
-                            read: true
-                        },
-                        native: {
-                            id: 'messages',
-                            name: 'messages'
-                        },
-                    });
-
-                    this.bshb.setState('messages', {val: this.mapValueToStorage(messages), ack: true});
-
-                    subscriber.next();
-                    subscriber.complete();
-                }, error: err => {
-                    subscriber.error(err);
-                }
-            });
-        });
+        return from(this.bshb.setObjectNotExistsAsync('messages', {
+            type: 'state',
+            common: {
+                name: 'messages',
+                type: 'array',
+                role: 'list',
+                write: false,
+                read: true
+            },
+            native: {
+                id: 'messages',
+                name: 'messages'
+            },
+        })).pipe(
+            switchMap(() => this.getBshcClient().getMessages({timeout: this.long_timeout})),
+            map(response => response.parsedResponse),
+            tap(messages => this.bshb.setState('messages', {val: this.mapValueToStorage(messages), ack: true})),
+            switchMap(() => of(undefined))
+        );
     }
 
 }
