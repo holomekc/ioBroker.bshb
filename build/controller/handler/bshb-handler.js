@@ -53,7 +53,12 @@ class BshbHandler {
                             return;
                         }
                         catch (e) {
-                            this.bshb.log.info(`Could not parse value "${value}" for id "${id}". Continue with actual value: ${e.message}`);
+                            if (e instanceof Error) {
+                                this.bshb.log.info(`Could not parse value "${value}" for id "${id}". Continue with actual value: ${e.message}`);
+                            }
+                            else {
+                                this.bshb.log.info(`Could not parse value "${value}" for id "${id}". Continue with actual value: ${e}`);
+                            }
                         }
                     }
                     // If condition does not apply or something went wrong we continue with untouched value.
