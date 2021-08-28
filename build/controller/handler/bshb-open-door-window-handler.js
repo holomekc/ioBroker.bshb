@@ -9,12 +9,14 @@ class BshbOpenDoorWindowHandler extends bshb_handler_1.BshbHandler {
         this.bshb.log.info('Start detecting open doors/windows...');
         // we need to do that because of concat
         return new rxjs_1.Observable(subscriber => {
-            this.detectOpenDoorsAndWindows().subscribe(() => {
-                this.bshb.log.info('Detecting open doors/windows finished');
-                subscriber.next();
-                subscriber.complete();
-            }, err => {
-                subscriber.error(err);
+            this.detectOpenDoorsAndWindows().subscribe({
+                next: () => {
+                    this.bshb.log.info('Detecting open doors/windows finished');
+                    subscriber.next();
+                    subscriber.complete();
+                }, error: err => {
+                    subscriber.error(err);
+                }
             });
         });
     }
@@ -26,12 +28,14 @@ class BshbOpenDoorWindowHandler extends bshb_handler_1.BshbHandler {
             resultEntry.deviceServiceIds.includes('ShutterContact');
         if (condition1 || condition2) {
             this.bshb.log.debug('Updating open doors/windows state...');
-            this.detectOpenDoorsAndWindows().subscribe(() => {
-                // we do nothing here because we do not need to.
-                this.bshb.log.debug('Updating open doors/windows finished');
-            }, error => {
-                this.bshb.log.warn('something went wrong during open doors/windows detection');
-                this.bshb.log.warn(error);
+            this.detectOpenDoorsAndWindows().subscribe({
+                next: () => {
+                    // we do nothing here because we do not need to.
+                    this.bshb.log.debug('Updating open doors/windows finished');
+                }, error: error => {
+                    this.bshb.log.warn('something went wrong during open doors/windows detection');
+                    this.bshb.log.warn(error);
+                }
             });
             return true;
         }
@@ -43,43 +47,45 @@ class BshbOpenDoorWindowHandler extends bshb_handler_1.BshbHandler {
     }
     detectOpenDoorsAndWindows() {
         return new rxjs_1.Observable(subscriber => {
-            this.getBshcClient().getOpenWindows({ timeout: this.long_timeout }).subscribe(result => {
-                // create folder
-                this.bshb.setObjectNotExists('openDoorsAndWindows', {
-                    type: 'folder',
-                    common: {
-                        name: 'Open Doors / Windows',
-                        read: true
-                    },
-                    native: {
-                        id: 'openDoorsAndWindows'
-                    },
-                });
-                const idPrefix = 'openDoorsAndWindows.';
-                const observables = [];
-                observables.push(this.setAllState(idPrefix, result));
-                observables.push(this.createGroup(idPrefix, 'all', 'All'));
-                observables.push(this.createGroup(idPrefix, 'doors', 'Doors'));
-                observables.push(this.createGroup(idPrefix, 'windows', 'Windows'));
-                observables.push(this.createGroup(idPrefix, 'others', 'Others'));
-                observables.push(this.setList(idPrefix, 'all.all', '--all--', 'All', result));
-                observables.push(this.setList(idPrefix, 'all.open', '--allOpen--', 'All Open', result));
-                observables.push(this.setList(idPrefix, 'all.unknown', '--allUnknown--', 'All Unknown', result));
-                observables.push(this.setList(idPrefix, 'doors.all', 'allDoors', 'All doors', result));
-                observables.push(this.setList(idPrefix, 'doors.open', 'openDoors', 'Open doors', result));
-                observables.push(this.setList(idPrefix, 'doors.unknown', 'unknownDoors', 'Unknown doors', result));
-                observables.push(this.setList(idPrefix, 'windows.all', 'allWindows', 'All windows', result));
-                observables.push(this.setList(idPrefix, 'windows.open', 'openWindows', 'Open windows', result));
-                observables.push(this.setList(idPrefix, 'windows.unknown', 'unknownWindows', 'Unknown windows', result));
-                observables.push(this.setList(idPrefix, 'others.all', 'allOthers', 'All others', result));
-                observables.push(this.setList(idPrefix, 'others.open', 'openOthers', 'Open others', result));
-                observables.push(this.setList(idPrefix, 'others.unknown', 'unknownOthers', 'Unknown others', result));
-                (0, rxjs_1.concat)(...observables).subscribe(() => {
-                    subscriber.next();
-                    subscriber.complete();
-                });
-            }, err => {
-                subscriber.error(err);
+            this.getBshcClient().getOpenWindows({ timeout: this.long_timeout }).subscribe({
+                next: result => {
+                    // create folder
+                    this.bshb.setObjectNotExists('openDoorsAndWindows', {
+                        type: 'folder',
+                        common: {
+                            name: 'Open Doors / Windows',
+                            read: true
+                        },
+                        native: {
+                            id: 'openDoorsAndWindows'
+                        },
+                    });
+                    const idPrefix = 'openDoorsAndWindows.';
+                    const observables = [];
+                    observables.push(this.setAllState(idPrefix, result));
+                    observables.push(this.createGroup(idPrefix, 'all', 'All'));
+                    observables.push(this.createGroup(idPrefix, 'doors', 'Doors'));
+                    observables.push(this.createGroup(idPrefix, 'windows', 'Windows'));
+                    observables.push(this.createGroup(idPrefix, 'others', 'Others'));
+                    observables.push(this.setList(idPrefix, 'all.all', '--all--', 'All', result));
+                    observables.push(this.setList(idPrefix, 'all.open', '--allOpen--', 'All Open', result));
+                    observables.push(this.setList(idPrefix, 'all.unknown', '--allUnknown--', 'All Unknown', result));
+                    observables.push(this.setList(idPrefix, 'doors.all', 'allDoors', 'All doors', result));
+                    observables.push(this.setList(idPrefix, 'doors.open', 'openDoors', 'Open doors', result));
+                    observables.push(this.setList(idPrefix, 'doors.unknown', 'unknownDoors', 'Unknown doors', result));
+                    observables.push(this.setList(idPrefix, 'windows.all', 'allWindows', 'All windows', result));
+                    observables.push(this.setList(idPrefix, 'windows.open', 'openWindows', 'Open windows', result));
+                    observables.push(this.setList(idPrefix, 'windows.unknown', 'unknownWindows', 'Unknown windows', result));
+                    observables.push(this.setList(idPrefix, 'others.all', 'allOthers', 'All others', result));
+                    observables.push(this.setList(idPrefix, 'others.open', 'openOthers', 'Open others', result));
+                    observables.push(this.setList(idPrefix, 'others.unknown', 'unknownOthers', 'Unknown others', result));
+                    (0, rxjs_1.concat)(...observables).subscribe(() => {
+                        subscriber.next();
+                        subscriber.complete();
+                    });
+                }, error: err => {
+                    subscriber.error(err);
+                }
             });
         });
     }

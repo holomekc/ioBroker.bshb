@@ -85,18 +85,20 @@ export class BshbController {
         return new Observable(subscriber => {
             const retry = new BehaviorSubject<boolean>(true);
             retry.pipe(catchError(err => err.pipe(delay(pairingDelay))), tap(() => {
-                this.boschSmartHomeBridge.pairIfNeeded(this.clientName,this.bshb.config.identifier, systemPassword, pairingDelay, -1).pipe(
+                this.boschSmartHomeBridge.pairIfNeeded(this.clientName, this.bshb.config.identifier, systemPassword, pairingDelay, -1).pipe(
                     takeUntil(this.bshb.alive)
-                ).subscribe(response => {
-                    // Everything is ok. We can stop all.
-                    subscriber.next(response);
-                    subscriber.complete();
-                    retry.complete();
-                }, () => {
-                    // Something went wrong. Already logged by lib. We just wait and retry.
-                    timer(pairingDelay).pipe(takeUntil(this.bshb.alive)).subscribe(value => {
-                        retry.next(true);
-                    });
+                ).subscribe({
+                    next: response => {
+                        // Everything is ok. We can stop all.
+                        subscriber.next(response);
+                        subscriber.complete();
+                        retry.complete();
+                    }, error: () => {
+                        // Something went wrong. Already logged by lib. We just wait and retry.
+                        timer(pairingDelay).pipe(takeUntil(this.bshb.alive)).subscribe(() => {
+                            retry.next(true);
+                        });
+                    }
                 })
             }), takeUntil(this.bshb.alive)).subscribe(() => {
                 // We do not care

@@ -29,7 +29,8 @@ exports.UNITS = {
     },
     intrusionDetectionControlState: {
         armActivationDelayTime: 's',
-        alarmActivationDelayTime: 's'
+        alarmActivationDelayTime: 's',
+        remainingTimeUntilArmed: 'ms'
     },
     ventilationDelayState: {
         delay: 's'

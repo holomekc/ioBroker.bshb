@@ -26,7 +26,8 @@ export const UNITS: { [TypeName: string]: { [KeyName: string]: string } } = {
     },
     intrusionDetectionControlState: {
         armActivationDelayTime: 's',
-        alarmActivationDelayTime: 's'
+        alarmActivationDelayTime: 's',
+        remainingTimeUntilArmed: 'ms'
     },
     ventilationDelayState: {
         delay: 's'
