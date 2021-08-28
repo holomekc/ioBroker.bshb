@@ -33,9 +33,18 @@ export class BshbDeviceHandler extends BshbHandler{
                         if (stateKey === '@type') {
                             return;
                         }
-                        if(resultEntry.state[stateKey])
-                        this.bshb.setState(BshbDeviceHandler.getId(cachedDeviceService.device, cachedDeviceService.deviceService, stateKey),
-                            {val: this.mapValueToStorage(resultEntry.state[stateKey]), ack: true});
+                        const id = BshbDeviceHandler.getId(cachedDeviceService.device, cachedDeviceService.deviceService, stateKey);
+
+                        this.bshb.getObject(id, (error, object) => {
+                            if (object) {
+                                this.bshb.setState(BshbDeviceHandler.getId(cachedDeviceService.device, cachedDeviceService.deviceService, stateKey),
+                                    {val: this.mapValueToStorage(resultEntry.state[stateKey]), ack: true});
+                            } else {
+                                // dynamically create objects in case it was missing. This might occur when values are not always set.
+                                // setState is also handled in state creation, so no additional setState necessary.
+                                this.importSimpleState(BshbDeviceHandler.getId(cachedDeviceService.device, cachedDeviceService.deviceService), cachedDeviceService.device, cachedDeviceService.deviceService, stateKey, resultEntry.state[stateKey]);
+                            }
+                        });
                     });
                 }
 
@@ -50,6 +59,7 @@ export class BshbDeviceHandler extends BshbHandler{
                         {val: this.mapValueToStorage(BshbDeviceHandler.getFaults(undefined)), ack: true});
                 }
             }
+
             return true;
         }
         return false;
@@ -361,7 +371,8 @@ export class BshbDeviceHandler extends BshbHandler{
         }
     }
 
-    private static getId(device: any, deviceService: any, stateKey: string): string {
+
+    private static getId(device: any, deviceService: any, stateKey?: string): string {
         let id: string;
 
         if (device) {
@@ -369,7 +380,11 @@ export class BshbDeviceHandler extends BshbHandler{
         } else {
             id = deviceService.id;
         }
-        return id + '.' + stateKey;
+        if (stateKey) {
+            return id + '.' + stateKey;
+        } else {
+            return id;
+        }
     }
 
 }
