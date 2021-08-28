@@ -1,5 +1,5 @@
 import {BshbHandler} from "./bshb-handler";
-import {Observable, of, from, tap, switchMap, mergeMap} from "rxjs";
+import {Observable, of, from, tap, switchMap, mergeMap, last} from "rxjs";
 import {catchError} from "rxjs/operators";
 
 /**
@@ -73,9 +73,12 @@ export class BshbScenarioHandler extends BshbHandler {
         })).pipe(
             switchMap(() => this.getBshcClient().getScenarios({timeout: this.long_timeout})),
             switchMap(response =>
-                this.deleteMissingScenarios((response.parsedResponse)).pipe(switchMap(() => from(response.parsedResponse)))
+                this.deleteMissingScenarios((response.parsedResponse)).pipe(
+                    last(undefined, void 0),
+                    switchMap(() => from(response.parsedResponse)))
             ),
             mergeMap(scenario => {
+                this.bshb.log.debug(`Found scenario ${scenario.id}, ${scenario.name}`);
                 const id = 'scenarios.' + scenario.id;
 
                 // we overwrite object here on purpose because we reflect 1-1 the data from controller here.

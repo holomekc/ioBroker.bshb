@@ -112,7 +112,7 @@ export class BshbController {
      * @return observable with no content
      */
     public startDetection(): Observable<void> {
-        return concat(...this.handlers.map(value => value.handleDetection())).pipe(last());
+        return concat(...this.handlers.map(value => value.handleDetection())).pipe(last(undefined, void 0));
     }
 
     /**
