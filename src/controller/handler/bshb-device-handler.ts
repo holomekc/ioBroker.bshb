@@ -403,12 +403,12 @@ export class BshbDeviceHandler extends BshbHandler {
     private handleBshcUpdateSpecialCases(id: string, device: any, deviceService: any, value: any) {
         if (id.includes('intrusionDetectionSystem.IntrusionDetectionControl.value')) {
             if (value === 'SYSTEM_DISARMED') {
-                this.bshb.setState(id, {
+                this.bshb.setState('intrusionDetectionSystem.IntrusionDetectionControl.remainingTimeUntilArmed', {
                     val: -1,
                     ack: true
                 });
             } else if(value === 'SYSTEM_ARMED') {
-                this.bshb.setState(id, {
+                this.bshb.setState('intrusionDetectionSystem.IntrusionDetectionControl.remainingTimeUntilArmed', {
                     val: 0,
                     ack: true
                 });
