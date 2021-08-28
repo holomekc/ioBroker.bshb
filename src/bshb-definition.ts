@@ -38,8 +38,10 @@ export class BshbDefinition {
      *        '@type' of bsh
      * @param key
      *        key of a device state
+     *@param value
+     *       value of a device state
      */
-    public static determineRole(type: string, key: string): string {
+    public static determineRole(type: string, key: string, value: any): string {
         // faults are always a list. Does not matter which service.
         if (key === 'faults') {
             return 'list';
@@ -53,6 +55,10 @@ export class BshbDefinition {
             if (role !== null && typeof role !== 'undefined') {
                 return role;
             }
+        }
+
+        if (Array.isArray(value)) {
+            return 'list';
         }
 
         return 'state';

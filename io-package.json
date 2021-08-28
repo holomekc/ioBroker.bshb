@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "bshb",
-        "version": "0.1.13",
+        "version": "0.1.14",
         "news": {
+			"0.1.14": {
+				"de": "RoomControlMode Typen hinzugefügt. Aktualisierung für js-controller 3.x.x. Dadurch werden Objekte und Arrays serialisiert. Bitte prüft Eure Logiken.",
+				"en": "RoomControlMode types added. Update for js-controller 3.x.x. This serializes objects and arrays. Please check your logics.",
+				"ru": "Добавлены типы RoomControlMode. Обновление для js-controller 3.x.x. Это сериализует объекты и массивы. Пожалуйста, проверьте вашу логику.",
+				"pt": "Tipos de RoomControlMode adicionados. Actualização para o js-controller 3.x.x. Isto serializa objectos e arrays. Por favor verifique as suas lógicas.",
+				"nl": "RoomControlMode types toegevoegd. Update voor js-controller 3.x.x. Dit serialiseert objecten en arrays. Controleer uw logica.",
+				"fr": "Ajout des types RoomControlMode. Mise à jour pour js-controller 3.x.x. Ceci sérialise les objets et les tableaux. Veuillez vérifier vos logiques.",
+				"it": "Aggiunti i tipi RoomControlMode. Aggiornamento per js-controller 3.x.x. Questo serializza oggetti e array. Per favore controlla le tue logiche.",
+				"es": "Se han añadido los tipos de RoomControlMode. Actualización para js-controller 3.x.x. Esto serializa objetos y arrays. Por favor, compruebe su lógica.",
+				"pl": "Dodano typy RoomControlMode. Aktualizacja dla js-controller 3.x.x. To serializuje obiekty i tablice. Proszę sprawdzić swoje logiki.",
+				"zh-cn": "增加了RoomControlMode类型。针对js-controller 3.x.x的更新。这可以序列化对象和数组。请检查你的逻辑学。"
+			},
 			"0.1.13": {
 				"de": "Update auf Api-Version 2.1. Unterstützung für Alarmprofile hinzufügen.",
 				"en": "Update to api-version 2.1. Add support for intrusion detection profiles.",
@@ -110,18 +122,6 @@
 				"es": "Mejoras para las funciones y las salas",
 				"pl": "Ulepszenia w zakresie funkcji i pomieszczeń",
 				"zh-cn": "功能和房间的改进"
-			},
-			"0.1.4": {
-				"en": "More roles defined for ioBroker states",
-				"de": "Mehr Rollen für ioBroker-Zustände definiert",
-				"ru": "Больше ролей определено для ioBroker состояний",
-				"pt": "Mais papéis definidos para os estados ioBroker",
-				"nl": "Meer rollen gedefinieerd voor ioBroker staten",
-				"fr": "Davantage de rôles définis pour les États ioBroker",
-				"it": "Altri ruoli definiti per gli stati ioBroker",
-				"es": "Se definen más papeles para los estados ioBroker",
-				"pl": "Więcej ról zdefiniowanych dla stanów ioBroker",
-				"zh-cn": "为ioBroker状态定义了更多角色"
 			}
         },
         "title": "Bosch Smart Home Bridge",

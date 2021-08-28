@@ -126,7 +126,7 @@ class BshbOpenDoorWindowHandler extends bshb_handler_1.BshbHandler {
                     name: id
                 },
             }, () => {
-                this.bshb.setState(idPrefix + id, { val: list, ack: true });
+                this.bshb.setState(idPrefix + id, { val: this.mapValueToStorage(list), ack: true });
                 subscriber.next();
                 subscriber.complete();
             });
@@ -191,7 +191,7 @@ class BshbOpenDoorWindowHandler extends bshb_handler_1.BshbHandler {
                     name: 'openDoorsAndWindows'
                 },
             }, () => {
-                this.bshb.setState(idPrefix + 'raw', { val: result.parsedResponse, ack: true });
+                this.bshb.setState(idPrefix + 'raw', { val: this.mapValueToStorage(result.parsedResponse), ack: true });
                 subscriber.next();
                 subscriber.complete();
             });
