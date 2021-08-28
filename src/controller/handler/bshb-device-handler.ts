@@ -287,32 +287,30 @@ export class BshbDeviceHandler extends BshbHandler {
             },
             native: {device: device, deviceService: deviceService, state: stateKey},
         }, (error, obj) => {
-            this.bshb.log.info("Not called if exists?");
-            this.bshb.log.info(JSON.stringify(obj));
+            this.bshb.log.info('I am a callback');
             this.bshb.log.info(JSON.stringify(error));
-            if (obj || !error) {
-                this.cachedStates.set(this.bshb.namespace + '.' + id, {
-                    device: device,
-                    deviceService: deviceService,
-                    id: id,
-                    stateKey: stateKey
-                });
+            this.bshb.log.info(JSON.stringify(obj));
+            this.cachedStates.set(this.bshb.namespace + '.' + id, {
+                device: device,
+                deviceService: deviceService,
+                id: id,
+                stateKey: stateKey
+            });
 
-                this.bshb.getState(id, (err, state) => {
+            this.bshb.getState(id, (err, state) => {
 
-                    if (state) {
-                        this.mapValueFromStorage(id, state).subscribe(value => {
-                            if (value !== stateValue) {
-                                // only set again if a change is detected.
-                                this.bshb.setState(id, {val: this.mapValueToStorage(stateValue), ack: true});
-                            }
-                        });
-                    } else {
-                        // no previous state so we set it
-                        this.bshb.setState(id, {val: this.mapValueToStorage(stateValue), ack: true});
-                    }
-                });
-            }
+                if (state) {
+                    this.mapValueFromStorage(id, state).subscribe(value => {
+                        if (value !== stateValue) {
+                            // only set again if a change is detected.
+                            this.bshb.setState(id, {val: this.mapValueToStorage(stateValue), ack: true});
+                        }
+                    });
+                } else {
+                    // no previous state so we set it
+                    this.bshb.setState(id, {val: this.mapValueToStorage(stateValue), ack: true});
+                }
+            });
         });
     }
 
@@ -410,7 +408,7 @@ export class BshbDeviceHandler extends BshbHandler {
                     val: -1,
                     ack: true
                 });
-            } else if(value === 'SYSTEM_ARMED') {
+            } else if (value === 'SYSTEM_ARMED') {
                 this.bshb.setState('intrusionDetectionSystem.IntrusionDetectionControl.remainingTimeUntilArmed', {
                     val: 0,
                     ack: true
