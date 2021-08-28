@@ -274,6 +274,7 @@ export class BshbDeviceHandler extends BshbHandler {
         const unit = BshbDefinition.determineUnit(deviceType, stateKey);
         const states = BshbDefinition.determineStates(deviceType, stateKey)
 
+        this.bshb.log.info('importSimpleState: ' + id);
         this.bshb.setObjectNotExists(id, {
             type: 'state',
             common: {
