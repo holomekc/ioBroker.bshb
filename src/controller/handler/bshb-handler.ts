@@ -76,8 +76,12 @@ export abstract class BshbHandler {
                             subscriber.next(JSON.parse(value));
                             subscriber.complete();
                             return;
-                        } catch (e) {
-                            this.bshb.log.info(`Could not parse value "${value}" for id "${id}". Continue with actual value: ${e.message}`);
+                        } catch (e: unknown) {
+                            if (e instanceof Error) {
+                                this.bshb.log.info(`Could not parse value "${value}" for id "${id}". Continue with actual value: ${e.message}`);
+                            } else {
+                                this.bshb.log.info(`Could not parse value "${value}" for id "${id}". Continue with actual value: ${e as string}`);
+                            }
                         }
                     }
                     // If condition does not apply or something went wrong we continue with untouched value.

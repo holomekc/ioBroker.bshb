@@ -88,7 +88,7 @@ class BshbIntrusionDetection extends bshb_handler_1.BshbHandler {
             observables.push(this.addProfile(idPrefix, 'disarmProtection', 'Disarm Protection'));
             // mute
             observables.push(this.addProfile(idPrefix, 'muteProtection', 'Mute Protection'));
-            rxjs_1.concat(...observables).subscribe(() => {
+            (0, rxjs_1.concat)(...observables).subscribe(() => {
                 subscriber.next();
                 subscriber.complete();
             });

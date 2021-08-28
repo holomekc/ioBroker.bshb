@@ -174,7 +174,7 @@
 		"dataSource": "push",
         "dependencies": [
             {
-                "js-controller": ">=1.4.2"
+                "js-controller": ">=3.3.15"
             }
         ]
     },

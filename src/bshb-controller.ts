@@ -50,8 +50,12 @@ export class BshbController {
             this.handlers.push(new BshbDeviceHandler(this.bshb, this.boschSmartHomeBridge));
             this.handlers.push(new BshbOpenDoorWindowHandler(this.bshb, this.boschSmartHomeBridge));
 
-        } catch (e) {
-            throw Utils.createError(bshb.log, e);
+        } catch (e: unknown) {
+            if (e instanceof Error) {
+                throw Utils.createError(bshb.log, e.message);
+            } else {
+                throw Utils.createError(bshb.log, e as string);
+            }
         }
     }
 

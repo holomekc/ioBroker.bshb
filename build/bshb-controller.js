@@ -46,7 +46,12 @@ class BshbController {
             this.handlers.push(new bshb_open_door_window_handler_1.BshbOpenDoorWindowHandler(this.bshb, this.boschSmartHomeBridge));
         }
         catch (e) {
-            throw utils_1.Utils.createError(bshb.log, e);
+            if (e instanceof Error) {
+                throw utils_1.Utils.createError(bshb.log, e.message);
+            }
+            else {
+                throw utils_1.Utils.createError(bshb.log, e);
+            }
         }
     }
     getBshcClient() {
@@ -71,19 +76,19 @@ class BshbController {
         // takeUntil must be last in pipe to prevent issues.
         return new rxjs_1.Observable(subscriber => {
             const retry = new rxjs_1.BehaviorSubject(true);
-            retry.pipe(operators_1.catchError(err => err.pipe(operators_1.delay(pairingDelay))), operators_1.tap(() => {
-                this.boschSmartHomeBridge.pairIfNeeded(this.clientName, this.bshb.config.identifier, systemPassword, pairingDelay, -1).pipe(operators_1.takeUntil(this.bshb.alive)).subscribe(response => {
+            retry.pipe((0, operators_1.catchError)(err => err.pipe((0, operators_1.delay)(pairingDelay))), (0, operators_1.tap)(() => {
+                this.boschSmartHomeBridge.pairIfNeeded(this.clientName, this.bshb.config.identifier, systemPassword, pairingDelay, -1).pipe((0, operators_1.takeUntil)(this.bshb.alive)).subscribe(response => {
                     // Everything is ok. We can stop all.
                     subscriber.next(response);
                     subscriber.complete();
                     retry.complete();
                 }, () => {
                     // Something went wrong. Already logged by lib. We just wait and retry.
-                    rxjs_1.timer(pairingDelay).pipe(operators_1.takeUntil(this.bshb.alive)).subscribe(value => {
+                    (0, rxjs_1.timer)(pairingDelay).pipe((0, operators_1.takeUntil)(this.bshb.alive)).subscribe(value => {
                         retry.next(true);
                     });
                 });
-            }), operators_1.takeUntil(this.bshb.alive)).subscribe(() => {
+            }), (0, operators_1.takeUntil)(this.bshb.alive)).subscribe(() => {
                 // We do not care
             });
         });
@@ -94,7 +99,7 @@ class BshbController {
      * @return observable with no content
      */
     startDetection() {
-        return rxjs_1.concat(this.handlers.map(value => value.handleDetection())).pipe(operators_1.switchMap(value => value));
+        return (0, rxjs_1.concat)(this.handlers.map(value => value.handleDetection())).pipe((0, operators_1.switchMap)(value => value));
     }
     /**
      * Changes on a state which results in a call to bshc controller

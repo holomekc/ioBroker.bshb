@@ -263,14 +263,14 @@ class Bshb extends utils.Adapter {
     }
     init(bshbController) {
         // start pairing if needed
-        bshbController.pairDeviceIfNeeded(this.config.systemPassword).pipe(operators_1.catchError((err) => {
+        bshbController.pairDeviceIfNeeded(this.config.systemPassword).pipe((0, operators_1.catchError)((err) => {
             this.log.error('Something went wrong during initialization');
             this.log.error(err);
             return rxjs_1.EMPTY;
-        }), operators_1.switchMap(() => {
+        }), (0, operators_1.switchMap)(() => {
             // Everything is ok. We check for devices first
             return bshbController.startDetection();
-        }), operators_1.takeUntil(this.alive)).subscribe(() => {
+        }), (0, operators_1.takeUntil)(this.alive)).subscribe(() => {
             // register for changes
             this.subscribeStates('*');
             // now we want to subscribe to BSHC for changes

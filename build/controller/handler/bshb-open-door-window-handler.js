@@ -74,7 +74,7 @@ class BshbOpenDoorWindowHandler extends bshb_handler_1.BshbHandler {
                 observables.push(this.setList(idPrefix, 'others.all', 'allOthers', 'All others', result));
                 observables.push(this.setList(idPrefix, 'others.open', 'openOthers', 'Open others', result));
                 observables.push(this.setList(idPrefix, 'others.unknown', 'unknownOthers', 'Unknown others', result));
-                rxjs_1.concat(...observables).subscribe(() => {
+                (0, rxjs_1.concat)(...observables).subscribe(() => {
                     subscriber.next();
                     subscriber.complete();
                 });
@@ -102,7 +102,7 @@ class BshbOpenDoorWindowHandler extends bshb_handler_1.BshbHandler {
         });
     }
     setList(idPrefix, id, key, name, result) {
-        return this.setListState(idPrefix, id, key, name, result).pipe(operators_1.switchMap(() => {
+        return this.setListState(idPrefix, id, key, name, result).pipe((0, operators_1.switchMap)(() => {
             return this.setListCount(idPrefix, id, key, name, result);
         }));
     }

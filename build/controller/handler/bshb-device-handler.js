@@ -34,8 +34,17 @@ class BshbDeviceHandler extends bshb_handler_1.BshbHandler {
                         if (stateKey === '@type') {
                             return;
                         }
-                        if (resultEntry.state[stateKey])
-                            this.bshb.setState(BshbDeviceHandler.getId(cachedDeviceService.device, cachedDeviceService.deviceService, stateKey), { val: this.mapValueToStorage(resultEntry.state[stateKey]), ack: true });
+                        const id = BshbDeviceHandler.getId(cachedDeviceService.device, cachedDeviceService.deviceService, stateKey);
+                        this.bshb.getObject(id, (error, object) => {
+                            if (object) {
+                                this.bshb.setState(BshbDeviceHandler.getId(cachedDeviceService.device, cachedDeviceService.deviceService, stateKey), { val: this.mapValueToStorage(resultEntry.state[stateKey]), ack: true });
+                            }
+                            else {
+                                // dynamically create objects in case it was missing. This might occur when values are not always set.
+                                // setState is also handled in state creation, so no additional setState necessary.
+                                this.importSimpleState(BshbDeviceHandler.getId(cachedDeviceService.device, cachedDeviceService.deviceService), cachedDeviceService.device, cachedDeviceService.deviceService, stateKey, resultEntry.state[stateKey]);
+                            }
+                        });
                     });
                 }
                 // fault handling
@@ -90,13 +99,13 @@ class BshbDeviceHandler extends bshb_handler_1.BshbHandler {
     detectDevices() {
         this.bshb.log.info('Start detecting devices...');
         return new rxjs_1.Observable(subscriber => {
-            this.getBshcClient().getRooms({ timeout: this.long_timeout }).pipe(operators_1.switchMap(response => {
+            this.getBshcClient().getRooms({ timeout: this.long_timeout }).pipe((0, operators_1.switchMap)(response => {
                 const rooms = response.parsedResponse;
                 rooms.forEach(room => {
                     this.cachedRooms.set(room.id, room);
                 });
                 return this.getBshcClient().getDevices({ timeout: this.long_timeout });
-            }), operators_1.switchMap(response => {
+            }), (0, operators_1.switchMap)(response => {
                 const devices = response.parsedResponse;
                 devices.forEach(device => {
                     // this.cachedDevices.set(device.id, device);
@@ -326,7 +335,12 @@ class BshbDeviceHandler extends bshb_handler_1.BshbHandler {
         else {
             id = deviceService.id;
         }
-        return id + '.' + stateKey;
+        if (stateKey) {
+            return id + '.' + stateKey;
+        }
+        else {
+            return id;
+        }
     }
 }
 exports.BshbDeviceHandler = BshbDeviceHandler;
