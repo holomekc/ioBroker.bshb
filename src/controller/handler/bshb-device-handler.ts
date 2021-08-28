@@ -287,6 +287,7 @@ export class BshbDeviceHandler extends BshbHandler {
             },
             native: {device: device, deviceService: deviceService, state: stateKey},
         }, (error, obj) => {
+            this.bshb.log.info("Not called if exists?");
             this.bshb.log.info(JSON.stringify(obj));
             this.bshb.log.info(JSON.stringify(error));
             if (obj || !error) {
