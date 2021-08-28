@@ -232,6 +232,8 @@ export class Bshb extends utils.Adapter {
             // Everything is ok. We check for devices first
             return bshbController.startDetection();
         }), takeUntil(this.alive)).subscribe(() => {
+            this.log.info('Subscribe to ioBroker states');
+
             // register for changes
             this.subscribeStates('*');
 

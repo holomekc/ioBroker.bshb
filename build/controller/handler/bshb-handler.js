@@ -24,13 +24,36 @@ class BshbHandler {
         this.bshb = bshb;
         this.boschSmartHomeBridge = boschSmartHomeBridge;
         this.long_timeout = 5000;
-        this.chain = Promise.resolve();
+        this.enumChain = new rxjs_1.Subject();
+        this.enumChain.pipe((0, rxjs_1.concatMap)(enumObj => {
+            if (enumObj.itemId) {
+                return (0, rxjs_1.from)(this.bshb.addStateToEnumAsync(enumObj.type, enumObj.name, enumObj.deviceId, enumObj.deviceServiceId, enumObj.itemId));
+            }
+            else {
+                return (0, rxjs_1.from)(this.bshb.addChannelToEnumAsync(enumObj.type, enumObj.name, enumObj.deviceId, enumObj.deviceServiceId));
+            }
+        })).subscribe();
     }
     /**
      * Get bshb client
      */
     getBshcClient() {
         return this.boschSmartHomeBridge.getBshcClient();
+    }
+    addRoomEnum(name, deviceId, deviceServiceId, itemId) {
+        this.addEnum('rooms', name, deviceId, deviceServiceId, itemId);
+    }
+    addFunctionEnum(name, deviceId, deviceServiceId, itemId) {
+        this.addEnum('functions', name, deviceId, deviceServiceId, itemId);
+    }
+    addEnum(type, name, deviceId, deviceServiceId, itemId) {
+        this.enumChain.next({
+            type: type,
+            name: name,
+            deviceId: deviceId,
+            deviceServiceId: deviceServiceId,
+            itemId: itemId
+        });
     }
     mapValueToStorage(value) {
         if (typeof value === "object") {

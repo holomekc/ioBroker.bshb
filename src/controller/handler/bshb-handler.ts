@@ -1,7 +1,6 @@
 import {Bshb} from "../../main";
 import {BoschSmartHomeBridge} from "bosch-smart-home-bridge";
-import {Observable} from "rxjs";
-import {ClientCert} from "../../client-cert";
+import {concatMap, from, Observable, Subject} from "rxjs";
 
 /**
  * Abstract handler which can be used to handle the following things:<br/>
@@ -15,7 +14,13 @@ import {ClientCert} from "../../client-cert";
 export abstract class BshbHandler {
     protected long_timeout = 5000;
 
-    protected chain = Promise.resolve();
+    private enumChain = new Subject<{
+        type: string,
+        name: string,
+        deviceId: string,
+        deviceServiceId: string,
+        itemId?: string
+    }>();
 
     /**
      * Create a new handler
@@ -26,6 +31,13 @@ export abstract class BshbHandler {
      *        bshb
      */
     constructor(protected bshb: Bshb, protected boschSmartHomeBridge: BoschSmartHomeBridge) {
+        this.enumChain.pipe(concatMap(enumObj => {
+            if (enumObj.itemId) {
+                return from(this.bshb.addStateToEnumAsync(enumObj.type, enumObj.name, enumObj.deviceId, enumObj.deviceServiceId, enumObj.itemId));
+            } else {
+                return from(this.bshb.addChannelToEnumAsync(enumObj.type,  enumObj.name, enumObj.deviceId, enumObj.deviceServiceId));
+            }
+        })).subscribe();
     }
 
     /**
@@ -55,6 +67,24 @@ export abstract class BshbHandler {
      */
     public getBshcClient() {
         return this.boschSmartHomeBridge.getBshcClient();
+    }
+
+    public addRoomEnum(name: string, deviceId: string, deviceServiceId: string, itemId: string | undefined) {
+        this.addEnum('rooms', name, deviceId, deviceServiceId, itemId);
+    }
+
+    public addFunctionEnum(name: string, deviceId: string, deviceServiceId: string, itemId: string | undefined) {
+        this.addEnum('functions', name, deviceId, deviceServiceId, itemId);
+    }
+
+    public addEnum(type: string, name: string, deviceId: string, deviceServiceId: string, itemId: string | undefined) {
+        this.enumChain.next({
+            type: type,
+            name: name,
+            deviceId: deviceId,
+            deviceServiceId: deviceServiceId,
+            itemId: itemId
+        });
     }
 
     public mapValueToStorage(value: any): any {

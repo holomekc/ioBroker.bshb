@@ -1,7 +1,7 @@
 import {BoschSmartHomeBridge, BoschSmartHomeBridgeBuilder} from 'bosch-smart-home-bridge';
 import {Bshb} from './main';
 import {BshbLogger} from './bshb-logger';
-import {BehaviorSubject, concat, EMPTY, merge, Observable, of, Subject, timer} from 'rxjs';
+import {BehaviorSubject, concat, EMPTY, last, merge, Observable, of, Subject, timer} from 'rxjs';
 import {catchError, delay, delayWhen, repeat, retryWhen, switchMap, takeUntil, tap} from "rxjs/operators";
 import {Utils} from "./utils";
 import {BshbHandler} from "./controller/handler/bshb-handler";
@@ -112,7 +112,7 @@ export class BshbController {
      * @return observable with no content
      */
     public startDetection(): Observable<void> {
-        return concat(this.handlers.map(value => value.handleDetection())).pipe(switchMap(value => value));
+        return concat(...this.handlers.map(value => value.handleDetection())).pipe(last());
     }
 
     /**

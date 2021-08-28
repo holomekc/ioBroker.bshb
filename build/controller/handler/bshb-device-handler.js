@@ -35,20 +35,22 @@ class BshbDeviceHandler extends bshb_handler_1.BshbHandler {
                             return;
                         }
                         const id = BshbDeviceHandler.getId(cachedDeviceService.device, cachedDeviceService.deviceService, stateKey);
-                        this.bshb.getObject(id, (error, object) => {
-                            if (object) {
+                        (0, rxjs_1.from)(this.bshb.getObjectAsync(id)).pipe((0, operators_1.switchMap)(obj => {
+                            if (obj) {
                                 this.bshb.setState(id, {
                                     val: this.mapValueToStorage(resultEntry.state[stateKey]),
                                     ack: true
                                 });
+                                return (0, rxjs_1.of)(undefined);
                             }
                             else {
                                 // dynamically create objects in case it was missing. This might occur when values are not always set.
                                 // setState is also handled in state creation, so no additional setState necessary.
-                                this.importSimpleState(BshbDeviceHandler.getId(cachedDeviceService.device, cachedDeviceService.deviceService), cachedDeviceService.device, cachedDeviceService.deviceService, stateKey, resultEntry.state[stateKey]);
+                                return this.importSimpleState(BshbDeviceHandler.getId(cachedDeviceService.device, cachedDeviceService.deviceService), cachedDeviceService.device, cachedDeviceService.deviceService, stateKey, resultEntry.state[stateKey]);
                             }
+                        }), (0, operators_1.tap)(() => {
                             this.handleBshcUpdateSpecialCases(id, cachedDeviceService.device, cachedDeviceService.deviceService, resultEntry.state[stateKey]);
-                        });
+                        })).subscribe();
                     });
                 }
                 // fault handling
@@ -68,7 +70,7 @@ class BshbDeviceHandler extends bshb_handler_1.BshbHandler {
     sendUpdateToBshc(id, state) {
         let cachedState = this.cachedStates.get(id);
         if (utils_1.Utils.isLevelActive(this.bshb.log.level, log_level_1.LogLevel.debug)) {
-            this.bshb.log.debug('Found cached state: ' + JSON.stringify(cachedState));
+            this.bshb.log.debug(`Send update to BSHC for id: ${id}. Cached state: ${JSON.stringify(cachedState)}`);
         }
         if (cachedState && cachedState.deviceService && cachedState.deviceService.state && cachedState.deviceService.state['@type']) {
             const data = {
@@ -104,85 +106,68 @@ class BshbDeviceHandler extends bshb_handler_1.BshbHandler {
      */
     detectDevices() {
         this.bshb.log.info('Start detecting devices...');
-        return new rxjs_1.Observable(subscriber => {
-            this.getBshcClient().getRooms({ timeout: this.long_timeout }).pipe((0, operators_1.switchMap)(response => {
-                const rooms = response.parsedResponse;
-                rooms.forEach(room => {
-                    this.cachedRooms.set(room.id, room);
-                });
-                return this.getBshcClient().getDevices({ timeout: this.long_timeout });
-            }), (0, operators_1.switchMap)(response => {
-                const devices = response.parsedResponse;
-                devices.forEach(device => {
-                    // this.cachedDevices.set(device.id, device);
-                    const name = this.getDeviceName(device);
-                    this.bshb.setObjectNotExists(device.id, {
-                        type: 'device',
-                        common: {
-                            name: name
-                        },
-                        native: { device: device },
-                    });
-                    this.cachedDevices.set(this.bshb.namespace + '.' + device.id, device);
-                    const rootDeviceName = 'BSHC';
-                    // root device. This should be the bosch smart home controller only. It does not exist as a
-                    // separate device so we add it multiple times but due to unique id this should be ok
-                    this.bshb.setObjectNotExists(device.rootDeviceId, {
-                        type: 'device',
-                        common: {
-                            name: rootDeviceName
-                        },
-                        native: {
-                            device: {
-                                id: device.rootDeviceId,
-                                roomId: device.roomId,
-                                name: rootDeviceName
-                            }
-                        },
-                    });
-                    this.cachedDevices.set(this.bshb.namespace + '.' + device.rootDeviceId, {
+        const rooms = this.getBshcClient().getRooms({ timeout: this.long_timeout }).pipe((0, operators_1.switchMap)(response => {
+            this.bshb.log.debug(`Found ${(response.parsedResponse.length)} rooms.`);
+            return (0, rxjs_1.from)(response.parsedResponse);
+        }), (0, operators_1.switchMap)(room => {
+            this.cachedRooms.set(room.id, room);
+            return (0, rxjs_1.of)(undefined);
+        }));
+        const devices = this.getBshcClient().getDevices({ timeout: this.long_timeout }).pipe((0, operators_1.switchMap)(response => (0, rxjs_1.from)(response.parsedResponse)), (0, operators_1.switchMap)(device => {
+            const name = this.getDeviceName(device);
+            this.bshb.log.debug(`Device ${device.id} detected.`);
+            return (0, rxjs_1.from)(this.bshb.setObjectNotExistsAsync(device.id, {
+                type: 'device',
+                common: {
+                    name: name
+                },
+                native: { device: device },
+            })).pipe((0, operators_1.switchMap)(() => {
+                this.cachedDevices.set(this.bshb.namespace + '.' + device.id, device);
+                const rootDeviceName = 'BSHC';
+                // root device. This should be the bosch smart home controller only. It does not exist as a
+                // separate device so we add it multiple times but due to unique id this should be ok
+                return (0, rxjs_1.from)(this.bshb.setObjectNotExistsAsync(device.rootDeviceId, {
+                    type: 'device',
+                    common: {
+                        name: rootDeviceName
+                    },
+                    native: {
                         device: {
-                            id: device.rootDeviceId
+                            id: device.rootDeviceId,
+                            roomId: device.roomId,
+                            name: rootDeviceName
                         }
-                    });
+                    }
+                }));
+            }), (0, operators_1.tap)(() => {
+                this.cachedDevices.set(this.bshb.namespace + '.' + device.rootDeviceId, {
+                    device: {
+                        id: device.rootDeviceId
+                    }
                 });
-                return this.checkDeviceServices();
-            })).subscribe({
-                next: () => {
-                    this.bshb.log.info('Detecting devices finished');
-                    subscriber.next();
-                    subscriber.complete();
-                }, error: (err) => {
-                    subscriber.error(err);
-                }
-            });
-        });
+            }));
+        }), (0, operators_1.switchMap)(() => (0, rxjs_1.of)(undefined)));
+        return (0, rxjs_1.concat)(rooms, devices, this.checkDeviceServices()).pipe((0, operators_1.tap)({
+            complete: () => this.bshb.log.info('Detecting devices finished')
+        }));
     }
     checkDeviceServices() {
-        return new rxjs_1.Observable(observer => {
-            this.getBshcClient().getDevicesServices({ timeout: this.long_timeout }).subscribe({
-                next: response => {
-                    const deviceServices = response.parsedResponse;
-                    deviceServices.forEach(deviceService => {
-                        this.bshb.getObject(deviceService.deviceId, (err, ioBrokerDevice) => {
-                            if (err) {
-                                this.bshb.log.error('Could not find device. This should not happen: deviceId=' + deviceService.deviceId + ', error=' + err);
-                                return;
-                            }
-                            else if (!ioBrokerDevice) {
-                                this.bshb.log.error('Found device but value is undefined. This should not happen: deviceId=' + deviceService.deviceId);
-                                return;
-                            }
-                            this.importChannels(ioBrokerDevice.native.device, deviceService);
-                        });
-                    });
-                    observer.next();
-                    observer.complete();
-                }, error: err => {
-                    observer.error(err);
+        return this.getBshcClient().getDevicesServices({ timeout: this.long_timeout }).pipe((0, operators_1.switchMap)(response => {
+            this.bshb.log.info(`Found ${response.parsedResponse ? response.parsedResponse.length : '0'} device services.`);
+            return (0, rxjs_1.from)(response.parsedResponse);
+        }), (0, rxjs_1.mergeMap)(deviceService => {
+            this.bshb.log.debug(`Check device service ${deviceService.id}`);
+            return (0, rxjs_1.from)(this.bshb.getObjectAsync(deviceService.deviceId)).pipe((0, operators_1.switchMap)(ioBrokerDevice => {
+                if (!ioBrokerDevice) {
+                    this.bshb.log.error('Found device but value is undefined. This should not happen: deviceId=' + deviceService.deviceId);
+                    return (0, rxjs_1.of)(undefined);
                 }
-            });
-        });
+                else {
+                    return this.importChannels(ioBrokerDevice.native.device, deviceService);
+                }
+            }));
+        }), (0, operators_1.switchMap)(() => (0, rxjs_1.of)(undefined)));
     }
     importChannels(device, deviceService) {
         let id;
@@ -193,35 +178,37 @@ class BshbDeviceHandler extends bshb_handler_1.BshbHandler {
             id = deviceService.id;
         }
         const name = this.getDeviceName(device) + '.' + deviceService.id;
-        this.bshb.setObjectNotExists(id, {
+        return (0, rxjs_1.from)(this.bshb.setObjectNotExistsAsync(id, {
             type: 'channel',
             common: {
                 name: name
             },
             native: { device: device, deviceService: deviceService },
-        }, (err, obj) => {
+        })).pipe((0, operators_1.tap)(obj => {
             if (obj) {
-                // a new object was created we add room and function
                 this.addRoom(device.id, deviceService.id, undefined, device.roomId);
                 this.addFunction(device.id, deviceService.id, undefined);
             }
-        });
+        }), 
         // add fault holder
-        this.importSimpleState(id, device, deviceService, 'faults', BshbDeviceHandler.getFaults(deviceService), false);
-        this.cachedDeviceServices.set(deviceService.path, { device: device, deviceService: deviceService });
-        // add states
-        this.importStates(id, device, deviceService);
+        (0, operators_1.switchMap)(() => this.importSimpleState(id, device, deviceService, 'faults', BshbDeviceHandler.getFaults(deviceService), false)), (0, operators_1.tap)(() => this.cachedDeviceServices.set(deviceService.path, {
+            device: device,
+            deviceService: deviceService
+        })), (0, operators_1.switchMap)(() => this.importStates(id, device, deviceService)));
     }
     importStates(idPrefix, device, deviceService) {
         // device service has a state
         // Only in case we have states
         if (deviceService.state) {
-            Object.keys(deviceService.state).forEach(stateKey => {
+            return (0, rxjs_1.from)(Object.keys(deviceService.state)).pipe((0, rxjs_1.mergeMap)(stateKey => {
                 if (stateKey === '@type') {
-                    return;
+                    return (0, rxjs_1.of)(undefined);
                 }
-                this.importSimpleState(idPrefix, device, deviceService, stateKey, deviceService.state[stateKey]);
-            });
+                return this.importSimpleState(idPrefix, device, deviceService, stateKey, deviceService.state[stateKey]);
+            }));
+        }
+        else {
+            return (0, rxjs_1.of)(undefined);
         }
     }
     importSimpleState(idPrefix, device, deviceService, stateKey, stateValue, write) {
@@ -237,7 +224,13 @@ class BshbDeviceHandler extends bshb_handler_1.BshbHandler {
         const role = bshb_definition_1.BshbDefinition.determineRole(deviceType, stateKey, stateValue);
         const unit = bshb_definition_1.BshbDefinition.determineUnit(deviceType, stateKey);
         const states = bshb_definition_1.BshbDefinition.determineStates(deviceType, stateKey);
-        this.bshb.setObjectNotExists(id, {
+        this.cachedStates.set(this.bshb.namespace + '.' + id, {
+            device: device,
+            deviceService: deviceService,
+            id: id,
+            stateKey: stateKey
+        });
+        return (0, rxjs_1.from)(this.bshb.setObjectNotExistsAsync(id, {
             type: 'state',
             common: {
                 name: name,
@@ -249,30 +242,24 @@ class BshbDeviceHandler extends bshb_handler_1.BshbHandler {
                 states: states
             },
             native: { device: device, deviceService: deviceService, state: stateKey },
-        }, (error, obj) => {
-            if (obj) {
-                this.cachedStates.set(this.bshb.namespace + '.' + id, {
-                    device: device,
-                    deviceService: deviceService,
-                    id: id,
-                    stateKey: stateKey
-                });
-                this.bshb.getState(id, (err, state) => {
-                    if (state) {
-                        this.mapValueFromStorage(id, state).subscribe(value => {
-                            if (value !== stateValue) {
-                                // only set again if a change is detected.
-                                this.bshb.setState(id, { val: this.mapValueToStorage(stateValue), ack: true });
-                            }
-                        });
-                    }
-                    else {
-                        // no previous state so we set it
+        })).pipe((0, operators_1.switchMap)(() => {
+            return (0, rxjs_1.from)(this.bshb.getStateAsync(id));
+        }), (0, operators_1.switchMap)(state => {
+            if (state) {
+                return this.mapValueFromStorage(id, state.val).pipe((0, operators_1.tap)(value => {
+                    if (value !== stateValue) {
+                        // only set again if a change is detected.
                         this.bshb.setState(id, { val: this.mapValueToStorage(stateValue), ack: true });
                     }
-                });
+                }), (0, operators_1.switchMap)(() => (0, rxjs_1.of)(undefined)));
             }
-        });
+            else {
+                // no previous state so we set it
+                this.bshb.setState(id, { val: this.mapValueToStorage(stateValue), ack: true });
+                // we do not wait
+                return (0, rxjs_1.of)(undefined);
+            }
+        }));
     }
     addRoom(deviceId, deviceServiceId, itemId, roomId) {
         if (roomId) {
@@ -282,13 +269,7 @@ class BshbDeviceHandler extends bshb_handler_1.BshbHandler {
                 if (name) {
                     name = name.trim().toLowerCase().replace(/ /g, '_');
                     if (name && name.length > 0) {
-                        // we need to make sure that the value exists to prevent crashing ioBroker
-                        if (itemId) {
-                            this.chain = this.chain.then(() => this.bshb.addStateToEnumAsync('rooms', name, deviceId, deviceServiceId, itemId));
-                        }
-                        else {
-                            this.chain = this.chain.then(() => this.bshb.addChannelToEnumAsync('rooms', name, deviceId, deviceServiceId));
-                        }
+                        this.addRoomEnum(name, deviceId, deviceServiceId, itemId);
                     }
                 }
             }
@@ -299,13 +280,7 @@ class BshbDeviceHandler extends bshb_handler_1.BshbHandler {
         if (name) {
             name = name.trim().toLowerCase().replace(/ /g, '_');
             if (name && name.length > 0) {
-                // we need to make sure that the value exists to prevent crashing ioBroker
-                if (itemId) {
-                    this.chain = this.chain.then(() => this.bshb.addStateToEnumAsync('functions', name, deviceId, deviceServiceId, itemId));
-                }
-                else {
-                    this.chain = this.chain.then(() => this.bshb.addChannelToEnumAsync('functions', name, deviceId, deviceServiceId));
-                }
+                this.addFunctionEnum(name, deviceId, deviceServiceId, itemId);
             }
         }
     }
@@ -359,13 +334,13 @@ class BshbDeviceHandler extends bshb_handler_1.BshbHandler {
     handleBshcUpdateSpecialCases(id, device, deviceService, value) {
         if (id.includes('intrusionDetectionSystem.IntrusionDetectionControl.value')) {
             if (value === 'SYSTEM_DISARMED') {
-                this.bshb.setState(id, {
+                this.bshb.setState('intrusionDetectionSystem.IntrusionDetectionControl.remainingTimeUntilArmed', {
                     val: -1,
                     ack: true
                 });
             }
             else if (value === 'SYSTEM_ARMED') {
-                this.bshb.setState(id, {
+                this.bshb.setState('intrusionDetectionSystem.IntrusionDetectionControl.remainingTimeUntilArmed', {
                     val: 0,
                     ack: true
                 });

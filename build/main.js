@@ -278,6 +278,7 @@ class Bshb extends utils.Adapter {
             // Everything is ok. We check for devices first
             return bshbController.startDetection();
         }), (0, operators_1.takeUntil)(this.alive)).subscribe(() => {
+            this.log.info('Subscribe to ioBroker states');
             // register for changes
             this.subscribeStates('*');
             // now we want to subscribe to BSHC for changes

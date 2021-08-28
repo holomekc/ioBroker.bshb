@@ -101,7 +101,7 @@ class BshbController {
      * @return observable with no content
      */
     startDetection() {
-        return (0, rxjs_1.concat)(this.handlers.map(value => value.handleDetection())).pipe((0, operators_1.switchMap)(value => value));
+        return (0, rxjs_1.concat)(...this.handlers.map(value => value.handleDetection())).pipe((0, rxjs_1.last)());
     }
     /**
      * Changes on a state which results in a call to bshc controller
