@@ -1,16 +1,26 @@
 "use strict";
-var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
-    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
-    return new (P || (P = Promise))(function (resolve, reject) {
-        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
-        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
-        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
-        step((generator = generator.apply(thisArg, _arguments || [])).next());
-    });
+var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    Object.defineProperty(o, k2, { enumerable: true, get: function() { return m[k]; } });
+}) : (function(o, m, k, k2) {
+    if (k2 === undefined) k2 = k;
+    o[k2] = m[k];
+}));
+var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
+    Object.defineProperty(o, "default", { enumerable: true, value: v });
+}) : function(o, v) {
+    o["default"] = v;
+});
+var __importStar = (this && this.__importStar) || function (mod) {
+    if (mod && mod.__esModule) return mod;
+    var result = {};
+    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
+    __setModuleDefault(result, mod);
+    return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Bshb = void 0;
-const utils = require("@iobroker/adapter-core");
+const utils = __importStar(require("@iobroker/adapter-core"));
 const bshb_controller_1 = require("./bshb-controller");
 const rxjs_1 = require("rxjs");
 const operators_1 = require("rxjs/operators");
@@ -19,11 +29,14 @@ const utils_1 = require("./utils");
 const client_cert_1 = require("./client-cert");
 const bosch_smart_home_bridge_1 = require("bosch-smart-home-bridge");
 const log_level_1 = require("./log-level");
-const fs = require("fs");
+const fs = __importStar(require("fs"));
 const { v4: uuidv4 } = require('uuid'); // Used commonjs because es did not work for some reason...
 class Bshb extends utils.Adapter {
     constructor(options = {}) {
-        super(Object.assign(Object.assign({}, options), { name: 'bshb' }));
+        super({
+            ...options,
+            name: 'bshb',
+        });
         this.pollingTrigger = new rxjs_1.BehaviorSubject(true);
         this.pollTimeout = null;
         this.startPollingTimeout = null;
@@ -82,22 +95,22 @@ class Bshb extends utils.Adapter {
                                     const bshbError = error;
                                     if (bshbError.cause && bshbError.cause instanceof bosch_smart_home_bridge_1.BshbError) {
                                         if (bshbError.errorType === bosch_smart_home_bridge_1.BshbErrorType.TIMEOUT) {
-                                            this.log.info(`LongPolling connection timed-out before BSHC closed connection.  Try to reconnect.`);
+                                            this.log.info('LongPolling connection timed-out before BSHC closed connection.  Try to reconnect.');
                                         }
                                         else if (bshbError.errorType === bosch_smart_home_bridge_1.BshbErrorType.ABORT) {
-                                            this.log.warn(`Connection to BSHC closed by adapter. Try to reconnect.`);
+                                            this.log.warn('Connection to BSHC closed by adapter. Try to reconnect.');
                                         }
                                         else {
-                                            this.log.warn(`Something went wrong during long polling. Try to reconnect.`);
+                                            this.log.warn('Something went wrong during long polling. Try to reconnect.');
                                         }
                                     }
                                     else {
-                                        this.log.warn(`Something went wrong during long polling. Try to reconnect.`);
+                                        this.log.warn('Something went wrong during long polling. Try to reconnect.');
                                     }
                                     this.startPolling(bshbController, 5000);
                                 }
                                 else {
-                                    this.log.warn(`Something went wrong during long polling. Try again later.`);
+                                    this.log.warn('Something went wrong during long polling. Try again later.');
                                     this.poll(10000);
                                 }
                             }
@@ -118,38 +131,36 @@ class Bshb extends utils.Adapter {
     /**
      * Is called when databases are connected and adapter received configuration.
      */
-    onReady() {
-        return __awaiter(this, void 0, void 0, function* () {
-            // Overwrite configuration
-            // make sure that identifier is valid regarding Bosch T&C
-            this.log.silly('onReady called. Load configuration');
-            if (!this.config.identifier) {
-                this.config.identifier = uuidv4();
+    async onReady() {
+        // Overwrite configuration
+        // make sure that identifier is valid regarding Bosch T&C
+        this.log.silly('onReady called. Load configuration');
+        if (!this.config.identifier) {
+            this.config.identifier = uuidv4();
+        }
+        this.config.host = this.config.host ? this.config.host.trim() : '';
+        const notPrefixedIdentifier = this.config.identifier ? this.config.identifier.trim() : '';
+        this.config.identifier = 'ioBroker.bshb_' + notPrefixedIdentifier;
+        this.config.systemPassword = this.config.systemPassword ? this.config.systemPassword.trim() : '';
+        this.config.certsPath = this.config.certsPath ? this.config.certsPath.trim() : '';
+        // The adapters config (in the instance object everything under the attribute "native") is accessible via
+        // this.config:
+        this.log.debug('config host: ' + this.config.host);
+        this.log.debug('config identifier: ' + this.config.identifier);
+        this.log.debug('config systemPassword: ' + (this.config.systemPassword != undefined));
+        this.log.debug('config pairingDelay: ' + this.config.pairingDelay);
+        if (!notPrefixedIdentifier) {
+            throw utils_1.Utils.createError(this.log, 'Identifier not defined but it is a mandatory parameter.');
+        }
+        this.loadCertificates(notPrefixedIdentifier).subscribe({
+            next: clientCert => {
+                this.handleAdapterInformation();
+                // Create controller for bosch-smart-home-bridge
+                this.bshbController = new bshb_controller_1.BshbController(this, clientCert.certificate, clientCert.privateKey);
+                this.init(this.bshbController);
+            }, error: error => {
+                this.log.error('Could not initialize adapter. See more details in error: ' + error);
             }
-            this.config.host = this.config.host ? this.config.host.trim() : '';
-            const notPrefixedIdentifier = this.config.identifier ? this.config.identifier.trim() : '';
-            this.config.identifier = 'ioBroker.bshb_' + notPrefixedIdentifier;
-            this.config.systemPassword = this.config.systemPassword ? this.config.systemPassword.trim() : '';
-            this.config.certsPath = this.config.certsPath ? this.config.certsPath.trim() : '';
-            // The adapters config (in the instance object everything under the attribute "native") is accessible via
-            // this.config:
-            this.log.debug('config host: ' + this.config.host);
-            this.log.debug('config identifier: ' + this.config.identifier);
-            this.log.debug('config systemPassword: ' + (this.config.systemPassword != undefined));
-            this.log.debug('config pairingDelay: ' + this.config.pairingDelay);
-            if (!notPrefixedIdentifier) {
-                throw utils_1.Utils.createError(this.log, 'Identifier not defined but it is a mandatory parameter.');
-            }
-            this.loadCertificates(notPrefixedIdentifier).subscribe({
-                next: clientCert => {
-                    this.handleAdapterInformation();
-                    // Create controller for bosch-smart-home-bridge
-                    this.bshbController = new bshb_controller_1.BshbController(this, clientCert.certificate, clientCert.privateKey);
-                    this.init(this.bshbController);
-                }, error: error => {
-                    this.log.error('Could not initialize adapter. See more details in error: ' + error);
-                }
-            });
         });
     }
     /**
@@ -274,10 +285,10 @@ class Bshb extends utils.Adapter {
             this.log.error('Something went wrong during initialization');
             this.log.error(err);
             return rxjs_1.EMPTY;
-        }), (0, operators_1.switchMap)(() => {
-            // Everything is ok. We check for devices first
-            return bshbController.startDetection();
-        }), (0, operators_1.takeUntil)(this.alive)).subscribe(() => {
+        }), 
+        // Everything is ok. We check for devices first
+        (0, operators_1.switchMap)(() => bshbController.startDetection()), (0, operators_1.takeUntil)(this.alive))
+            .subscribe(() => {
             this.log.info('Subscribe to ioBroker states');
             // register for changes
             this.subscribeStates('*');
@@ -381,3 +392,4 @@ else {
     // otherwise start the instance directly
     (() => new Bshb())();
 }
+//# sourceMappingURL=main.js.map

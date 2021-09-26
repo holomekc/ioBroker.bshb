@@ -43,3 +43,4 @@ exports.UNITS = {
         automaticPowerOffTime: 's'
     }
 };
+//# sourceMappingURL=units.js.map

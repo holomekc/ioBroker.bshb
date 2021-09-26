@@ -99,9 +99,7 @@ class BshbOpenDoorWindowHandler extends bshb_handler_1.BshbHandler {
         });
     }
     setList(idPrefix, id, key, name, result) {
-        return this.setListState(idPrefix, id, key, name, result).pipe((0, operators_1.switchMap)(() => {
-            return this.setListCount(idPrefix, id, key, name, result);
-        }));
+        return this.setListState(idPrefix, id, key, name, result).pipe((0, operators_1.switchMap)(() => this.setListCount(idPrefix, id, key, name, result)));
     }
     setListState(idPrefix, id, key, name, result) {
         return new rxjs_1.Observable(subscriber => {
@@ -207,3 +205,4 @@ class BshbOpenDoorWindowHandler extends bshb_handler_1.BshbHandler {
     }
 }
 exports.BshbOpenDoorWindowHandler = BshbOpenDoorWindowHandler;
+//# sourceMappingURL=bshb-open-door-window-handler.js.map

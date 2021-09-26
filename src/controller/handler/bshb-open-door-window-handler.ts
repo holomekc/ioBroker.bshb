@@ -121,9 +121,7 @@ export class BshbOpenDoorWindowHandler extends BshbHandler {
     }
 
     private setList(idPrefix: string, id: string, key: string, name: string, result: BshbResponse<any>): Observable<void> {
-        return this.setListState(idPrefix, id, key, name, result).pipe(switchMap(() => {
-            return this.setListCount(idPrefix, id, key, name, result);
-        }));
+        return this.setListState(idPrefix, id, key, name, result).pipe(switchMap(() => this.setListCount(idPrefix, id, key, name, result)));
     }
 
     private setListState(idPrefix: string, id: string, key: string, name: string, result: BshbResponse<any>): Observable<void> {

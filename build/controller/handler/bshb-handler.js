@@ -56,7 +56,7 @@ class BshbHandler {
         });
     }
     mapValueToStorage(value) {
-        if (typeof value === "object") {
+        if (typeof value === 'object') {
             return JSON.stringify(value);
         }
         else if (Array.isArray(value)) {
@@ -66,7 +66,7 @@ class BshbHandler {
     }
     mapValueFromStorage(id, value) {
         return new rxjs_1.Observable(subscriber => {
-            if (typeof value === "string") {
+            if (typeof value === 'string') {
                 // in case we see a string we check object.common.type for array or object.
                 this.bshb.getObject(id, (error, object) => {
                     if (object && object.common && (object.common.type === 'array' || object.common.type === 'object' || object.common.type === 'json')) {
@@ -98,3 +98,4 @@ class BshbHandler {
     }
 }
 exports.BshbHandler = BshbHandler;
+//# sourceMappingURL=bshb-handler.js.map

@@ -6,3 +6,4 @@ exports.WRITE = {
         remainingTimeUntilArmed: false
     }
 };
+//# sourceMappingURL=write.js.map

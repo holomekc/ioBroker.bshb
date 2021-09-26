@@ -16,3 +16,4 @@ exports.FUNCTIONS = {
     AirQualityLevel: 'airQuality',
     SmokeSensitivity: 'smokeSensitivity'
 };
+//# sourceMappingURL=function.js.map

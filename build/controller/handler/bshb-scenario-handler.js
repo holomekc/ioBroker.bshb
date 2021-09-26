@@ -109,3 +109,4 @@ class BshbScenarioHandler extends bshb_handler_1.BshbHandler {
     }
 }
 exports.BshbScenarioHandler = BshbScenarioHandler;
+//# sourceMappingURL=bshb-scenario-handler.js.map

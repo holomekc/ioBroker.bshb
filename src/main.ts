@@ -225,21 +225,22 @@ export class Bshb extends utils.Adapter {
     private init(bshbController: BshbController) {
         // start pairing if needed
         bshbController.pairDeviceIfNeeded(this.config.systemPassword).pipe(catchError((err: any) => {
-            this.log.error('Something went wrong during initialization');
-            this.log.error(err);
-            return EMPTY;
-        }), switchMap(() => {
+                this.log.error('Something went wrong during initialization');
+                this.log.error(err);
+                return EMPTY;
+            }),
             // Everything is ok. We check for devices first
-            return bshbController.startDetection();
-        }), takeUntil(this.alive)).subscribe(() => {
-            this.log.info('Subscribe to ioBroker states');
+            switchMap(() => bshbController.startDetection()),
+            takeUntil(this.alive))
+            .subscribe(() => {
+                this.log.info('Subscribe to ioBroker states');
 
-            // register for changes
-            this.subscribeStates('*');
+                // register for changes
+                this.subscribeStates('*');
 
-            // now we want to subscribe to BSHC for changes
-            this.startPolling(bshbController);
-        });
+                // now we want to subscribe to BSHC for changes
+                this.startPolling(bshbController);
+            });
     }
 
     private poll = (delay?: number) => {
@@ -346,19 +347,19 @@ export class Bshb extends utils.Adapter {
                                 const bshbError = (error as BshbError);
                                 if (bshbError.cause && bshbError.cause instanceof BshbError) {
                                     if (bshbError.errorType === BshbErrorType.TIMEOUT) {
-                                        this.log.info(`LongPolling connection timed-out before BSHC closed connection.  Try to reconnect.`)
+                                        this.log.info('LongPolling connection timed-out before BSHC closed connection.  Try to reconnect.')
                                     } else if (bshbError.errorType === BshbErrorType.ABORT) {
-                                        this.log.warn(`Connection to BSHC closed by adapter. Try to reconnect.`);
+                                        this.log.warn('Connection to BSHC closed by adapter. Try to reconnect.');
                                     } else {
-                                        this.log.warn(`Something went wrong during long polling. Try to reconnect.`);
+                                        this.log.warn('Something went wrong during long polling. Try to reconnect.');
                                     }
                                 } else {
-                                    this.log.warn(`Something went wrong during long polling. Try to reconnect.`);
+                                    this.log.warn('Something went wrong during long polling. Try to reconnect.');
                                 }
 
                                 this.startPolling(bshbController, 5000);
                             } else {
-                                this.log.warn(`Something went wrong during long polling. Try again later.`);
+                                this.log.warn('Something went wrong during long polling. Try again later.');
                                 this.poll(10000);
                             }
                         }

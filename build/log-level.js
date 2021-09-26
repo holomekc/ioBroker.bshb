@@ -16,3 +16,4 @@ var LogLevel;
     LogLevel[LogLevel["warn"] = 3] = "warn";
     LogLevel[LogLevel["error"] = 4] = "error";
 })(LogLevel = exports.LogLevel || (exports.LogLevel = {}));
+//# sourceMappingURL=log-level.js.map

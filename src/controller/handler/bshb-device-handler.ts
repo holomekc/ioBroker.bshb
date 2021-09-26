@@ -152,7 +152,7 @@ export class BshbDeviceHandler extends BshbHandler {
             filter(this.isDefined),
             switchMap(roomState => this.mapValueFromStorage('info.cache.rooms', roomState.val)),
             tap(roomState => {
-                for (const [key, value] of Object.entries(roomState)) {
+                for (const [ key, value ] of Object.entries(roomState)) {
                     this.bshb.log.debug('Restore cache room: ' + key);
                     this.cachedRooms.set(key, value);
                 }
@@ -410,9 +410,7 @@ export class BshbDeviceHandler extends BshbHandler {
             },
             native: {device: device, deviceService: deviceService, state: stateKey},
         })).pipe(
-            switchMap(() => {
-                return from(this.bshb.getStateAsync(id))
-            }),
+            switchMap(() => from(this.bshb.getStateAsync(id))),
             switchMap(state => {
                 if (state) {
                     return this.mapValueFromStorage(id, state.val).pipe(

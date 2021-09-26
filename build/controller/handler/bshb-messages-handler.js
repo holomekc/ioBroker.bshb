@@ -55,3 +55,4 @@ class BshbMessagesHandler extends bshb_handler_1.BshbHandler {
     }
 }
 exports.BshbMessagesHandler = BshbMessagesHandler;
+//# sourceMappingURL=bshb-messages-handler.js.map

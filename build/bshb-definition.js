@@ -97,3 +97,4 @@ class BshbDefinition {
     }
 }
 exports.BshbDefinition = BshbDefinition;
+//# sourceMappingURL=bshb-definition.js.map

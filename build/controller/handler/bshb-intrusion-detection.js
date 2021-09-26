@@ -113,3 +113,4 @@ class BshbIntrusionDetection extends bshb_handler_1.BshbHandler {
     }
 }
 exports.BshbIntrusionDetection = BshbIntrusionDetection;
+//# sourceMappingURL=bshb-intrusion-detection.js.map

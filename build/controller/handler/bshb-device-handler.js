@@ -116,7 +116,7 @@ class BshbDeviceHandler extends bshb_handler_1.BshbHandler {
             },
             native: {}
         }))), (0, operators_1.switchMap)(() => this.bshb.setObjectNotExistsAsync('info.cache.rooms', {
-            type: "state",
+            type: 'state',
             common: {
                 name: 'rooms',
                 type: 'object',
@@ -328,9 +328,7 @@ class BshbDeviceHandler extends bshb_handler_1.BshbHandler {
                 states: states
             },
             native: { device: device, deviceService: deviceService, state: stateKey },
-        })).pipe((0, operators_1.switchMap)(() => {
-            return (0, rxjs_1.from)(this.bshb.getStateAsync(id));
-        }), (0, operators_1.switchMap)(state => {
+        })).pipe((0, operators_1.switchMap)(() => (0, rxjs_1.from)(this.bshb.getStateAsync(id))), (0, operators_1.switchMap)(state => {
             if (state) {
                 return this.mapValueFromStorage(id, state.val).pipe((0, operators_1.tap)(value => {
                     if (value !== stateValue) {
@@ -435,3 +433,4 @@ class BshbDeviceHandler extends bshb_handler_1.BshbHandler {
     }
 }
 exports.BshbDeviceHandler = BshbDeviceHandler;
+//# sourceMappingURL=bshb-device-handler.js.map
