@@ -38,6 +38,7 @@ If you want to support the work I would appreciate a small donation. This is 100
 ### 0.1.15
 * (holomekc) Restore cache also possible without controller connection to internet. Device services endpoint fails in this case. These failures during detection are ignored now with a warning that e.g. detection of new devices is not possible in this case. Nevertheless, controlling Bosch devices will still work.
 * (holomekc) Fix tests and add "simple" integration test
+* (holomekc) Update structure of project
 
 ### 0.1.14
 * (holomekc) RoomControlMode types added.
