@@ -1,6 +1,6 @@
-import {Bshb} from "../../main";
-import {BoschSmartHomeBridge} from "bosch-smart-home-bridge";
-import {concatMap, from, Observable, Subject} from "rxjs";
+import {Bshb} from '../../main';
+import {BoschSmartHomeBridge} from 'bosch-smart-home-bridge';
+import {concatMap, from, Observable, Subject} from 'rxjs';
 
 /**
  * Abstract handler which can be used to handle the following things:<br/>
@@ -35,7 +35,7 @@ export abstract class BshbHandler {
             if (enumObj.itemId) {
                 return from(this.bshb.addStateToEnumAsync(enumObj.type, enumObj.name, enumObj.deviceId, enumObj.deviceServiceId, enumObj.itemId));
             } else {
-                return from(this.bshb.addChannelToEnumAsync(enumObj.type,  enumObj.name, enumObj.deviceId, enumObj.deviceServiceId));
+                return from(this.bshb.addChannelToEnumAsync(enumObj.type, enumObj.name, enumObj.deviceId, enumObj.deviceServiceId));
             }
         })).subscribe();
     }
@@ -88,7 +88,7 @@ export abstract class BshbHandler {
     }
 
     public mapValueToStorage(value: any): any {
-        if (typeof value === "object") {
+        if (typeof value === 'object') {
             return JSON.stringify(value);
         } else if (Array.isArray(value)) {
             return JSON.stringify(value);
@@ -98,9 +98,9 @@ export abstract class BshbHandler {
 
     public mapValueFromStorage(id: string, value: any): Observable<any> {
         return new Observable<any>(subscriber => {
-            if (typeof value === "string") {
+            if (typeof value === 'string') {
                 // in case we see a string we check object.common.type for array or object.
-                this.bshb.getObject(id, (error,object) => {
+                this.bshb.getObject(id, (error, object) => {
                     if (object && object.common && (object.common.type === 'array' || object.common.type === 'object' || object.common.type === 'json')) {
                         try {
                             subscriber.next(JSON.parse(value));

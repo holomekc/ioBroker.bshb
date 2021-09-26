@@ -1,6 +1,6 @@
-import {BshbHandler} from "./bshb-handler";
-import {Observable, of, from, tap, switchMap, mergeMap, last} from "rxjs";
-import {catchError} from "rxjs/operators";
+import {BshbHandler} from './bshb-handler';
+import {Observable, of, from, tap, switchMap, mergeMap, last} from 'rxjs';
+import {catchError} from 'rxjs/operators';
 
 /**
  * This handler is used to detect scenarios of bshc

@@ -4,11 +4,11 @@
  * @author Christopher Holomek
  * @since 27.09.2019
  */
-import {ROLES} from "./definition/roles";
-import {FUNCTIONS} from "./definition/function";
-import {UNITS} from "./definition/units";
-import {STATES} from "./definition/states";
-import {WRITE} from "./definition/write";
+import {ROLES} from './definition/roles';
+import {FUNCTIONS} from './definition/function';
+import {UNITS} from './definition/units';
+import {STATES} from './definition/states';
+import {WRITE} from './definition/write';
 
 export class BshbDefinition {
 

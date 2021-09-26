@@ -1,9 +1,9 @@
-import {BshbHandler} from "./bshb-handler";
-import {Observable, from, concat, of, mergeMap, filter} from "rxjs";
-import {catchError, switchMap, tap} from "rxjs/operators";
-import {BshbDefinition} from "../../bshb-definition";
-import {Utils} from "../../utils";
-import {LogLevel} from "../../log-level";
+import {BshbHandler} from './bshb-handler';
+import {Observable, from, concat, of, mergeMap, filter} from 'rxjs';
+import {catchError, switchMap, tap} from 'rxjs/operators';
+import {BshbDefinition} from '../../bshb-definition';
+import {Utils} from '../../utils';
+import {LogLevel} from '../../log-level';
 
 /**
  * This handler is used to detect devices of bshc
@@ -134,7 +134,7 @@ export class BshbDeviceHandler extends BshbHandler {
                 native: {}
             }))),
             switchMap(() => this.bshb.setObjectNotExistsAsync('info.cache.rooms', {
-                type: "state",
+                type: 'state',
                 common: {
                     name: 'rooms',
                     type: 'object',
@@ -145,7 +145,7 @@ export class BshbDeviceHandler extends BshbHandler {
                 native: {}
             })));
 
-        const rooms =  preparation.pipe(
+        const rooms = preparation.pipe(
             // Restore rooms cache
             tap(() => this.bshb.log.info('Restoring cache: rooms')),
             switchMap(() => from(this.bshb.getStateAsync('info.cache.rooms'))),

@@ -1,4 +1,4 @@
-import {LogLevel} from "./log-level";
+import {LogLevel} from './log-level';
 
 /**
  * This class contains helpful methods for the adapter

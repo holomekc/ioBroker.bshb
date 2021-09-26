@@ -2,12 +2,12 @@ import * as utils from '@iobroker/adapter-core';
 import {BshbController} from './bshb-controller';
 import {BehaviorSubject, EMPTY, Observable, Subject, Subscriber} from 'rxjs';
 import {catchError, switchMap, takeUntil} from 'rxjs/operators';
-import {Migration} from "./migration";
-import {Utils} from "./utils";
-import {ClientCert} from "./client-cert";
-import {BshbError, BshbErrorType, BshbUtils} from "bosch-smart-home-bridge";
-import {LogLevel} from "./log-level";
-import * as fs from "fs";
+import {Migration} from './migration';
+import {Utils} from './utils';
+import {ClientCert} from './client-cert';
+import {BshbError, BshbErrorType, BshbUtils} from 'bosch-smart-home-bridge';
+import {LogLevel} from './log-level';
+import * as fs from 'fs';
 import Timeout = NodeJS.Timeout;
 
 const {v4: uuidv4} = require('uuid'); // Used commonjs because es did not work for some reason...

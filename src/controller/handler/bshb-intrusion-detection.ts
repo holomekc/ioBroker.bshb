@@ -1,5 +1,5 @@
-import {BshbHandler} from "./bshb-handler";
-import {concat, Observable, tap} from "rxjs";
+import {BshbHandler} from './bshb-handler';
+import {concat, Observable, tap} from 'rxjs';
 
 export class BshbIntrusionDetection extends BshbHandler {
     private readonly folderName: string = 'intrusionDetectionControl'
@@ -87,11 +87,11 @@ export class BshbIntrusionDetection extends BshbHandler {
             // individual
             observables.push(this.addProfile(idPrefix, 'individualProtection', 'Individual Protection'));
             // individual
-            observables.push(this.addProfile(idPrefix,  'individualProtection', 'Individual Protection'));
+            observables.push(this.addProfile(idPrefix, 'individualProtection', 'Individual Protection'));
             // disarm
-            observables.push(this.addProfile(idPrefix,  'disarmProtection', 'Disarm Protection'));
+            observables.push(this.addProfile(idPrefix, 'disarmProtection', 'Disarm Protection'));
             // mute
-            observables.push(this.addProfile(idPrefix,  'muteProtection', 'Mute Protection'));
+            observables.push(this.addProfile(idPrefix, 'muteProtection', 'Mute Protection'));
 
             concat(...observables).subscribe(() => {
                 subscriber.next();

@@ -3,7 +3,7 @@ import {Bshb} from './main';
 
 /**
  * This class implements the logger of bosch-smart-home-bridge and forward it to iobroker
- * 
+ *
  * @author Christopher Holomek
  * @since 27.09.2019
  */
@@ -42,7 +42,7 @@ export class BshbLogger implements Logger {
                 optionalParams.forEach(value => {
                     if (typeof value === 'object') {
                         concatMessage += ' - ' + JSON.stringify(value);
-                    }else{
+                    } else {
                         concatMessage += ' - ' + value;
                     }
                 });
@@ -56,7 +56,7 @@ export class BshbLogger implements Logger {
                 optionalParams.forEach(value => {
                     if (typeof value === 'object') {
                         concatMessage += ' - ' + JSON.stringify(value);
-                    }else{
+                    } else {
                         concatMessage += ' - ' + value;
                     }
                 });

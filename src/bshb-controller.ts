@@ -2,14 +2,14 @@ import {BoschSmartHomeBridge, BoschSmartHomeBridgeBuilder} from 'bosch-smart-hom
 import {Bshb} from './main';
 import {BshbLogger} from './bshb-logger';
 import {BehaviorSubject, concat, EMPTY, last, merge, Observable, of, Subject, timer} from 'rxjs';
-import {catchError, delay, delayWhen, repeat, retryWhen, switchMap, takeUntil, tap} from "rxjs/operators";
-import {Utils} from "./utils";
-import {BshbHandler} from "./controller/handler/bshb-handler";
-import {BshbScenarioHandler} from "./controller/handler/bshb-scenario-handler";
-import {BshbDeviceHandler} from "./controller/handler/bshb-device-handler";
-import {BshbMessagesHandler} from "./controller/handler/bshb-messages-handler";
-import {BshbOpenDoorWindowHandler} from "./controller/handler/bshb-open-door-window-handler";
-import {BshbIntrusionDetection} from "./controller/handler/bshb-intrusion-detection";
+import {catchError, delay, delayWhen, repeat, retryWhen, switchMap, takeUntil, tap} from 'rxjs/operators';
+import {Utils} from './utils';
+import {BshbHandler} from './controller/handler/bshb-handler';
+import {BshbScenarioHandler} from './controller/handler/bshb-scenario-handler';
+import {BshbDeviceHandler} from './controller/handler/bshb-device-handler';
+import {BshbMessagesHandler} from './controller/handler/bshb-messages-handler';
+import {BshbOpenDoorWindowHandler} from './controller/handler/bshb-open-door-window-handler';
+import {BshbIntrusionDetection} from './controller/handler/bshb-intrusion-detection';
 
 /**
  * This controller encapsulates bosch-smart-home-bridge and provides it to iobroker.bshb

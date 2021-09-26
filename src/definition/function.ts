@@ -1,4 +1,4 @@
-export const FUNCTIONS: { [FunctionName: string]:  string  } = {
+export const FUNCTIONS: { [FunctionName: string]: string } = {
     TemperatureLevel: 'heating',
     TemperatureOffset: 'heating',
     Thermostat: 'heating',
