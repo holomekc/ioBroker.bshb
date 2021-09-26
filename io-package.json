@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "bshb",
-        "version": "0.1.14",
+        "version": "0.1.15",
         "news": {
+			"0.1.15": {
+				"de": "Adapter kann nun auch ohne Internetverbindung neu gestartet werden.",
+				"en": "Adapter can now be restarted without internet connection.",
+				"ru": "Теперь адаптер можно перезапустить без подключения к Интернету.",
+				"pt": "O adaptador pode agora ser reiniciado sem ligação à Internet.",
+				"nl": "De adapter kan nu opnieuw worden opgestart zonder internetverbinding.",
+				"fr": "L'adaptateur peut maintenant être redémarré sans connexion Internet.",
+				"it": "L'adattatore può ora essere riavviato senza connessione internet.",
+				"es": "El adaptador ahora puede reiniciarse sin conexión a Internet.",
+				"pl": "Adapter można teraz uruchomić ponownie bez połączenia z Internetem.",
+				"zh-cn": "适配器现在可以在没有互联网连接的情况下重新启动。"
+			},
 			"0.1.14": {
 				"de": "RoomControlMode Typen hinzugefügt. Aktualisierung für js-controller 3.x.x. Dadurch werden Objekte und Arrays serialisiert. Bitte prüft Eure Logiken.",
 				"en": "RoomControlMode types added. Update for js-controller 3.x.x. This serializes objects and arrays. Please check your logics.",
@@ -110,18 +122,6 @@
 				"es": "Se añadió la característica de puertas y ventanas abiertas",
 				"pl": "Dodano funkcję otwartych drzwi i okien",
 				"zh-cn": "新增了开门和开窗功能"
-			},
-			"0.1.5": {
-				"en": "Improvements for functions and rooms",
-				"de": "Verbesserungen für Funktionen und Räume",
-				"ru": "Улучшения для функций и комнат",
-				"pt": "Melhorias para as funções e salas",
-				"nl": "Verbeteringen voor functies en kamers",
-				"fr": "Améliorations pour les fonctions et les salles",
-				"it": "Miglioramenti per le funzioni e gli ambienti",
-				"es": "Mejoras para las funciones y las salas",
-				"pl": "Ulepszenia w zakresie funkcji i pomieszczeń",
-				"zh-cn": "功能和房间的改进"
 			}
         },
         "title": "Bosch Smart Home Bridge",

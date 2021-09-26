@@ -22,7 +22,13 @@ class BshbDeviceHandler extends bshb_handler_1.BshbHandler {
         this.cachedDeviceServices = new Map();
     }
     handleDetection() {
-        return this.detectDevices();
+        const cache = this.restoreCache();
+        const devices = this.detectDevices().pipe((0, operators_1.catchError)(err => {
+            // skip errors here
+            this.bshb.log.warn('Failure during detection in BshbDeviceHandler. Continue with cached data. This only works if the adapter has been started successfully at least once. New devices may not be recognized. ' + err);
+            return (0, rxjs_1.of)(undefined);
+        }));
+        return (0, rxjs_1.concat)(cache, devices);
     }
     handleBshcUpdate(resultEntry) {
         if (resultEntry.path) {
@@ -101,6 +107,77 @@ class BshbDeviceHandler extends bshb_handler_1.BshbHandler {
         }
         return false;
     }
+    restoreCache() {
+        let start = (0, rxjs_1.of)('').pipe((0, operators_1.tap)(() => this.bshb.log.info('Restoring cache started...')));
+        const preparation = start.pipe((0, operators_1.switchMap)(() => (0, rxjs_1.from)(this.bshb.setObjectNotExistsAsync('info.cache', {
+            type: 'folder',
+            common: {
+                name: 'cache'
+            },
+            native: {}
+        }))), (0, operators_1.switchMap)(() => this.bshb.setObjectNotExistsAsync('info.cache.rooms', {
+            type: "state",
+            common: {
+                name: 'rooms',
+                type: 'object',
+                role: 'state',
+                read: true,
+                write: false,
+            },
+            native: {}
+        })));
+        const rooms = preparation.pipe(
+        // Restore rooms cache
+        (0, operators_1.tap)(() => this.bshb.log.info('Restoring cache: rooms')), (0, operators_1.switchMap)(() => (0, rxjs_1.from)(this.bshb.getStateAsync('info.cache.rooms'))), (0, rxjs_1.filter)(this.isDefined), (0, operators_1.switchMap)(roomState => this.mapValueFromStorage('info.cache.rooms', roomState.val)), (0, operators_1.tap)(roomState => {
+            for (const [key, value] of Object.entries(roomState)) {
+                this.bshb.log.debug('Restore cache room: ' + key);
+                this.cachedRooms.set(key, value);
+            }
+        }));
+        const devices = rooms.pipe((0, operators_1.tap)(() => this.bshb.log.info('Restoring cache: devices, device service and states')), 
+        // Restore devices, services and states
+        // First get all objects and create stream
+        (0, operators_1.switchMap)(() => (0, rxjs_1.from)(this.bshb.getDevicesAsync())), (0, operators_1.switchMap)(result => (0, rxjs_1.from)(result)), (0, rxjs_1.filter)(obj => obj.native.device && obj.native.device.id), 
+        // Restore device
+        (0, operators_1.tap)(obj => {
+            this.bshb.log.debug('Restore cache device: ' + obj.native.device.id);
+            this.cachedDevices.set(this.bshb.namespace + '.' + obj.native.device.id, obj.native.device);
+        }));
+        const deviceServices = devices.pipe(
+        // We use device.id because it is the ioBroker id but Object does not provide id without namespace.
+        (0, rxjs_1.mergeMap)(obj => (0, rxjs_1.from)(this.bshb.getChannelsOfAsync(obj.native.device.id))), (0, operators_1.switchMap)(result => (0, rxjs_1.from)(result)), (0, rxjs_1.filter)(obj => obj.native.device && obj.native.device.id &&
+            obj.native.deviceService && obj.native.deviceService.id && obj.native.deviceService.path), 
+        // Restore device service
+        (0, operators_1.tap)(channelObj => {
+            const id = BshbDeviceHandler.getId(channelObj.native.device, channelObj.native.deviceService);
+            this.bshb.log.silly('Restore cache device service: ' + id);
+            this.cachedDeviceServices.set(channelObj.native.deviceService.path, {
+                device: channelObj.native.device,
+                deviceService: channelObj.native.deviceService
+            });
+        }));
+        const states = deviceServices.pipe((0, rxjs_1.mergeMap)(obj => (0, rxjs_1.from)(this.bshb.getStatesOfAsync(obj.native.device.id, obj.native.deviceService.id))), (0, operators_1.switchMap)(result => (0, rxjs_1.from)(result)), (0, rxjs_1.filter)(obj => obj.native.device && obj.native.device.id &&
+            obj.native.deviceService && obj.native.deviceService.id &&
+            obj.native.state), (0, operators_1.tap)(stateObj => {
+            const id = BshbDeviceHandler.getId(stateObj.native.device, stateObj.native.deviceService, stateObj.native.state);
+            this.bshb.log.silly('Restore cache state: ' + id);
+            this.cachedStates.set(this.bshb.namespace + '.' + id, {
+                device: stateObj.native.device,
+                deviceService: stateObj.native.deviceService,
+                id: id,
+                stateKey: stateObj.native.state
+            });
+        }));
+        return states.pipe((0, operators_1.tap)({
+            complete: () => this.bshb.log.info('Restoring cache finished')
+        }), (0, operators_1.switchMap)(() => (0, rxjs_1.of)(undefined)), (0, operators_1.catchError)(err => {
+            this.bshb.log.warn('Restoring Cache failed. We continue anyway. ' + err);
+            return (0, rxjs_1.of)(undefined);
+        }));
+    }
+    isDefined(arg) {
+        return arg !== null && arg !== undefined;
+    }
     /**
      * detect devices will search for all devices and device states and load them to iobroker.
      */
@@ -112,6 +189,15 @@ class BshbDeviceHandler extends bshb_handler_1.BshbHandler {
         }), (0, operators_1.switchMap)(room => {
             this.cachedRooms.set(room.id, room);
             return (0, rxjs_1.of)(undefined);
+        }), (0, operators_1.tap)({
+            complete: () => {
+                const result = {};
+                this.cachedRooms.forEach((value, key) => {
+                    result[key] = value;
+                });
+                // Cache result at the end
+                this.bshb.setState('info.cache.rooms', { val: this.mapValueToStorage(result), ack: true });
+            }
         }));
         const devices = this.getBshcClient().getDevices({ timeout: this.long_timeout }).pipe((0, operators_1.switchMap)(response => (0, rxjs_1.from)(response.parsedResponse)), (0, operators_1.switchMap)(device => {
             const name = this.getDeviceName(device);
@@ -154,7 +240,7 @@ class BshbDeviceHandler extends bshb_handler_1.BshbHandler {
     }
     checkDeviceServices() {
         return this.getBshcClient().getDevicesServices({ timeout: this.long_timeout }).pipe((0, operators_1.switchMap)(response => {
-            this.bshb.log.info(`Found ${response.parsedResponse ? response.parsedResponse.length : '0'} device services.`);
+            this.bshb.log.debug(`Found ${response.parsedResponse ? response.parsedResponse.length : '0'} device services.`);
             return (0, rxjs_1.from)(response.parsedResponse);
         }), (0, rxjs_1.mergeMap)(deviceService => {
             this.bshb.log.debug(`Check device service ${deviceService.id}`);

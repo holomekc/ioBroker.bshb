@@ -101,7 +101,7 @@ export abstract class BshbHandler {
             if (typeof value === "string") {
                 // in case we see a string we check object.common.type for array or object.
                 this.bshb.getObject(id, (error,object) => {
-                    if (object && object.common && (object.common.type === 'array' || object.common.type === 'object')) {
+                    if (object && object.common && (object.common.type === 'array' || object.common.type === 'object' || object.common.type === 'json')) {
                         try {
                             subscriber.next(JSON.parse(value));
                             subscriber.complete();

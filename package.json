@@ -1,6 +1,6 @@
 {
   "name": "iobroker.bshb",
-  "version": "0.1.14",
+  "version": "0.1.15",
   "description": "Connects Bosch Smart Home Interface-Processes to ioBroker",
   "author": {
     "name": "Christopher Holomek",
