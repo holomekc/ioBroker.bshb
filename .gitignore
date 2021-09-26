@@ -44,3 +44,12 @@ typings/
 
 # next.js build output
 .next
+
+Thumbs.db
+
+# NYC coverage files
+coverage
+
+# i18n intermediate files
+admin/i18n/flat.txt
+admin/i18n/*/flat.txt
