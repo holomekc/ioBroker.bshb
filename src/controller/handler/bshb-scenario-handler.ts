@@ -1,6 +1,6 @@
 import {BshbHandler} from './bshb-handler';
 import {Observable, of, from, tap, switchMap, mergeMap, last} from 'rxjs';
-import {catchError} from 'rxjs/operators';
+import {catchError, delay} from 'rxjs/operators';
 
 /**
  * This handler is used to detect scenarios of bshc
@@ -35,6 +35,25 @@ export class BshbScenarioHandler extends BshbHandler {
             });
 
             return true;
+        } else if (resultEntry['@type'] === 'scenarioTriggered') {
+            // Shortly mark scenario as true and then after 1s switch back to false
+            const id = `scenarios.${resultEntry['id']}`;
+            from(this.bshb.setStateAsync(id, {val: true, ack: true})).pipe(
+                delay(1000),
+                switchMap(() => from(this.bshb.setStateAsync(id, {
+                    val: false,
+                    ack: true
+                })))
+            ).subscribe({
+                next: () => {
+                    // we do nothing here because we do not need to.
+                    this.bshb.log.debug(`Scenario with id=${resultEntry['id']} was triggered.`);
+                }, error: error => {
+                    this.bshb.log.warn('Error occurred while updating scenario after it receiving trigger.');
+                    this.bshb.log.warn(error);
+                }
+            });
+            return true;
         }
         return false;
     }
@@ -48,7 +67,6 @@ export class BshbScenarioHandler extends BshbHandler {
                 this.getBshcClient().triggerScenario(match[1]).subscribe({
                     next: () => {
                         this.bshb.log.info(`Scenario with id=${match[1]} triggered`);
-                        this.bshb.setState(id, {val: false, ack: true});
                     }, error: error => {
                         this.bshb.log.warn(`Could not send trigger for scenario with id=${match[1]} and value=${state.val}: ` + error)
                     }

@@ -36,6 +36,23 @@ class BshbScenarioHandler extends bshb_handler_1.BshbHandler {
             });
             return true;
         }
+        else if (resultEntry['@type'] === 'scenarioTriggered') {
+            // Shortly mark scenario as true and then after 1s switch back to false
+            const id = `scenarios.${resultEntry['id']}`;
+            (0, rxjs_1.from)(this.bshb.setStateAsync(id, { val: true, ack: true })).pipe((0, operators_1.delay)(1000), (0, rxjs_1.switchMap)(() => (0, rxjs_1.from)(this.bshb.setStateAsync(id, {
+                val: false,
+                ack: true
+            })))).subscribe({
+                next: () => {
+                    // we do nothing here because we do not need to.
+                    this.bshb.log.debug(`Scenario with id=${resultEntry['id']} was triggered.`);
+                }, error: error => {
+                    this.bshb.log.warn('Error occurred while updating scenario after it receiving trigger.');
+                    this.bshb.log.warn(error);
+                }
+            });
+            return true;
+        }
         return false;
     }
     sendUpdateToBshc(id, state) {
@@ -46,7 +63,6 @@ class BshbScenarioHandler extends bshb_handler_1.BshbHandler {
                 this.getBshcClient().triggerScenario(match[1]).subscribe({
                     next: () => {
                         this.bshb.log.info(`Scenario with id=${match[1]} triggered`);
-                        this.bshb.setState(id, { val: false, ack: true });
                     }, error: error => {
                         this.bshb.log.warn(`Could not send trigger for scenario with id=${match[1]} and value=${state.val}: ` + error);
                     }

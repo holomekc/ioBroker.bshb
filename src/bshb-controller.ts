@@ -10,6 +10,7 @@ import {BshbDeviceHandler} from './controller/handler/bshb-device-handler';
 import {BshbMessagesHandler} from './controller/handler/bshb-messages-handler';
 import {BshbOpenDoorWindowHandler} from './controller/handler/bshb-open-door-window-handler';
 import {BshbIntrusionDetection} from './controller/handler/bshb-intrusion-detection';
+import {BshbGeneralUpdateHandler} from './controller/handler/bshb-general-update-handler';
 
 /**
  * This controller encapsulates bosch-smart-home-bridge and provides it to iobroker.bshb
@@ -44,6 +45,7 @@ export class BshbController {
                 .build();
 
             this.handlers = [];
+            this.handlers.push(new BshbGeneralUpdateHandler(this.bshb, this.boschSmartHomeBridge));
             this.handlers.push(new BshbScenarioHandler(this.bshb, this.boschSmartHomeBridge));
             this.handlers.push(new BshbMessagesHandler(this.bshb, this.boschSmartHomeBridge));
             this.handlers.push(new BshbIntrusionDetection(this.bshb, this.boschSmartHomeBridge));

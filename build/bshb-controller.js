@@ -11,6 +11,7 @@ const bshb_device_handler_1 = require("./controller/handler/bshb-device-handler"
 const bshb_messages_handler_1 = require("./controller/handler/bshb-messages-handler");
 const bshb_open_door_window_handler_1 = require("./controller/handler/bshb-open-door-window-handler");
 const bshb_intrusion_detection_1 = require("./controller/handler/bshb-intrusion-detection");
+const bshb_general_update_handler_1 = require("./controller/handler/bshb-general-update-handler");
 /**
  * This controller encapsulates bosch-smart-home-bridge and provides it to iobroker.bshb
  *
@@ -39,6 +40,7 @@ class BshbController {
                 .withLogger(new bshb_logger_1.BshbLogger(bshb))
                 .build();
             this.handlers = [];
+            this.handlers.push(new bshb_general_update_handler_1.BshbGeneralUpdateHandler(this.bshb, this.boschSmartHomeBridge));
             this.handlers.push(new bshb_scenario_handler_1.BshbScenarioHandler(this.bshb, this.boschSmartHomeBridge));
             this.handlers.push(new bshb_messages_handler_1.BshbMessagesHandler(this.bshb, this.boschSmartHomeBridge));
             this.handlers.push(new bshb_intrusion_detection_1.BshbIntrusionDetection(this.bshb, this.boschSmartHomeBridge));
