@@ -96,7 +96,7 @@ class BshbIntrusionDetection extends bshb_handler_1.BshbHandler {
                 common: {
                     name: name,
                     type: 'boolean',
-                    role: 'button',
+                    role: 'switch',
                     read: false,
                     write: true
                 },
