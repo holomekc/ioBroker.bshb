@@ -107,7 +107,7 @@ export class BshbIntrusionDetection extends BshbHandler {
                 common: {
                     name: name,
                     type: 'boolean',
-                    role: 'button',
+                    role: 'switch',
                     read: false,
                     write: true
                 },

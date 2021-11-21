@@ -105,7 +105,7 @@ export class BshbScenarioHandler extends BshbHandler {
                     common: {
                         name: scenario.name,
                         type: 'boolean',
-                        role: 'button',
+                        role: 'switch',
                         write: true,
                         read: false
                     },
