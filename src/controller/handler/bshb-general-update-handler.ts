@@ -17,7 +17,7 @@ export class BshbGeneralUpdateHandler extends BshbHandler {
     }
 
     handleDetection(): Observable<void> {
-        return from(this.bshb.setObjectNotExistsAsync('updates', {
+        return this.setObjectNotExistsAsync('updates', {
             type: 'state',
             common: {
                 name: 'Updates',
@@ -29,7 +29,7 @@ export class BshbGeneralUpdateHandler extends BshbHandler {
             native: {
                 id: 'updates'
             }
-        })).pipe(
+        }).pipe(
             switchMap(() => of(undefined))
         );
     }

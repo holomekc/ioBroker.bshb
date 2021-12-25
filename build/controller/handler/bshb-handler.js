@@ -1,6 +1,7 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.BshbHandler = void 0;
+const operators_1 = require("rxjs/operators");
 const rxjs_1 = require("rxjs");
 /**
  * Abstract handler which can be used to handle the following things:<br/>
@@ -95,6 +96,25 @@ class BshbHandler {
                 subscriber.complete();
             }
         });
+    }
+    /**
+     * A custom implementation of setObjectNotExistsAsync object is always provided, and it does not
+     * matter if object was created or not. At the moment there is no way to distinguish between creation
+     * and no creation. We will see if this is sufficient.
+     * @param id id to set
+     * @param object object ot create if not exists
+     * @param options optional options
+     */
+    setObjectNotExistsAsync(id, object, options) {
+        return (0, rxjs_1.from)(this.bshb.getObjectAsync(id, options)).pipe((0, rxjs_1.switchMap)(obj => {
+            if (!obj) {
+                return (0, rxjs_1.from)(this.bshb.setObjectAsync(id, object)).pipe((0, operators_1.tap)(o => o._bshbCreated = true), (0, rxjs_1.map)(o => o));
+            }
+            else {
+                obj._bshbCreated = false;
+                return (0, rxjs_1.of)(obj);
+            }
+        }));
     }
 }
 exports.BshbHandler = BshbHandler;

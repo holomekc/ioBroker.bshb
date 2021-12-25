@@ -38,7 +38,7 @@ class BshbMessagesHandler extends bshb_handler_1.BshbHandler {
         return false;
     }
     detectMessages() {
-        return (0, rxjs_1.from)(this.bshb.setObjectNotExistsAsync('messages', {
+        return this.setObjectNotExistsAsync('messages', {
             type: 'state',
             common: {
                 name: 'messages',
@@ -51,7 +51,7 @@ class BshbMessagesHandler extends bshb_handler_1.BshbHandler {
                 id: 'messages',
                 name: 'messages'
             },
-        })).pipe((0, operators_1.switchMap)(() => this.getBshcClient().getMessages({ timeout: this.long_timeout })), (0, rxjs_1.map)(response => response.parsedResponse), (0, rxjs_1.tap)(messages => this.bshb.setState('messages', { val: this.mapValueToStorage(messages), ack: true })), (0, operators_1.switchMap)(() => (0, rxjs_1.of)(undefined)));
+        }).pipe((0, operators_1.switchMap)(() => this.getBshcClient().getMessages({ timeout: this.long_timeout })), (0, rxjs_1.map)(response => response.parsedResponse), (0, rxjs_1.tap)(messages => this.bshb.setState('messages', { val: this.mapValueToStorage(messages), ack: true })), (0, operators_1.switchMap)(() => (0, rxjs_1.of)(undefined)));
     }
 }
 exports.BshbMessagesHandler = BshbMessagesHandler;

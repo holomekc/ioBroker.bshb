@@ -1,6 +1,7 @@
+import {tap} from 'rxjs/operators';
 import {Bshb} from '../../main';
 import {BoschSmartHomeBridge} from 'bosch-smart-home-bridge';
-import {concatMap, from, Observable, Subject} from 'rxjs';
+import {concatMap, from, map, Observable, of, Subject, switchMap} from 'rxjs';
 
 /**
  * Abstract handler which can be used to handle the following things:<br/>
@@ -124,5 +125,32 @@ export abstract class BshbHandler {
                 subscriber.complete();
             }
         });
+    }
+
+    /**
+     * A custom implementation of setObjectNotExistsAsync object is always provided, and it does not
+     * matter if object was created or not. At the moment there is no way to distinguish between creation
+     * and no creation. We will see if this is sufficient.
+     * @param id id to set
+     * @param object object ot create if not exists
+     * @param options optional options
+     */
+    public setObjectNotExistsAsync(id: string, object: ioBroker.SettableObject,
+                                   options?: unknown)
+        : Observable<{ id: string, _bshbCreated: boolean }> {
+
+        return from(this.bshb.getObjectAsync(id, options)).pipe(
+            switchMap(obj => {
+                if (!obj) {
+                    return from(this.bshb.setObjectAsync(id, object)).pipe(
+                        tap(o => (o as any )._bshbCreated = true),
+                        map(o => o as unknown as { id: string, _bshbCreated: boolean } )
+                    );
+                } else {
+                    (obj as any)._bshbCreated = false;
+                    return of(obj as unknown as { id: string, _bshbCreated: boolean });
+                }
+            })
+        );
     }
 }

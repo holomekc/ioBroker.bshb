@@ -57,18 +57,16 @@ class BshbIntrusionDetection extends bshb_handler_1.BshbHandler {
         return false;
     }
     detectIntrusionDetectionSystem() {
-        return new rxjs_1.Observable(subscriber => {
-            // create folder
-            this.bshb.setObjectNotExists(this.folderName, {
-                type: 'folder',
-                common: {
-                    name: 'Intrusion Detection Control',
-                    read: true
-                },
-                native: {
-                    id: this.folderName
-                },
-            });
+        return this.setObjectNotExistsAsync(this.folderName, {
+            type: 'folder',
+            common: {
+                name: 'Intrusion Detection Control',
+                read: true
+            },
+            native: {
+                id: this.folderName
+            },
+        }).pipe((0, rxjs_1.switchMap)(() => {
             const idPrefix = this.folderName + '.';
             const observables = [];
             // full
@@ -83,11 +81,8 @@ class BshbIntrusionDetection extends bshb_handler_1.BshbHandler {
             observables.push(this.addProfile(idPrefix, 'disarmProtection', 'Disarm Protection'));
             // mute
             observables.push(this.addProfile(idPrefix, 'muteProtection', 'Mute Protection'));
-            (0, rxjs_1.concat)(...observables).subscribe(() => {
-                subscriber.next();
-                subscriber.complete();
-            });
-        });
+            return (0, rxjs_1.concat)(...observables);
+        }));
     }
     addProfile(idPrefix, id, name) {
         return new rxjs_1.Observable(subscriber => {

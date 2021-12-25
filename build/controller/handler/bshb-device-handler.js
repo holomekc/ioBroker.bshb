@@ -109,13 +109,13 @@ class BshbDeviceHandler extends bshb_handler_1.BshbHandler {
     }
     restoreCache() {
         let start = (0, rxjs_1.of)('').pipe((0, operators_1.tap)(() => this.bshb.log.info('Restoring cache started...')));
-        const preparation = start.pipe((0, operators_1.switchMap)(() => (0, rxjs_1.from)(this.bshb.setObjectNotExistsAsync('info.cache', {
+        const preparation = start.pipe((0, operators_1.switchMap)(() => this.setObjectNotExistsAsync('info.cache', {
             type: 'folder',
             common: {
                 name: 'cache'
             },
             native: {}
-        }))), (0, operators_1.switchMap)(() => this.bshb.setObjectNotExistsAsync('info.cache.rooms', {
+        })), (0, operators_1.switchMap)(() => this.setObjectNotExistsAsync('info.cache.rooms', {
             type: 'state',
             common: {
                 name: 'rooms',
@@ -202,18 +202,18 @@ class BshbDeviceHandler extends bshb_handler_1.BshbHandler {
         const devices = this.getBshcClient().getDevices({ timeout: this.long_timeout }).pipe((0, operators_1.switchMap)(response => (0, rxjs_1.from)(response.parsedResponse)), (0, operators_1.switchMap)(device => {
             const name = this.getDeviceName(device);
             this.bshb.log.debug(`Device ${device.id} detected.`);
-            return (0, rxjs_1.from)(this.bshb.setObjectNotExistsAsync(device.id, {
+            return this.setObjectNotExistsAsync(device.id, {
                 type: 'device',
                 common: {
                     name: name
                 },
                 native: { device: device },
-            })).pipe((0, operators_1.switchMap)(() => {
+            }).pipe((0, operators_1.switchMap)(() => {
                 this.cachedDevices.set(this.bshb.namespace + '.' + device.id, device);
                 const rootDeviceName = 'BSHC';
                 // root device. This should be the bosch smart home controller only. It does not exist as a
                 // separate device so we add it multiple times but due to unique id this should be ok
-                return (0, rxjs_1.from)(this.bshb.setObjectNotExistsAsync(device.rootDeviceId, {
+                return this.setObjectNotExistsAsync(device.rootDeviceId, {
                     type: 'device',
                     common: {
                         name: rootDeviceName
@@ -225,7 +225,7 @@ class BshbDeviceHandler extends bshb_handler_1.BshbHandler {
                             name: rootDeviceName
                         }
                     }
-                }));
+                });
             }), (0, operators_1.tap)(() => {
                 this.cachedDevices.set(this.bshb.namespace + '.' + device.rootDeviceId, {
                     device: {
@@ -264,14 +264,14 @@ class BshbDeviceHandler extends bshb_handler_1.BshbHandler {
             id = deviceService.id;
         }
         const name = this.getDeviceName(device) + '.' + deviceService.id;
-        return (0, rxjs_1.from)(this.bshb.setObjectNotExistsAsync(id, {
+        return this.setObjectNotExistsAsync(id, {
             type: 'channel',
             common: {
                 name: name
             },
             native: { device: device, deviceService: deviceService },
-        })).pipe((0, operators_1.tap)(obj => {
-            if (obj) {
+        }).pipe((0, operators_1.tap)(obj => {
+            if (obj && obj._bshbCreated) {
                 this.addRoom(device.id, deviceService.id, undefined, device.roomId);
                 this.addFunction(device.id, deviceService.id, undefined);
             }
@@ -316,7 +316,7 @@ class BshbDeviceHandler extends bshb_handler_1.BshbHandler {
             id: id,
             stateKey: stateKey
         });
-        return (0, rxjs_1.from)(this.bshb.setObjectNotExistsAsync(id, {
+        return this.setObjectNotExistsAsync(id, {
             type: 'state',
             common: {
                 name: name,
@@ -328,7 +328,7 @@ class BshbDeviceHandler extends bshb_handler_1.BshbHandler {
                 states: states
             },
             native: { device: device, deviceService: deviceService, state: stateKey },
-        })).pipe((0, operators_1.switchMap)(() => (0, rxjs_1.from)(this.bshb.getStateAsync(id))), (0, operators_1.switchMap)(state => {
+        }).pipe((0, operators_1.switchMap)(() => (0, rxjs_1.from)(this.bshb.getStateAsync(id))), (0, operators_1.switchMap)(state => {
             if (state) {
                 return this.mapValueFromStorage(id, state.val).pipe((0, operators_1.tap)(value => {
                     if (value !== stateValue) {

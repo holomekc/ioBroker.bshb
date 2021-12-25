@@ -1,5 +1,5 @@
 import {BshbHandler} from './bshb-handler';
-import {Observable, tap, of, from, map} from 'rxjs';
+import {Observable, tap, of, map} from 'rxjs';
 import {switchMap} from 'rxjs/operators';
 
 /**
@@ -43,7 +43,7 @@ export class BshbMessagesHandler extends BshbHandler {
     }
 
     private detectMessages(): Observable<void> {
-        return from(this.bshb.setObjectNotExistsAsync('messages', {
+        return this.setObjectNotExistsAsync('messages', {
             type: 'state',
             common: {
                 name: 'messages',
@@ -56,7 +56,7 @@ export class BshbMessagesHandler extends BshbHandler {
                 id: 'messages',
                 name: 'messages'
             },
-        })).pipe(
+        }).pipe(
             switchMap(() => this.getBshcClient().getMessages({timeout: this.long_timeout})),
             map(response => response.parsedResponse),
             tap(messages => this.bshb.setState('messages', {val: this.mapValueToStorage(messages), ack: true})),

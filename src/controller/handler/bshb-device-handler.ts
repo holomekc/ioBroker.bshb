@@ -126,14 +126,14 @@ export class BshbDeviceHandler extends BshbHandler {
     private restoreCache(): Observable<void> {
         let start = of('').pipe(tap(() => this.bshb.log.info('Restoring cache started...')));
         const preparation = start.pipe(
-            switchMap(() => from(this.bshb.setObjectNotExistsAsync('info.cache', {
+            switchMap(() => this.setObjectNotExistsAsync('info.cache', {
                 type: 'folder',
                 common: {
                     name: 'cache'
                 },
                 native: {}
-            }))),
-            switchMap(() => this.bshb.setObjectNotExistsAsync('info.cache.rooms', {
+            })),
+            switchMap(() => this.setObjectNotExistsAsync('info.cache.rooms', {
                 type: 'state',
                 common: {
                     name: 'rooms',
@@ -259,13 +259,13 @@ export class BshbDeviceHandler extends BshbHandler {
 
                 this.bshb.log.debug(`Device ${device.id} detected.`);
 
-                return from(this.bshb.setObjectNotExistsAsync(device.id, {
+                return this.setObjectNotExistsAsync(device.id, {
                     type: 'device',
                     common: {
                         name: name
                     },
                     native: {device: device},
-                })).pipe(
+                }).pipe(
                     switchMap(() => {
                         this.cachedDevices.set(this.bshb.namespace + '.' + device.id, device);
 
@@ -273,7 +273,7 @@ export class BshbDeviceHandler extends BshbHandler {
 
                         // root device. This should be the bosch smart home controller only. It does not exist as a
                         // separate device so we add it multiple times but due to unique id this should be ok
-                        return from(this.bshb.setObjectNotExistsAsync(device.rootDeviceId, {
+                        return this.setObjectNotExistsAsync(device.rootDeviceId, {
                             type: 'device',
                             common: {
                                 name: rootDeviceName
@@ -285,7 +285,7 @@ export class BshbDeviceHandler extends BshbHandler {
                                     name: rootDeviceName
                                 }
                             }
-                        }));
+                        });
                     }), tap(() => {
                             this.cachedDevices.set(this.bshb.namespace + '.' + device.rootDeviceId, {
                                 device: {
@@ -335,15 +335,15 @@ export class BshbDeviceHandler extends BshbHandler {
 
         const name = this.getDeviceName(device) + '.' + deviceService.id;
 
-        return from(this.bshb.setObjectNotExistsAsync(id, {
+        return this.setObjectNotExistsAsync(id, {
             type: 'channel',
             common: {
                 name: name
             },
             native: {device: device, deviceService: deviceService},
-        })).pipe(
+        }).pipe(
             tap(obj => {
-                if (obj) {
+                if (obj && obj._bshbCreated) {
                     this.addRoom(device.id, deviceService.id, undefined as unknown as string, device.roomId);
                     this.addFunction(device.id, deviceService.id, undefined as unknown as string);
                 }
@@ -397,7 +397,7 @@ export class BshbDeviceHandler extends BshbHandler {
             stateKey: stateKey
         });
 
-        return from(this.bshb.setObjectNotExistsAsync(id, {
+        return this.setObjectNotExistsAsync(id, {
             type: 'state',
             common: {
                 name: name,
@@ -409,7 +409,7 @@ export class BshbDeviceHandler extends BshbHandler {
                 states: states
             },
             native: {device: device, deviceService: deviceService, state: stateKey},
-        })).pipe(
+        }).pipe(
             switchMap(() => from(this.bshb.getStateAsync(id))),
             switchMap(state => {
                 if (state) {

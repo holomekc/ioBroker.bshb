@@ -79,7 +79,7 @@ export class BshbScenarioHandler extends BshbHandler {
     }
 
     private detectScenarios(): Observable<void> {
-        return from(this.bshb.setObjectNotExistsAsync('scenarios', {
+        return this.setObjectNotExistsAsync('scenarios', {
             type: 'folder',
             common: {
                 name: 'scenarios',
@@ -88,7 +88,7 @@ export class BshbScenarioHandler extends BshbHandler {
             native: {
                 id: 'scenarios'
             },
-        })).pipe(
+        }).pipe(
             switchMap(() => this.getBshcClient().getScenarios({timeout: this.long_timeout})),
             switchMap(response =>
                 this.deleteMissingScenarios((response.parsedResponse)).pipe(

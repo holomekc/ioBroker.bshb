@@ -37,117 +37,92 @@ class BshbOpenDoorWindowHandler extends bshb_handler_1.BshbHandler {
         return false;
     }
     detectOpenDoorsAndWindows() {
-        return new rxjs_1.Observable(subscriber => {
-            this.getBshcClient().getOpenWindows({ timeout: this.long_timeout }).subscribe({
-                next: result => {
-                    // create folder
-                    this.bshb.setObjectNotExists('openDoorsAndWindows', {
-                        type: 'folder',
-                        common: {
-                            name: 'Open Doors / Windows',
-                            read: true
-                        },
-                        native: {
-                            id: 'openDoorsAndWindows'
-                        },
-                    });
-                    const idPrefix = 'openDoorsAndWindows.';
-                    const observables = [];
-                    observables.push(this.setAllState(idPrefix, result));
-                    observables.push(this.createGroup(idPrefix, 'all', 'All'));
-                    observables.push(this.createGroup(idPrefix, 'doors', 'Doors'));
-                    observables.push(this.createGroup(idPrefix, 'windows', 'Windows'));
-                    observables.push(this.createGroup(idPrefix, 'others', 'Others'));
-                    observables.push(this.setList(idPrefix, 'all.all', '--all--', 'All', result));
-                    observables.push(this.setList(idPrefix, 'all.open', '--allOpen--', 'All Open', result));
-                    observables.push(this.setList(idPrefix, 'all.unknown', '--allUnknown--', 'All Unknown', result));
-                    observables.push(this.setList(idPrefix, 'doors.all', 'allDoors', 'All doors', result));
-                    observables.push(this.setList(idPrefix, 'doors.open', 'openDoors', 'Open doors', result));
-                    observables.push(this.setList(idPrefix, 'doors.unknown', 'unknownDoors', 'Unknown doors', result));
-                    observables.push(this.setList(idPrefix, 'windows.all', 'allWindows', 'All windows', result));
-                    observables.push(this.setList(idPrefix, 'windows.open', 'openWindows', 'Open windows', result));
-                    observables.push(this.setList(idPrefix, 'windows.unknown', 'unknownWindows', 'Unknown windows', result));
-                    observables.push(this.setList(idPrefix, 'others.all', 'allOthers', 'All others', result));
-                    observables.push(this.setList(idPrefix, 'others.open', 'openOthers', 'Open others', result));
-                    observables.push(this.setList(idPrefix, 'others.unknown', 'unknownOthers', 'Unknown others', result));
-                    (0, rxjs_1.concat)(...observables).subscribe(() => {
-                        subscriber.next();
-                        subscriber.complete();
-                    });
-                }, error: err => {
-                    subscriber.error(err);
-                }
-            });
-        });
+        return this.getBshcClient().getOpenWindows({ timeout: this.long_timeout }).pipe((0, rxjs_1.tap)(() => this.setObjectNotExistsAsync('openDoorsAndWindows', {
+            type: 'folder',
+            common: {
+                name: 'Open Doors / Windows',
+                read: true
+            },
+            native: {
+                id: 'openDoorsAndWindows'
+            },
+        })), (0, operators_1.switchMap)(result => {
+            const idPrefix = 'openDoorsAndWindows.';
+            const observables = [];
+            observables.push(this.setAllState(idPrefix, result));
+            observables.push(this.createGroup(idPrefix, 'all', 'All'));
+            observables.push(this.createGroup(idPrefix, 'doors', 'Doors'));
+            observables.push(this.createGroup(idPrefix, 'windows', 'Windows'));
+            observables.push(this.createGroup(idPrefix, 'others', 'Others'));
+            observables.push(this.setList(idPrefix, 'all.all', '--all--', 'All', result));
+            observables.push(this.setList(idPrefix, 'all.open', '--allOpen--', 'All Open', result));
+            observables.push(this.setList(idPrefix, 'all.unknown', '--allUnknown--', 'All Unknown', result));
+            observables.push(this.setList(idPrefix, 'doors.all', 'allDoors', 'All doors', result));
+            observables.push(this.setList(idPrefix, 'doors.open', 'openDoors', 'Open doors', result));
+            observables.push(this.setList(idPrefix, 'doors.unknown', 'unknownDoors', 'Unknown doors', result));
+            observables.push(this.setList(idPrefix, 'windows.all', 'allWindows', 'All windows', result));
+            observables.push(this.setList(idPrefix, 'windows.open', 'openWindows', 'Open windows', result));
+            observables.push(this.setList(idPrefix, 'windows.unknown', 'unknownWindows', 'Unknown windows', result));
+            observables.push(this.setList(idPrefix, 'others.all', 'allOthers', 'All others', result));
+            observables.push(this.setList(idPrefix, 'others.open', 'openOthers', 'Open others', result));
+            observables.push(this.setList(idPrefix, 'others.unknown', 'unknownOthers', 'Unknown others', result));
+            return (0, rxjs_1.concat)(...observables);
+        }));
     }
     createGroup(idPrefix, id, name) {
-        return new rxjs_1.Observable(subscriber => {
-            this.bshb.setObjectNotExists(idPrefix + id, {
-                type: 'folder',
-                common: {
-                    name: name,
-                    read: true
-                },
-                native: {
-                    id: idPrefix + id,
-                    name: id
-                },
-            }, () => {
-                subscriber.next();
-                subscriber.complete();
-            });
-        });
+        return this.setObjectNotExistsAsync(idPrefix + id, {
+            type: 'folder',
+            common: {
+                name: name,
+                read: true
+            },
+            native: {
+                id: idPrefix + id,
+                name: id
+            },
+        }).pipe((0, operators_1.switchMap)(() => (0, rxjs_1.of)(undefined)));
     }
     setList(idPrefix, id, key, name, result) {
         return this.setListState(idPrefix, id, key, name, result).pipe((0, operators_1.switchMap)(() => this.setListCount(idPrefix, id, key, name, result)));
     }
     setListState(idPrefix, id, key, name, result) {
-        return new rxjs_1.Observable(subscriber => {
-            const list = [];
-            this.getElements(result, key).forEach((val) => {
-                list.push(val.name);
-            });
-            this.bshb.setObjectNotExists(idPrefix + id, {
-                type: 'state',
-                common: {
-                    name: name,
-                    type: 'array',
-                    role: 'list',
-                    read: true,
-                    write: false
-                },
-                native: {
-                    id: idPrefix + id,
-                    name: id
-                },
-            }, () => {
-                this.bshb.setState(idPrefix + id, { val: this.mapValueToStorage(list), ack: true });
-                subscriber.next();
-                subscriber.complete();
-            });
+        const list = [];
+        this.getElements(result, key).forEach((val) => {
+            list.push(val.name);
         });
+        return (0, rxjs_1.of)(list).pipe((0, rxjs_1.tap)(() => this.setObjectNotExistsAsync(idPrefix + id, {
+            type: 'state',
+            common: {
+                name: name,
+                type: 'array',
+                role: 'list',
+                read: true,
+                write: false
+            },
+            native: {
+                id: idPrefix + id,
+                name: id
+            },
+        })), (0, rxjs_1.tap)(list => this.bshb.setState(idPrefix + id, { val: this.mapValueToStorage(list), ack: true })), (0, operators_1.switchMap)(() => (0, rxjs_1.of)(undefined)));
     }
     setListCount(idPrefix, id, key, name, result) {
-        return new rxjs_1.Observable(subscriber => {
-            this.bshb.setObjectNotExists(idPrefix + id + 'Count', {
-                type: 'state',
-                common: {
-                    name: name + ' count',
-                    type: 'number',
-                    role: 'value',
-                    read: true,
-                    write: false
-                },
-                native: {
-                    id: idPrefix + id + 'Count',
-                    name: id + 'Count'
-                },
-            }, () => {
-                this.bshb.setState(idPrefix + id + 'Count', { val: this.getElements(result, key).length, ack: true });
-                subscriber.next();
-                subscriber.complete();
-            });
-        });
+        return this.setObjectNotExistsAsync(idPrefix + id + 'Count', {
+            type: 'state',
+            common: {
+                name: name + ' count',
+                type: 'number',
+                role: 'value',
+                read: true,
+                write: false
+            },
+            native: {
+                id: idPrefix + id + 'Count',
+                name: id + 'Count'
+            },
+        }).pipe((0, rxjs_1.tap)(() => this.bshb.setState(idPrefix + id + 'Count', {
+            val: this.getElements(result, key).length,
+            ack: true
+        })), (0, operators_1.switchMap)(() => (0, rxjs_1.of)(undefined)));
     }
     getElements(result, key) {
         if (key.startsWith('--all')) {
@@ -171,26 +146,23 @@ class BshbOpenDoorWindowHandler extends bshb_handler_1.BshbHandler {
         }
     }
     setAllState(idPrefix, result) {
-        return new rxjs_1.Observable(subscriber => {
-            this.bshb.setObjectNotExists(idPrefix + 'raw', {
-                type: 'state',
-                common: {
-                    name: 'Raw Data from BSHC',
-                    type: 'object',
-                    role: 'state',
-                    read: true,
-                    write: false
-                },
-                native: {
-                    id: idPrefix + 'raw',
-                    name: 'openDoorsAndWindows'
-                },
-            }, () => {
-                this.bshb.setState(idPrefix + 'raw', { val: this.mapValueToStorage(result.parsedResponse), ack: true });
-                subscriber.next();
-                subscriber.complete();
-            });
-        });
+        return this.setObjectNotExistsAsync(idPrefix + 'raw', {
+            type: 'state',
+            common: {
+                name: 'Raw Data from BSHC',
+                type: 'object',
+                role: 'state',
+                read: true,
+                write: false
+            },
+            native: {
+                id: idPrefix + 'raw',
+                name: 'openDoorsAndWindows'
+            },
+        }).pipe((0, rxjs_1.tap)(() => this.bshb.setState(idPrefix + 'raw', {
+            val: this.mapValueToStorage(result.parsedResponse),
+            ack: true
+        })), (0, operators_1.switchMap)(() => (0, rxjs_1.of)(undefined)));
     }
     static getGroupPrefix(key) {
         switch (key) {

@@ -17,7 +17,7 @@ class BshbGeneralUpdateHandler extends bshb_handler_1.BshbHandler {
         return false;
     }
     handleDetection() {
-        return (0, rxjs_1.from)(this.bshb.setObjectNotExistsAsync('updates', {
+        return this.setObjectNotExistsAsync('updates', {
             type: 'state',
             common: {
                 name: 'Updates',
@@ -29,7 +29,7 @@ class BshbGeneralUpdateHandler extends bshb_handler_1.BshbHandler {
             native: {
                 id: 'updates'
             }
-        })).pipe((0, rxjs_1.switchMap)(() => (0, rxjs_1.of)(undefined)));
+        }).pipe((0, rxjs_1.switchMap)(() => (0, rxjs_1.of)(undefined)));
     }
     sendUpdateToBshc(id, state) {
         // not needed

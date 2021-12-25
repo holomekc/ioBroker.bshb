@@ -73,7 +73,7 @@ class BshbScenarioHandler extends bshb_handler_1.BshbHandler {
         return false;
     }
     detectScenarios() {
-        return (0, rxjs_1.from)(this.bshb.setObjectNotExistsAsync('scenarios', {
+        return this.setObjectNotExistsAsync('scenarios', {
             type: 'folder',
             common: {
                 name: 'scenarios',
@@ -82,7 +82,7 @@ class BshbScenarioHandler extends bshb_handler_1.BshbHandler {
             native: {
                 id: 'scenarios'
             },
-        })).pipe((0, rxjs_1.switchMap)(() => this.getBshcClient().getScenarios({ timeout: this.long_timeout })), (0, rxjs_1.switchMap)(response => this.deleteMissingScenarios((response.parsedResponse)).pipe((0, rxjs_1.last)(undefined, void 0), (0, rxjs_1.switchMap)(() => (0, rxjs_1.from)(response.parsedResponse)))), (0, rxjs_1.mergeMap)(scenario => {
+        }).pipe((0, rxjs_1.switchMap)(() => this.getBshcClient().getScenarios({ timeout: this.long_timeout })), (0, rxjs_1.switchMap)(response => this.deleteMissingScenarios((response.parsedResponse)).pipe((0, rxjs_1.last)(undefined, void 0), (0, rxjs_1.switchMap)(() => (0, rxjs_1.from)(response.parsedResponse)))), (0, rxjs_1.mergeMap)(scenario => {
             this.bshb.log.debug(`Found scenario ${scenario.id}, ${scenario.name}`);
             const id = 'scenarios.' + scenario.id;
             // we overwrite object here on purpose because we reflect 1-1 the data from controller here.

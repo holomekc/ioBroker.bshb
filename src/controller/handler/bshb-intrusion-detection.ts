@@ -1,5 +1,5 @@
 import {BshbHandler} from './bshb-handler';
-import {concat, Observable, tap} from 'rxjs';
+import {concat, Observable, switchMap, tap} from 'rxjs';
 
 export class BshbIntrusionDetection extends BshbHandler {
     private readonly folderName: string = 'intrusionDetectionControl'
@@ -63,41 +63,37 @@ export class BshbIntrusionDetection extends BshbHandler {
     }
 
     private detectIntrusionDetectionSystem(): Observable<void> {
-        return new Observable<void>(subscriber => {
-            // create folder
-            this.bshb.setObjectNotExists(this.folderName, {
-                type: 'folder',
-                common: {
-                    name: 'Intrusion Detection Control',
-                    read: true
-                },
-                native: {
-                    id: this.folderName
-                },
-            });
+        return this.setObjectNotExistsAsync(this.folderName, {
+            type: 'folder',
+            common: {
+                name: 'Intrusion Detection Control',
+                read: true
+            },
+            native: {
+                id: this.folderName
+            },
+        }).pipe(
+            switchMap(() => {
+                const idPrefix = this.folderName + '.';
 
-            const idPrefix = this.folderName + '.';
+                const observables = [];
 
-            const observables = [];
+                // full
+                observables.push(this.addProfile(idPrefix, 'fullProtection', 'Full Protection'));
+                // partial
+                observables.push(this.addProfile(idPrefix, 'partialProtection', 'Partial Protection'));
+                // individual
+                observables.push(this.addProfile(idPrefix, 'individualProtection', 'Individual Protection'));
+                // individual
+                observables.push(this.addProfile(idPrefix, 'individualProtection', 'Individual Protection'));
+                // disarm
+                observables.push(this.addProfile(idPrefix, 'disarmProtection', 'Disarm Protection'));
+                // mute
+                observables.push(this.addProfile(idPrefix, 'muteProtection', 'Mute Protection'));
 
-            // full
-            observables.push(this.addProfile(idPrefix, 'fullProtection', 'Full Protection'));
-            // partial
-            observables.push(this.addProfile(idPrefix, 'partialProtection', 'Partial Protection'));
-            // individual
-            observables.push(this.addProfile(idPrefix, 'individualProtection', 'Individual Protection'));
-            // individual
-            observables.push(this.addProfile(idPrefix, 'individualProtection', 'Individual Protection'));
-            // disarm
-            observables.push(this.addProfile(idPrefix, 'disarmProtection', 'Disarm Protection'));
-            // mute
-            observables.push(this.addProfile(idPrefix, 'muteProtection', 'Mute Protection'));
-
-            concat(...observables).subscribe(() => {
-                subscriber.next();
-                subscriber.complete();
-            });
-        });
+                return concat(...observables);
+            })
+        );
     }
 
     private addProfile(idPrefix: string, id: string, name: string) {
