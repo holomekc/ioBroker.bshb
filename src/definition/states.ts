@@ -220,4 +220,20 @@ export const STATES: { [TypeName: string]: { [KeyName: string]: { [Key: string]:
             'UNKNOWN': 'UNKNOWN'
         }
     },
+    // Yale
+    doorSensor: {
+        doorState: {
+            DOOR_CLOSED: 'DOOR_CLOSED',
+            DOOR_OPEN: 'DOOR_OPEN',
+            DOOR_UNKNOWN: 'DOOR_UNKNOWN',
+        }
+    },
+    lockActuator: {
+        lockState : {
+            UNLOCKED: 'UNLOCKED',
+            LOCKED: 'LOCKED',
+            LOCKING: 'LOCKING',
+            UNLOCKING: 'UNLOCKING'
+        },
+    }
 };

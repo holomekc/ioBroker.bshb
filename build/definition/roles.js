@@ -142,6 +142,13 @@ exports.ROLES = {
     },
     presenceSimulationSchedulingState: {
         schedule: 'list'
+    },
+    // Yale
+    doorSensor: {
+        doorState: 'text'
+    },
+    lockActuator: {
+        lockState: 'text',
     }
 };
 //# sourceMappingURL=roles.js.map

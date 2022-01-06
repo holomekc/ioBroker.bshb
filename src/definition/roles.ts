@@ -139,5 +139,12 @@ export const ROLES: { [TypeName: string]: { [KeyName: string]: string } } = {
     },
     presenceSimulationSchedulingState: {
         schedule: 'list'
+    },
+    // Yale
+    doorSensor: {
+        doorState: 'text'
+    },
+    lockActuator: {
+        lockState : 'text',
     }
 };

@@ -221,5 +221,21 @@ exports.STATES = {
             'UNKNOWN': 'UNKNOWN'
         }
     },
+    // Yale
+    doorSensor: {
+        doorState: {
+            DOOR_CLOSED: 'DOOR_CLOSED',
+            DOOR_OPEN: 'DOOR_OPEN',
+            DOOR_UNKNOWN: 'DOOR_UNKNOWN',
+        }
+    },
+    lockActuator: {
+        lockState: {
+            UNLOCKED: 'UNLOCKED',
+            LOCKED: 'LOCKED',
+            LOCKING: 'LOCKING',
+            UNLOCKING: 'UNLOCKING'
+        },
+    }
 };
 //# sourceMappingURL=states.js.map

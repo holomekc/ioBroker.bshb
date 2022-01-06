@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "bshb",
-        "version": "0.1.16",
+        "version": "0.1.17",
         "news": {
+			"0.1.17": {
+				"de": "Yale Werte hinzugefügt. Zustände werden beim Start aktualisiert.",
+				"en": "Yale values added. States are updated at startup.",
+				"ru": "Добавлены значения Yale. Состояния обновляются при запуске.",
+				"pt": "Valores de Yale adicionados. Os Estados são actualizados no arranque.",
+				"nl": "Yale waarden toegevoegd. De staten worden bij het opstarten bijgewerkt.",
+				"fr": "Ajout des valeurs de Yale. Les états sont mis à jour au démarrage.",
+				"it": "Valori di Yale aggiunti. Gli stati sono aggiornati all'avvio.",
+				"es": "Valores de Yale añadidos. Los estados se actualizan al inicio.",
+				"pl": "Dodano wartości Yale. Stany są aktualizowane podczas uruchamiania.",
+				"zh-cn": "Yale的价值得到了补充。状态在启动时被更新。"
+			},
 			"0.1.16": {
 				"de": "Ausgelöste Szenarien werden durch ein kurzzeitigen Wechseln von \"true\" nach \"false\" angezeigt. Neuer Zustand \"updates\" nimmt alle Nachrichten vom Controller entgegen.",
 				"en": "Triggered scenarios are indicated by a momentary change from \"true\" to \"false\". New state \"updates\" accepts all messages from the controller.",
@@ -110,18 +122,6 @@
 				"es": "Mejoras menores",
 				"pl": "Drobne ulepszenia",
 				"zh-cn": "小改进"
-			},
-			"0.1.7": {
-				"en": "Improved error handling",
-				"de": "Verbessertes Fehlerhandling",
-				"ru": "Улучшенная обработка ошибок",
-				"pt": "Melhoria do tratamento de erros",
-				"nl": "Verbeterde foutafhandeling",
-				"fr": "Amélioration du traitement des erreurs",
-				"it": "Miglioramento della gestione degli errori",
-				"es": "Mejor manejo de los errores",
-				"pl": "Lepsza obsługa błędów",
-				"zh-cn": "改进的错误处理"
 			}
         },
         "title": "Bosch Smart Home Bridge",
