@@ -20,7 +20,7 @@
   },
   "dependencies": {
     "@iobroker/adapter-core": "^2.6.0",
-    "bosch-smart-home-bridge": "^1.0.3",
+    "bosch-smart-home-bridge": "^1.0.4",
     "rxjs": "^7.5.5",
     "uuid": "^8.3.2"
   },
@@ -50,7 +50,7 @@
     "sinon-chai": "^3.7.0",
     "source-map-support": "^0.5.21",
     "ts-node": "^10.5.0",
-    "typescript": "^4.6.2",
+    "typescript": "^4.6.3",
     "express": "^4.17.3"
   },
   "main": "build/main.js",
