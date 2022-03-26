@@ -32,6 +32,7 @@ class BshbController {
     constructor(bshb, clientCert, clientPrivateKey) {
         this.bshb = bshb;
         this.clientName = 'ioBroker.bshb';
+        this.$rateLimit = new rxjs_1.Subject();
         try {
             this.boschSmartHomeBridge = bosch_smart_home_bridge_1.BoschSmartHomeBridgeBuilder.builder()
                 .withHost(bshb.config.host)
@@ -46,6 +47,14 @@ class BshbController {
             this.handlers.push(new bshb_intrusion_detection_1.BshbIntrusionDetection(this.bshb, this.boschSmartHomeBridge));
             this.handlers.push(new bshb_device_handler_1.BshbDeviceHandler(this.bshb, this.boschSmartHomeBridge));
             this.handlers.push(new bshb_open_door_window_handler_1.BshbOpenDoorWindowHandler(this.bshb, this.boschSmartHomeBridge));
+            this.$rateLimit.pipe((0, rxjs_1.concatMap)(data => {
+                if (this.bshb.config.rateLimit === 0) {
+                    return (0, rxjs_1.of)(data);
+                }
+                return (0, rxjs_1.of)(data).pipe((0, operators_1.delay)(this.bshb.config.rateLimit));
+            })).subscribe(fnc => {
+                fnc();
+            });
         }
         catch (e) {
             if (e instanceof Error) {
@@ -114,12 +123,14 @@ class BshbController {
      *        state itself
      */
     setState(id, state) {
-        for (let i = 0; i < this.handlers.length; i++) {
-            let handled = this.handlers[i].sendUpdateToBshc(id, state);
-            if (handled) {
-                this.bshb.log.silly(`Handler "${this.handlers[i].constructor.name}" send message to controller with state id=${id} and value=${state.val}`);
+        this.$rateLimit.next(() => {
+            for (let i = 0; i < this.handlers.length; i++) {
+                let handled = this.handlers[i].sendUpdateToBshc(id, state);
+                if (handled) {
+                    this.bshb.log.silly(`Handler "${this.handlers[i].constructor.name}" send message to controller with state id=${id} and value=${state.val}`);
+                }
             }
-        }
+        });
     }
     /**
      * Changes from bshc controller which results in updates on ioBroker state

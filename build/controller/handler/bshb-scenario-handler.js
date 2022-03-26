@@ -60,7 +60,7 @@ class BshbScenarioHandler extends bshb_handler_1.BshbHandler {
         if (match) {
             this.bshb.log.debug(`Found scenario trigger with id=${match[1]} and value=${state.val}`);
             if (state.val) {
-                this.getBshcClient().triggerScenario(match[1]).subscribe({
+                this.getBshcClient().triggerScenario(match[1], { timeout: this.long_timeout }).subscribe({
                     next: () => {
                         this.bshb.log.info(`Scenario with id=${match[1]} triggered`);
                     }, error: error => {

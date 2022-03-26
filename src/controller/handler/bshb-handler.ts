@@ -13,7 +13,7 @@ import {concatMap, from, map, Observable, of, Subject, switchMap} from 'rxjs';
  * @since 18.01.2020
  */
 export abstract class BshbHandler {
-    protected long_timeout = 5000;
+    protected long_timeout = 20000;
 
     private enumChain = new Subject<{
         type: string,

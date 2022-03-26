@@ -101,7 +101,7 @@ export class BshbDeviceHandler extends BshbHandler {
                     this.bshb.log.debug('Data which will be send: ' + JSON.stringify(data));
                 }
 
-                this.getBshcClient().putState(cachedState.deviceService.path, data).subscribe({
+                this.getBshcClient().putState(cachedState.deviceService.path, data, {timeout: this.long_timeout}).subscribe({
                     next: response => {
                         if (response) {
                             if (Utils.isLevelActive(this.bshb.log.level, LogLevel.debug)) {

@@ -24,7 +24,7 @@ class BshbHandler {
     constructor(bshb, boschSmartHomeBridge) {
         this.bshb = bshb;
         this.boschSmartHomeBridge = boschSmartHomeBridge;
-        this.long_timeout = 5000;
+        this.long_timeout = 20000;
         this.enumChain = new rxjs_1.Subject();
         this.enumChain.pipe((0, rxjs_1.concatMap)(enumObj => {
             if (enumObj.itemId) {

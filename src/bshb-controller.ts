@@ -1,8 +1,8 @@
 import {BoschSmartHomeBridge, BoschSmartHomeBridgeBuilder} from 'bosch-smart-home-bridge';
 import {Bshb} from './main';
 import {BshbLogger} from './bshb-logger';
-import {BehaviorSubject, concat, EMPTY, last, merge, Observable, of, Subject, timer} from 'rxjs';
-import {catchError, delay, delayWhen, repeat, retryWhen, switchMap, takeUntil, tap} from 'rxjs/operators';
+import {BehaviorSubject, concat, concatMap, last, Observable, of, Subject, timer} from 'rxjs';
+import {catchError, delay, takeUntil, tap} from 'rxjs/operators';
 import {Utils} from './utils';
 import {BshbHandler} from './controller/handler/bshb-handler';
 import {BshbScenarioHandler} from './controller/handler/bshb-scenario-handler';
@@ -22,6 +22,8 @@ export class BshbController {
 
     private readonly boschSmartHomeBridge: BoschSmartHomeBridge;
     private clientName = 'ioBroker.bshb';
+
+    private $rateLimit = new Subject<() => void>();
 
     private handlers: BshbHandler[];
 
@@ -51,6 +53,17 @@ export class BshbController {
             this.handlers.push(new BshbIntrusionDetection(this.bshb, this.boschSmartHomeBridge));
             this.handlers.push(new BshbDeviceHandler(this.bshb, this.boschSmartHomeBridge));
             this.handlers.push(new BshbOpenDoorWindowHandler(this.bshb, this.boschSmartHomeBridge));
+
+            this.$rateLimit.pipe(
+                concatMap(data => {
+                    if (this.bshb.config.rateLimit === 0) {
+                        return of(data);
+                    }
+                    return of(data).pipe(delay(this.bshb.config.rateLimit));
+                })
+            ).subscribe(fnc => {
+                fnc();
+            });
 
         } catch (e: unknown) {
             if (e instanceof Error) {
@@ -126,12 +139,16 @@ export class BshbController {
      *        state itself
      */
     public setState(id: string, state: ioBroker.State) {
-        for (let i = 0; i < this.handlers.length; i++) {
-            let handled = this.handlers[i].sendUpdateToBshc(id, state);
-            if (handled) {
-                this.bshb.log.silly(`Handler "${this.handlers[i].constructor.name}" send message to controller with state id=${id} and value=${state.val}`);
+        this.$rateLimit.next(
+            () => {
+                for (let i = 0; i < this.handlers.length; i++) {
+                    let handled = this.handlers[i].sendUpdateToBshc(id, state);
+                    if (handled) {
+                        this.bshb.log.silly(`Handler "${this.handlers[i].constructor.name}" send message to controller with state id=${id} and value=${state.val}`);
+                    }
+                }
             }
-        }
+        );
     }
 
     /**

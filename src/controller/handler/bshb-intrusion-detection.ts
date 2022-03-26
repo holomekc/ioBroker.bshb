@@ -31,19 +31,19 @@ export class BshbIntrusionDetection extends BshbHandler {
                 let command;
                 switch (control) {
                     case 'fullProtection':
-                        command = this.getBshcClient().armIntrusionDetectionSystem(0);
+                        command = this.getBshcClient().armIntrusionDetectionSystem(0,{timeout: this.long_timeout});
                         break;
                     case 'partialProtection':
-                        command = this.getBshcClient().armIntrusionDetectionSystem(1);
+                        command = this.getBshcClient().armIntrusionDetectionSystem(1,{timeout: this.long_timeout});
                         break;
                     case 'individualProtection':
-                        command = this.getBshcClient().armIntrusionDetectionSystem(2);
+                        command = this.getBshcClient().armIntrusionDetectionSystem(2,{timeout: this.long_timeout});
                         break;
                     case 'disarmProtection':
-                        command = this.getBshcClient().disarmIntrusionDetectionSystem();
+                        command = this.getBshcClient().disarmIntrusionDetectionSystem({timeout: this.long_timeout});
                         break;
                     case 'muteProtection':
-                        command = this.getBshcClient().muteIntrusionDetectionSystem();
+                        command = this.getBshcClient().muteIntrusionDetectionSystem({timeout: this.long_timeout});
                         break;
                     default:
                         return false;

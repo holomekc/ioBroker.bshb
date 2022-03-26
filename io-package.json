@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "bshb",
-        "version": "0.1.17",
+        "version": "0.1.18",
         "news": {
+			"0.1.18": {
+				"de": "Verzögerung zwischen Controller Aufrufen konfigurierbar.",
+				"en": "Delay between controller calls configurable.",
+				"ru": "Задержка между вызовами контроллера настраивается.",
+				"pt": "Atraso entre as chamadas do controlador configurável.",
+				"nl": "Vertraging tussen controller oproepen configureerbaar.",
+				"fr": "Délai configurable entre les appels du contrôleur.",
+				"it": "Ritardo tra le chiamate del controller configurabile.",
+				"es": "Retraso entre llamadas del controlador configurable.",
+				"pl": "Konfigurowalne opóźnienie między wywołaniami kontrolera.",
+				"zh-cn": "可配置控制器调用之间的延迟。"
+			},
 			"0.1.17": {
 				"de": "Yale Werte hinzugefügt. Zustände werden beim Start aktualisiert.",
 				"en": "Yale values added. States are updated at startup.",
@@ -110,18 +122,6 @@
 				"es": "Error en el manejo del escenario arreglado",
 				"pl": "Błąd w obsłudze scenariusza naprawiony",
 				"zh-cn": "解决方案处理错误"
-			},
-			"0.1.8": {
-				"en": "Minor improvements",
-				"de": "Kleinere Verbesserungen",
-				"ru": "Незначительные улучшения",
-				"pt": "Pequenas melhorias",
-				"nl": "Kleine verbeteringen",
-				"fr": "Améliorations mineures",
-				"it": "Miglioramenti minori",
-				"es": "Mejoras menores",
-				"pl": "Drobne ulepszenia",
-				"zh-cn": "小改进"
 			}
         },
         "title": "Bosch Smart Home Bridge",
@@ -182,7 +182,8 @@
 		"host": "192.168.178.10",
 		"identifier": "",
 		"systemPassword": "",
-		"pairingDelay": 10000
+		"pairingDelay": 10000,
+		"rateLimit": 1000
     },
     "objects": [],
     "instanceObjects": []

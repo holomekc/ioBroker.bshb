@@ -86,4 +86,16 @@ systemDictionary = {
 		"pl": "Czas oczekiwania podczas prób parowania",
 		"zh-cn": "配对过程中的等待时间"
 	},
+	"rateLimit": {
+		"en": "Delay between controller calls in ms",
+		"de": "Verzögerung zwischen Controller Aufrufen in ms",
+		"ru": "Задержка между вызовами контроллера в мс",
+		"pt": "Atraso entre as chamadas do controlador em ms",
+		"nl": "Vertraging tussen controlleroproepen in ms",
+		"fr": "Délai entre les appels du contrôleur en ms",
+		"it": "Ritardo tra le chiamate del controllore in ms",
+		"es": "Retraso entre llamadas del controlador en ms",
+		"pl": "Opóźnienie między wywołaniami kontrolera w ms",
+		"zh-cn": "控制器调用之间的延迟，单位为ms"
+	}
 };
