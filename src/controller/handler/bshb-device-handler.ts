@@ -254,7 +254,7 @@ export class BshbDeviceHandler extends BshbHandler {
 
         const devices = this.getBshcClient().getDevices({timeout: this.long_timeout}).pipe(
             switchMap(response => from(response.parsedResponse)),
-            switchMap(device => {
+            mergeMap(device => {
                 const name = this.getDeviceName(device);
 
                 this.bshb.log.debug(`Device ${device.id} detected.`);

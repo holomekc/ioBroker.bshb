@@ -90,7 +90,7 @@ class BshbOpenDoorWindowHandler extends bshb_handler_1.BshbHandler {
         this.getElements(result, key).forEach((val) => {
             list.push(val.name);
         });
-        return (0, rxjs_1.of)(list).pipe((0, rxjs_1.tap)(() => this.setObjectNotExistsAsync(idPrefix + id, {
+        return (0, rxjs_1.of)(list).pipe((0, operators_1.switchMap)(() => this.setObjectNotExistsAsync(idPrefix + id, {
             type: 'state',
             common: {
                 name: name,

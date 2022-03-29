@@ -118,7 +118,7 @@ export class BshbOpenDoorWindowHandler extends BshbHandler {
         });
 
         return of(list).pipe(
-            tap(() => this.setObjectNotExistsAsync(idPrefix + id, {
+            switchMap(() => this.setObjectNotExistsAsync(idPrefix + id, {
                 type: 'state',
                 common: {
                     name: name,

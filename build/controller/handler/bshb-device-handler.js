@@ -199,7 +199,7 @@ class BshbDeviceHandler extends bshb_handler_1.BshbHandler {
                 this.bshb.setState('info.cache.rooms', { val: this.mapValueToStorage(result), ack: true });
             }
         }));
-        const devices = this.getBshcClient().getDevices({ timeout: this.long_timeout }).pipe((0, operators_1.switchMap)(response => (0, rxjs_1.from)(response.parsedResponse)), (0, operators_1.switchMap)(device => {
+        const devices = this.getBshcClient().getDevices({ timeout: this.long_timeout }).pipe((0, operators_1.switchMap)(response => (0, rxjs_1.from)(response.parsedResponse)), (0, rxjs_1.mergeMap)(device => {
             const name = this.getDeviceName(device);
             this.bshb.log.debug(`Device ${device.id} detected.`);
             return this.setObjectNotExistsAsync(device.id, {

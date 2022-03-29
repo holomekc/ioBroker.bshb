@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "bshb",
-        "version": "0.1.18",
+        "version": "0.1.19",
         "news": {
+			"0.1.19": {
+				"de": "Probleme beim initialen Setup behoben.",
+				"en": "Problems with initial setup fixed.",
+				"ru": "Исправлены проблемы с начальной настройкой.",
+				"pt": "Problemas com a configuração inicial resolvidos.",
+				"nl": "Problemen met de eerste installatie opgelost.",
+				"fr": "Correction de problèmes lors de l'installation initiale.",
+				"it": "Problemi con la configurazione iniziale risolti.",
+				"es": "Se han solucionado los problemas de la configuración inicial.",
+				"pl": "Naprawiono problemy z początkową konfiguracją.",
+				"zh-cn": "初始设置的问题得到解决。"
+			},
 			"0.1.18": {
 				"de": "Verzögerung zwischen Controller Aufrufen konfigurierbar.",
 				"en": "Delay between controller calls configurable.",
@@ -110,18 +122,6 @@
 				"es": "Limpieza de los archivos de instalación",
 				"pl": "Czyszczenie plików instalacyjnych",
 				"zh-cn": "清理安装文件"
-			},
-			"0.1.9": {
-				"en": "Error in scenario handling fixed",
-				"de": "Fehler in der Szenariobehandlung behoben",
-				"ru": "Исправлена ошибка в обработке сценариев",
-				"pt": "Erro no tratamento dos cenários corrigido",
-				"nl": "Fout in scenario-afhandeling verholpen",
-				"fr": "Correction d'une erreur dans le traitement des scénarios",
-				"it": "Corretto l'errore nella gestione degli scenari",
-				"es": "Error en el manejo del escenario arreglado",
-				"pl": "Błąd w obsłudze scenariusza naprawiony",
-				"zh-cn": "解决方案处理错误"
 			}
         },
         "title": "Bosch Smart Home Bridge",

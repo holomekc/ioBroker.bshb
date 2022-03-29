@@ -63,6 +63,9 @@ export class Bshb extends utils.Adapter {
 
         if (!this.config.identifier) {
             this.config.identifier = uuidv4();
+            this.updateConfig({
+                identifier: this.config.identifier
+            });
         }
 
         this.config.host = this.config.host ? this.config.host.trim() : '';
@@ -82,6 +85,9 @@ export class Bshb extends utils.Adapter {
         } else {
             this.config.rateLimit = 1000;
             this.log.debug('config rateLimit not set using default: 1000');
+            this.updateConfig({
+                rateLimit: this.config.rateLimit
+            });
         }
 
         if (!notPrefixedIdentifier) {
