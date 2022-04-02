@@ -132,7 +132,7 @@ export class BshbOpenDoorWindowHandler extends BshbHandler {
                     name: id
                 },
             })),
-            tap(list => this.bshb.setState(idPrefix + id, {val: this.mapValueToStorage(list), ack: true})),
+            tap(() => this.bshb.setState(idPrefix + id, {val: this.mapValueToStorage(list), ack: true})),
             switchMap(() => of(undefined))
         );
     }

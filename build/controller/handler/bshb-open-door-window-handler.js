@@ -103,7 +103,7 @@ class BshbOpenDoorWindowHandler extends bshb_handler_1.BshbHandler {
                 id: idPrefix + id,
                 name: id
             },
-        })), (0, rxjs_1.tap)(list => this.bshb.setState(idPrefix + id, { val: this.mapValueToStorage(list), ack: true })), (0, operators_1.switchMap)(() => (0, rxjs_1.of)(undefined)));
+        })), (0, rxjs_1.tap)(() => this.bshb.setState(idPrefix + id, { val: this.mapValueToStorage(list), ack: true })), (0, operators_1.switchMap)(() => (0, rxjs_1.of)(undefined)));
     }
     setListCount(idPrefix, id, key, name, result) {
         return this.setObjectNotExistsAsync(idPrefix + id + 'Count', {

@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "bshb",
-        "version": "0.1.19",
+        "version": "0.1.20",
         "news": {
+			"0.1.20": {
+				"de": "Probleme beim initialen Setup behoben.",
+				"en": "Fixed problems with openDoorsAndWindows.",
+				"ru": "Исправлены проблемы с openDoorsAndWindows.",
+				"pt": "Problemas corrigidos com portas e janelas abertas.",
+				"nl": "Probleme mit openDoorsAndWindows wurden behoben.",
+				"fr": "Les problèmes avec openDoorsAndWindows ont été résolus.",
+				"it": "I problemi con openDoorsAndWindows sono stati risolti.",
+				"es": "Se han resuelto los problemas con openDoorsAndWindows.",
+				"pl": "Rozwiązano problemy z funkcją OpenDoorsAndWindows.",
+				"zh-cn": "修正了openDoorsAndWindows的问题。"
+			},
 			"0.1.19": {
 				"de": "Probleme beim initialen Setup behoben.",
 				"en": "Problems with initial setup fixed.",
@@ -110,18 +122,6 @@
 				"es": "Actualizar las dependencias y añadir la indicación de conexión",
 				"pl": "Aktualizacja zależności i dodanie wskazania połączenia",
 				"zh-cn": "更新了依赖性并添加了连接指示"
-			},
-			"0.1.10": {
-				"en": "Cleanup installation files",
-				"de": "Bereinigen von Installationsdateien",
-				"ru": "Очистка установочных файлов",
-				"pt": "Limpeza dos ficheiros de instalação",
-				"nl": "Schoonmaakinstallatiebestanden",
-				"fr": "Nettoyage des fichiers d'installation",
-				"it": "File di installazione per la pulizia",
-				"es": "Limpieza de los archivos de instalación",
-				"pl": "Czyszczenie plików instalacyjnych",
-				"zh-cn": "清理安装文件"
 			}
         },
         "title": "Bosch Smart Home Bridge",
