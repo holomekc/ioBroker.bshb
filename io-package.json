@@ -169,12 +169,15 @@
         "mode": "daemon",
         "type": "iot-systems",
         "compact": true,
-        "materialize": true,
+		"adminUI": {
+			"config": "json",
+			"tab": "materialize"
+		},
 		"connectionType": "local",
 		"dataSource": "push",
         "dependencies": [
             {
-                "js-controller": ">=3.3.15"
+                "js-controller": ">=3.3.22"
             }
         ]
     },
