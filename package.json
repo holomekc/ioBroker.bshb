@@ -19,7 +19,7 @@
     "url": "https://github.com/holomekc/ioBroker.bshb"
   },
   "dependencies": {
-    "@iobroker/adapter-core": "^2.6.0",
+    "@iobroker/adapter-core": "^2.6.6",
     "bosch-smart-home-bridge": "^1.0.4",
     "rxjs": "^7.5.5",
     "uuid": "^8.3.2"
