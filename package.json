@@ -22,7 +22,7 @@
     "@iobroker/adapter-core": "^2.6.0",
     "bosch-smart-home-bridge": "^1.0.4",
     "rxjs": "^7.5.5",
-    "uuid": "^8.3.2"
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
     "@alcalzone/release-script": "^3.5.2",
