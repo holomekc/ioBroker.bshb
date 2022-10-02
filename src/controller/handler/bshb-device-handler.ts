@@ -85,7 +85,7 @@ export class BshbDeviceHandler extends BshbHandler {
     public sendUpdateToBshc(id: string, state: ioBroker.State): boolean {
         let cachedState = this.cachedStates.get(id);
 
-        if (Utils.isLevelActive(this.bshb.log.level, LogLevel.debug)) {
+        if (cachedState && Utils.isLevelActive(this.bshb.log.level, LogLevel.debug)) {
             this.bshb.log.debug(`Send update to BSHC for id: ${id}. Cached state: ${JSON.stringify(cachedState)}`);
         }
 
@@ -411,24 +411,7 @@ export class BshbDeviceHandler extends BshbHandler {
             native: {device: device, deviceService: deviceService, state: stateKey},
         }).pipe(
             switchMap(() => from(this.bshb.getStateAsync(id))),
-            switchMap(state => {
-                if (state) {
-                    return this.mapValueFromStorage(id, state.val).pipe(
-                        tap(value => {
-                            if (value !== stateValue) {
-                                // only set again if a change is detected.
-                                this.bshb.setState(id, {val: this.mapValueToStorage(stateValue), ack: true});
-                            }
-                        }),
-                        switchMap(() => of(undefined))
-                    );
-                } else {
-                    // no previous state so we set it
-                    this.bshb.setState(id, {val: this.mapValueToStorage(stateValue), ack: true});
-                    // we do not wait
-                    return of(undefined);
-                }
-            })
+            switchMap(state => this.setInitialStateValueIfNotSet(id, state, stateValue))
         );
     }
 

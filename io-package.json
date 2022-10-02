@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "bshb",
-        "version": "0.1.20",
+        "version": "0.2.0",
         "news": {
+			"0.2.0": {
+				"de": "Unterstützung für weitere Dienste.",
+				"en": "Support for additional services.",
+				"ru": "Поддержка дополнительных услуг.",
+				"pt": "Apoio para serviços adicionais.",
+				"nl": "Steun voor aanvullende diensten.",
+				"fr": "Soutien aux services supplémentaires.",
+				"it": "Supporto per servizi aggiuntivi.",
+				"es": "Apoyo a los servicios adicionales.",
+				"pl": "Wsparcie dla usług dodatkowych.",
+				"zh-cn": "支持额外的服务。"
+			},
 			"0.1.20": {
 				"de": "Probleme beim initialen Setup behoben.",
 				"en": "Fixed problems with openDoorsAndWindows.",
@@ -110,18 +122,6 @@
 				"es": "Estados, unidades y limpieza",
 				"pl": "Państwa, jednostki i czyszczenie",
 				"zh-cn": "国家、单位和清理"
-			},
-			"0.1.11": {
-				"de": "Abhängigkeiten aktualisiert und Verbindungsanzeige hinzugefügt",
-				"en": "Updated dependencies and add connection indication",
-				"ru": "Обновленные зависимости и добавить индикацию подключения",
-				"pt": "Dependências actualizadas e indicação de ligação adicional",
-				"nl": "Bijgewerkte afhankelijkheden en verbindingsindicatie toevoegen",
-				"fr": "Mise à jour des dépendances et ajout d'une indication de connexion",
-				"it": "Aggiornare le dipendenze e aggiungere l'indicazione di connessione",
-				"es": "Actualizar las dependencias y añadir la indicación de conexión",
-				"pl": "Aktualizacja zależności i dodanie wskazania połączenia",
-				"zh-cn": "更新了依赖性并添加了连接指示"
 			}
         },
         "title": "Bosch Smart Home Bridge",

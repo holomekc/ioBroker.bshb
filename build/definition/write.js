@@ -11,6 +11,11 @@ exports.WRITE = {
     },
     lockActuator: {
         canUnlatch: false
+    },
+    waterAlarmSystemState: {
+        available: false,
+        state: false,
+        deleted: false
     }
 };
 //# sourceMappingURL=write.js.map

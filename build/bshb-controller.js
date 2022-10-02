@@ -12,6 +12,9 @@ const bshb_messages_handler_1 = require("./controller/handler/bshb-messages-hand
 const bshb_open_door_window_handler_1 = require("./controller/handler/bshb-open-door-window-handler");
 const bshb_intrusion_detection_1 = require("./controller/handler/bshb-intrusion-detection");
 const bshb_general_update_handler_1 = require("./controller/handler/bshb-general-update-handler");
+const bshb_air_purity_guardian_handler_1 = require("./controller/handler/bshb-air-purity-guardian-handler");
+const bshb_motion_lights_handler_1 = require("./controller/handler/bshb-motion-lights-handler");
+const bshb_water_alarm_handler_1 = require("./controller/handler/bshb-water-alarm-handler");
 /**
  * This controller encapsulates bosch-smart-home-bridge and provides it to iobroker.bshb
  *
@@ -45,6 +48,9 @@ class BshbController {
             this.handlers.push(new bshb_scenario_handler_1.BshbScenarioHandler(this.bshb, this.boschSmartHomeBridge));
             this.handlers.push(new bshb_messages_handler_1.BshbMessagesHandler(this.bshb, this.boschSmartHomeBridge));
             this.handlers.push(new bshb_intrusion_detection_1.BshbIntrusionDetection(this.bshb, this.boschSmartHomeBridge));
+            this.handlers.push(new bshb_air_purity_guardian_handler_1.BshbAirPurityGuardianHandler(this.bshb, this.boschSmartHomeBridge));
+            this.handlers.push(new bshb_motion_lights_handler_1.BshbMotionLightsHandler(this.bshb, this.boschSmartHomeBridge));
+            this.handlers.push(new bshb_water_alarm_handler_1.BshbWaterAlarmHandler(this.bshb, this.boschSmartHomeBridge));
             this.handlers.push(new bshb_device_handler_1.BshbDeviceHandler(this.bshb, this.boschSmartHomeBridge));
             this.handlers.push(new bshb_open_door_window_handler_1.BshbOpenDoorWindowHandler(this.bshb, this.boschSmartHomeBridge));
             this.$rateLimit.pipe((0, rxjs_1.concatMap)(data => {

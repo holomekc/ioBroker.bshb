@@ -116,6 +116,22 @@ class BshbHandler {
             }
         }));
     }
+    setInitialStateValueIfNotSet(id, state, value) {
+        if (state) {
+            return this.mapValueFromStorage(id, state.val).pipe((0, operators_1.tap)(value => {
+                if (value !== value) {
+                    // only set again if a change is detected.
+                    this.bshb.setState(id, { val: this.mapValueToStorage(value), ack: true });
+                }
+            }), (0, rxjs_1.switchMap)(() => (0, rxjs_1.of)(undefined)));
+        }
+        else {
+            // no previous state so we set it
+            this.bshb.setState(id, { val: this.mapValueToStorage(value), ack: true });
+            // we do not wait
+            return (0, rxjs_1.of)(undefined);
+        }
+    }
 }
 exports.BshbHandler = BshbHandler;
 //# sourceMappingURL=bshb-handler.js.map

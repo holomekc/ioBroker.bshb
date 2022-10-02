@@ -8,5 +8,10 @@ export const WRITE: { [TypeName: string]: { [KeyName: string]: boolean } } = {
     },
     lockActuator: {
         canUnlatch: false
+    },
+    waterAlarmSystemState: {
+        available: false,
+        state: false,
+        deleted: false
     }
 }

@@ -75,7 +75,7 @@ class BshbDeviceHandler extends bshb_handler_1.BshbHandler {
     }
     sendUpdateToBshc(id, state) {
         let cachedState = this.cachedStates.get(id);
-        if (utils_1.Utils.isLevelActive(this.bshb.log.level, log_level_1.LogLevel.debug)) {
+        if (cachedState && utils_1.Utils.isLevelActive(this.bshb.log.level, log_level_1.LogLevel.debug)) {
             this.bshb.log.debug(`Send update to BSHC for id: ${id}. Cached state: ${JSON.stringify(cachedState)}`);
         }
         if (cachedState && cachedState.deviceService && cachedState.deviceService.state && cachedState.deviceService.state['@type']) {
@@ -328,22 +328,7 @@ class BshbDeviceHandler extends bshb_handler_1.BshbHandler {
                 states: states
             },
             native: { device: device, deviceService: deviceService, state: stateKey },
-        }).pipe((0, operators_1.switchMap)(() => (0, rxjs_1.from)(this.bshb.getStateAsync(id))), (0, operators_1.switchMap)(state => {
-            if (state) {
-                return this.mapValueFromStorage(id, state.val).pipe((0, operators_1.tap)(value => {
-                    if (value !== stateValue) {
-                        // only set again if a change is detected.
-                        this.bshb.setState(id, { val: this.mapValueToStorage(stateValue), ack: true });
-                    }
-                }), (0, operators_1.switchMap)(() => (0, rxjs_1.of)(undefined)));
-            }
-            else {
-                // no previous state so we set it
-                this.bshb.setState(id, { val: this.mapValueToStorage(stateValue), ack: true });
-                // we do not wait
-                return (0, rxjs_1.of)(undefined);
-            }
-        }));
+        }).pipe((0, operators_1.switchMap)(() => (0, rxjs_1.from)(this.bshb.getStateAsync(id))), (0, operators_1.switchMap)(state => this.setInitialStateValueIfNotSet(id, state, stateValue)));
     }
     addRoom(deviceId, deviceServiceId, itemId, roomId) {
         if (roomId) {

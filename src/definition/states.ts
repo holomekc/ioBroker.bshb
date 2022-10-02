@@ -235,5 +235,12 @@ export const STATES: { [TypeName: string]: { [KeyName: string]: { [Key: string]:
             LOCKING: 'LOCKING',
             UNLOCKING: 'UNLOCKING'
         },
+    },
+    waterAlarmSystemState: {
+        state: {
+            WATER_ALARM: 'WATER_ALARM',
+            ALARM_OFF: 'ALARM_OFF',
+            ALARM_MUTED: 'ALARM_MUTED'
+        }
     }
 };

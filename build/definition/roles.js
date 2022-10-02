@@ -149,6 +149,23 @@ exports.ROLES = {
     },
     lockActuator: {
         lockState: 'text',
+    },
+    airPurityGuardian: {
+        enabled: 'switch'
+    },
+    motionlight: {
+        enabled: 'switch',
+        brightness: 'level.dimmer',
+        darknessThresholdLux: 'level.color.luminance',
+        lightsOffDelay: 'level.timer',
+        illuminanceLux: 'level.color.luminance',
+        lightIds: 'list'
+    },
+    waterAlarmSystemState: {
+        available: 'indicator',
+        visualActuatorsAvailable: 'switch',
+        videoActuatorsAvailable: 'switch',
+        deleted: 'indicator'
     }
 };
 //# sourceMappingURL=roles.js.map

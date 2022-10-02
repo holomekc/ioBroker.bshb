@@ -153,4 +153,23 @@ export abstract class BshbHandler {
             })
         );
     }
+
+    public setInitialStateValueIfNotSet(id: string, state: ioBroker.State | null | undefined, value: any) {
+        if (state) {
+            return this.mapValueFromStorage(id, state.val).pipe(
+                tap(value => {
+                    if (value !== value) {
+                        // only set again if a change is detected.
+                        this.bshb.setState(id, {val: this.mapValueToStorage(value), ack: true});
+                    }
+                }),
+                switchMap(() => of(undefined))
+            );
+        } else {
+            // no previous state so we set it
+            this.bshb.setState(id, {val: this.mapValueToStorage(value), ack: true});
+            // we do not wait
+            return of(undefined);
+        }
+    }
 }
