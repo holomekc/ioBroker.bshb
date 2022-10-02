@@ -120,7 +120,7 @@ export class BshbScenarioHandler extends BshbHandler {
     }
 
     private deleteMissingScenarios(scenarios: any[]): Observable<void> {
-        return from(this.bshb.getStatesOfAsync('scenarios')).pipe(
+        return from(this.bshb.getStatesOfAsync('scenarios', '')).pipe(
             switchMap(objects => from(objects)),
             switchMap(object => {
                 let found = false;
@@ -133,7 +133,7 @@ export class BshbScenarioHandler extends BshbHandler {
                 }
 
                 if (!found) {
-                    return from(this.bshb.deleteStateAsync('scenarios', object.native.id)).pipe(
+                    return from(this.bshb.deleteStateAsync('scenarios', '', object.native.id)).pipe(
                         tap(() => this.bshb.log.info(`scenario with id=${object.native.id} removed because it does not exist anymore.`)),
                         catchError(err => {
                             this.bshb.log.error(`Could not delete scenario with id=${object.native.id} because: ` + err);

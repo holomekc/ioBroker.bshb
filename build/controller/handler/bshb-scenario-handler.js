@@ -103,7 +103,7 @@ class BshbScenarioHandler extends bshb_handler_1.BshbHandler {
         }), (0, rxjs_1.switchMap)(() => (0, rxjs_1.of)(undefined)));
     }
     deleteMissingScenarios(scenarios) {
-        return (0, rxjs_1.from)(this.bshb.getStatesOfAsync('scenarios')).pipe((0, rxjs_1.switchMap)(objects => (0, rxjs_1.from)(objects)), (0, rxjs_1.switchMap)(object => {
+        return (0, rxjs_1.from)(this.bshb.getStatesOfAsync('scenarios', '')).pipe((0, rxjs_1.switchMap)(objects => (0, rxjs_1.from)(objects)), (0, rxjs_1.switchMap)(object => {
             let found = false;
             for (let i = 0; i < scenarios.length; i++) {
                 if (object.native.id === scenarios[i].id) {
@@ -113,7 +113,7 @@ class BshbScenarioHandler extends bshb_handler_1.BshbHandler {
                 }
             }
             if (!found) {
-                return (0, rxjs_1.from)(this.bshb.deleteStateAsync('scenarios', object.native.id)).pipe((0, rxjs_1.tap)(() => this.bshb.log.info(`scenario with id=${object.native.id} removed because it does not exist anymore.`)), (0, operators_1.catchError)(err => {
+                return (0, rxjs_1.from)(this.bshb.deleteStateAsync('scenarios', '', object.native.id)).pipe((0, rxjs_1.tap)(() => this.bshb.log.info(`scenario with id=${object.native.id} removed because it does not exist anymore.`)), (0, operators_1.catchError)(err => {
                     this.bshb.log.error(`Could not delete scenario with id=${object.native.id} because: ` + err);
                     return (0, rxjs_1.of)(undefined);
                 }));
