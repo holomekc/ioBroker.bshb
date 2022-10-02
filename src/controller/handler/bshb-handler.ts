@@ -38,7 +38,10 @@ export abstract class BshbHandler {
             } else {
                 return from(this.bshb.addChannelToEnumAsync(enumObj.type, enumObj.name, enumObj.deviceId, enumObj.deviceServiceId));
             }
-        })).subscribe();
+        })).subscribe({
+            next: () => {},
+            error: err => this.bshb.log.warn(`Could not add enum: ${err}`)
+        });
     }
 
     /**
@@ -70,12 +73,24 @@ export abstract class BshbHandler {
         return this.boschSmartHomeBridge.getBshcClient();
     }
 
-    public addRoomEnum(name: string, deviceId: string, deviceServiceId: string, itemId: string | undefined) {
-        this.addEnum('rooms', name, deviceId, deviceServiceId, itemId);
+    public addRoomEnum(name: string, deviceId: string, deviceServiceId: string, itemId: string | undefined = undefined) {
+        if (name) {
+            name = name.trim();
+
+            if (name && name.length > 0) {
+                this.addEnum('rooms', name, deviceId, deviceServiceId, itemId);
+            }
+        }
     }
 
-    public addFunctionEnum(name: string, deviceId: string, deviceServiceId: string, itemId: string | undefined) {
-        this.addEnum('functions', name, deviceId, deviceServiceId, itemId);
+    public addFunctionEnum(name: string, deviceId: string, deviceServiceId: string, itemId: string | undefined = undefined) {
+        if (name) {
+            name = name.trim();
+
+            if (name && name.length > 0) {
+                this.addEnum('functions', name, deviceId, deviceServiceId, itemId);
+            }
+        }
     }
 
     public addEnum(type: string, name: string, deviceId: string, deviceServiceId: string, itemId: string | undefined) {

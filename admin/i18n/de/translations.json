@@ -1,0 +1,10 @@
+{
+    "host": "Bosch Smart Home Controller IP-Adresse",
+    "identifier": "Eindeutige Kennung des erstellten Clients",
+    "identifier-detail": "uuidv4 wird empfohlen",
+    "systemPassword": "Bosch Smart Home Controller Systempassword",
+    "systemPassword-detail": "Kann nach dem Koppeln entfernt werden",
+    "pairingDelay": "Verzögerung bei Kopplungsversuchen in ms",
+    "pairingDelay-detail": "Wartezeit während des Kopplungsprozesses",
+    "rateLimit": "Verzögerung zwischen Controller Aufrufen in ms"
+}

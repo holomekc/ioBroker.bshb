@@ -420,29 +420,14 @@ export class BshbDeviceHandler extends BshbHandler {
             const room = this.getRoomById(roomId);
 
             if (room) {
-                let name = room.name;
-
-                if (name) {
-                    name = name.trim().toLowerCase().replace(/ /g, '_');
-
-                    if (name && name.length > 0) {
-                        this.addRoomEnum(name, deviceId, deviceServiceId, itemId);
-                    }
-                }
+                this.addRoomEnum(room.name, deviceId, deviceServiceId, itemId);
             }
         }
     }
 
     private addFunction(deviceId: string, deviceServiceId: string, itemId: string): void {
         let name = BshbDefinition.determineFunction(deviceServiceId);
-
-        if (name) {
-            name = name.trim().toLowerCase().replace(/ /g, '_');
-
-            if (name && name.length > 0) {
-                this.addFunctionEnum(name, deviceId, deviceServiceId, itemId);
-            }
-        }
+        this.addFunctionEnum(name, deviceId, deviceServiceId, itemId);
     }
 
     private getDeviceName(device: any): string {

@@ -1,10 +1,12 @@
 import {BshbHandler} from './bshb-handler';
-import {from, map, mergeMap, Observable, of, switchMap, tap} from 'rxjs';
+import {from, map, merge, mergeMap, Observable, of, switchMap, tap, throwError, zip} from 'rxjs';
 import {BshbDefinition} from '../../bshb-definition';
+import {catchError} from 'rxjs/operators';
 
 export class BshbAirPurityGuardianHandler extends BshbHandler {
 
     private regex = /bshb\.\d+\.airPurityGuardian\.(.*)/;
+    private roomRegex = /^airPurityGuardian_(.*)$/;
     private cachedStates = new Map<string, any>();
 
     handleDetection(): Observable<void> {
@@ -89,13 +91,38 @@ export class BshbAirPurityGuardianHandler extends BshbHandler {
     }
 
     private addAirPurityGuardian(airPurityGuardian: any): Observable<any> {
-        return this.setObjectNotExistsAsync(`airPurityGuardian.${airPurityGuardian.id}`, {
-            type: 'channel',
-            common: {
-                name: airPurityGuardian.name
-            },
-            native: {}
-        }).pipe(
+        const match = this.roomRegex.exec(airPurityGuardian.id);
+
+        let roomAndFunctions;
+        if (match) {
+            roomAndFunctions = this.getBshcClient().getRoom(match ? match[1] : match[1]).pipe(
+                map(response => response.parsedResponse),
+                catchError(() => of(undefined))
+            );
+        } else {
+            roomAndFunctions = throwError(() => new Error('No room could be extracted from airPurityGuardian.'));
+        }
+
+        return zip(
+            this.setObjectNotExistsAsync(`airPurityGuardian.${airPurityGuardian.id}`, {
+                type: 'channel',
+                common: {
+                    name: airPurityGuardian.name
+                },
+                native: {}
+            }),
+            roomAndFunctions
+        ).pipe(
+            tap(objAndRoom => {
+                    const obj = objAndRoom[0];
+                    const room = objAndRoom[1];
+                    if (obj && room && obj._bshbCreated) {
+                        this.addRoomEnum(room.name, 'airPurityGuardian', airPurityGuardian.id, undefined as unknown as string);
+                        this.addFunctionEnum(BshbDefinition.determineFunction('airPurityGuardian'),
+                            'airPurityGuardian', airPurityGuardian.id, undefined as unknown as string);
+                    }
+                }
+            ),
             mergeMap(() => from(Object.keys(airPurityGuardian))),
             mergeMap(key => this.importState(key, airPurityGuardian))
         );
@@ -119,7 +146,7 @@ export class BshbAirPurityGuardianHandler extends BshbHandler {
                 type: BshbDefinition.determineType(value),
                 role: BshbDefinition.determineRole('airPurityGuardian', key, value),
                 read: true,
-                write:  true
+                write: true
             },
             native: {}
         }).pipe(

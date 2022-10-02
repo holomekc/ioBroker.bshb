@@ -14,6 +14,7 @@ exports.FUNCTIONS = {
     CommunicationQuality: 'communicationQuality',
     BatteryLevel: 'battery',
     AirQualityLevel: 'airQuality',
-    SmokeSensitivity: 'smokeSensitivity'
+    SmokeSensitivity: 'smokeSensitivity',
+    airPurityGuardian: 'airQuality',
 };
 //# sourceMappingURL=function.js.map

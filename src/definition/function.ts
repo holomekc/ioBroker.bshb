@@ -11,5 +11,6 @@ export const FUNCTIONS: { [FunctionName: string]: string } = {
     CommunicationQuality: 'communicationQuality',
     BatteryLevel: 'battery',
     AirQualityLevel: 'airQuality',
-    SmokeSensitivity: 'smokeSensitivity'
+    SmokeSensitivity: 'smokeSensitivity',
+    airPurityGuardian: 'airQuality',
 };
