@@ -2,15 +2,46 @@
     "i18n": true,
     "type": "panel",
     "items": {
-        "option1": {
-            "type": "checkbox",
-            "label": "option1",
-            "newLine": true
-        },
-        "option2": {
+        "host": {
             "type": "text",
-            "label": "option2",
-            "newLine": true
+            "label": "host",
+            "newLine": false,
+            "sm": 12,
+            "md": 6
+        },
+        "identifier": {
+            "type": "text",
+            "label": "identifier",
+            "newLine": false,
+            "help": "identifier-detail",
+            "sm": 12,
+            "md": 6
+        },
+        "systemPassword": {
+            "type": "password",
+            "label": "systemPassword",
+            "newLine": true,
+            "help": "systemPassword-detail",
+            "visible": true,
+            "sm": 12,
+            "md": 6
+        },
+        "pairingDelay": {
+            "type": "number",
+            "label": "pairingDelay",
+            "newLine": false,
+            "help": "pairingDelay-detail",
+            "min": 1000,
+            "sm": 12,
+            "md": 6
+        },
+        "rateLimit": {
+            "type": "number",
+            "label": "rateLimit",
+            "newLine": true,
+            "min": 1000,
+            "sm": 12,
+            "md": 6
         }
     }
 }

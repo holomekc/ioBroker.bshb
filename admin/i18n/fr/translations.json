@@ -1,0 +1,10 @@
+{
+    "host": "Adresse IP du Bosch Smart Home Controller",
+    "identifier": "Identificateur unique du client créé",
+    "identifier-detail": "uuidv4 est recommandé",
+    "systemPassword": "Mot de passe système Bosch Smart Home Controller",
+    "systemPassword-detail": "Peut être retiré après l'appairage",
+    "pairingDelay": "Délai pendant les tentatives d'appairage en ms",
+    "pairingDelay-detail": "Temps d'attente pendant les tentatives de pairage",
+    "rateLimit": "Délai entre les appels du contrôleur en ms"
+}

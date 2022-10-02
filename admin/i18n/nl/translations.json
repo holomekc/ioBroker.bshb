@@ -1,0 +1,10 @@
+{
+    "host": "IP-adres van de Bosch Smart Home Controller",
+    "identifier": "Unieke identificatie van de aangemaakte klant",
+    "identifier-detail": "uuidv4 is recommended",
+    "systemPassword": "Wachtwoord voor het systeem van Bosch Smart Home Controller",
+    "systemPassword-detail": "Kan na het koppelen worden verwijderd",
+    "pairingDelay": "Vertraging tijdens koppelingspogingen in ms",
+    "pairingDelay-detail": "Tijd die wacht tijdens de koppelingspogingen",
+    "rateLimit": "Vertraging tussen controlleroproepen in ms"
+}
