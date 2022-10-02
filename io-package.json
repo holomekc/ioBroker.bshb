@@ -152,9 +152,7 @@
             "Christopher Holomek <holomekc.github@gmail.com>"
         ],
         "keywords": [
-            "ioBroker",
             "Bosch Smart Home",
-            "Smart Home",
             "home automation"
         ],
         "license": "MIT",
