@@ -152,8 +152,7 @@
             "Christopher Holomek <holomekc.github@gmail.com>"
         ],
         "keywords": [
-            "Bosch Smart Home",
-            "home automation"
+            "Bosch"
         ],
         "license": "MIT",
         "platform": "Javascript/Node.js",

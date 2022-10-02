@@ -9,8 +9,9 @@
   "homepage": "https://github.com/holomekc/ioBroker.bshb",
   "license": "MIT",
   "keywords": [
-    "Bosch Smart Home",
-    "home automation"
+    "ioBroker",
+    "Bosch",
+    "Smart Home"
   ],
   "repository": {
     "type": "git",
