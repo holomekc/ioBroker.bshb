@@ -1,9 +1,9 @@
 {
     "common": {
         "name": "bshb",
-        "version": "0.2.0",
+        "version": "0.2.1",
         "news": {
-			"0.2.0": {
+			"0.2.1": {
 				"de": "Unterstützung für weitere Dienste.",
 				"en": "Support for additional services.",
 				"ru": "Поддержка дополнительных услуг.",
@@ -175,7 +175,12 @@
             {
                 "js-controller": ">=3.3.22"
             }
-        ]
+        ],
+		"globalDependencies": [
+			{
+				"admin": ">=5.1.13"
+			}
+		]
     },
     "native": {
 		"host": "192.168.178.10",

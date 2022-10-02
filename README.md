@@ -35,7 +35,7 @@ If you want to support the work I would appreciate a small donation. This is 100
 
 ## Changelog
 
-### 0.2.0
+### 0.2.1
 * (holomekc) Support for additional services
 
 ### 0.1.20
