@@ -59,6 +59,17 @@ mock.get('/smarthome/rooms', (req, res) => {
     ]);
 });
 
+mock.get('/smarthome/rooms/hz_2', (req, res) => {
+    res.json(
+        {
+            '@type': 'room',
+            'id': 'hz_2',
+            'iconId': 'icon_room_bedroom',
+            'name': 'Schlafzimmer',
+        }
+    );
+});
+
 mock.get('/smarthome/scenarios', (req, res) => {
     res.json([
         {
@@ -182,6 +193,31 @@ mock.get('/smarthome/devices', (req, res) => {
     ]);
 });
 
+mock.get('/smarthome/devices/hdm:ZigBee:xxx', (req, res) => {
+    res.json(
+        {
+            '@type': 'device',
+            'rootDeviceId': '00-00-00-00-00-00',
+            'id': 'hdm:ZigBee:xxx',
+            'deviceServiceIds': [
+                'CommunicationQuality',
+                'BatteryLevel',
+                'MultiswitchDebug',
+                'MultiswitchConfiguration',
+                'TemperatureLevel'
+            ],
+            'manufacturer': 'BOSCH',
+            'roomId': 'hz_2',
+            'deviceModel': 'MULTISWITCH',
+            'serial': '0000000000000000',
+            'profile': 'GENERIC',
+            'name': 'Bewegungsmelder',
+            'status': 'AVAILABLE',
+            'childDeviceIds': []
+        }
+    );
+});
+
 mock.get('/smarthome/services', (req, res) => {
     res.json([
         {
@@ -249,15 +285,91 @@ mock.post('/remote/json-rpc', (req, res) => {
     }
 });
 
+mock.get('/smarthome/airquality/airpurityguardian', (req, res) => {
+    res.json([
+        {
+            '@type': 'airPurityGuardian',
+            'id': 'airPurityGuardian_hz_2',
+            'name': 'Schlafzimmer',
+            'enabled': false,
+            'lightActuators': [],
+            'staticSensitivityLevels': {
+                'high': [
+                    1000,
+                    1500
+                ],
+                'medium': [
+                    1500,
+                    2000
+                ],
+                'low': [
+                    2000,
+                    2500
+                ]
+            },
+            'configuration': {
+                'sensitivity': 'MEDIUM',
+                'operatingHours': {
+                    'startTime': '08:00',
+                    'endTime': '22:00',
+                    'alwaysOn': true
+                },
+                'actuators': {
+                    'pushNotificationEnabled': true,
+                    'red': {
+                        'mode': 'BLINKING',
+                        'lights': []
+                    },
+                    'yellow': {
+                        'lights': []
+                    },
+                    'green': {
+                        'lights': []
+                    }
+                }
+            }
+        }
+    ]);
+});
+
+mock.get('/smarthome/motionlights', (req, res) => {
+    res.json([
+        {
+            '@type': 'motionlight',
+            'id': 'hdm:ZigBee:xxx',
+            'enabled': false,
+            'brightness': 90,
+            'darknessThresholdLux': 30,
+            'lightsOffDelay': 5,
+            'illuminanceLux': 9,
+            'lightIds': [
+                'hdm:PhilipsHueBridge:HueLight_test'
+            ],
+            'motionDetectorId': 'hdm:ZigBee:xxx'
+        }
+    ]);
+});
+
+mock.get('/smarthome/wateralarm', (req, res) => {
+    res.json({
+        '@type': 'waterAlarmSystemState',
+        'available': false,
+        'visualActuatorsAvailable': false,
+        'videoActuatorsAvailable': true,
+        'state': 'ALARM_OFF',
+        'deleted': false
+    });
+});
+
 httpsServer.listen(8444, () => {
 });
 
 // Run integration tests - See https://github.com/ioBroker/testing for a detailed explanation and further options
 tests.integration(path.join(__dirname, '..'), {
-    allowedExitCodes: [0],
+    allowedExitCodes: [ 0 ],
     waitBeforeStartupSuccess: 2000,
-    defineAdditionalTests(getHarness) {
-        describe('Test sendTo()', () => {
+    defineAdditionalTests({suite}) {
+        suite('Test sendTod()', getHarness => {
             before(() => new Promise(async resolve => {
                 console.log('Edit file to disable certificate verification: ' + certDisableFile);
 
@@ -306,6 +418,6 @@ tests.integration(path.join(__dirname, '..'), {
                     }
                 });
             })).timeout(10000);
-        });
+        })
     }
 });
