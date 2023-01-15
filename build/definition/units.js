@@ -41,6 +41,9 @@ exports.UNITS = {
     },
     powerSwitchState: {
         automaticPowerOffTime: 's'
+    },
+    roomExtProperties: {
+        humidity: '%'
     }
 };
 //# sourceMappingURL=units.js.map

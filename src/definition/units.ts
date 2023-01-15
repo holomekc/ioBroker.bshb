@@ -38,5 +38,8 @@ export const UNITS: { [TypeName: string]: { [KeyName: string]: string } } = {
     },
     powerSwitchState: {
         automaticPowerOffTime: 's'
+    },
+    roomExtProperties: {
+        humidity: '%'
     }
 }

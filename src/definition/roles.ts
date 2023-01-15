@@ -163,5 +163,8 @@ export const ROLES: { [TypeName: string]: { [KeyName: string]: string } } = {
         visualActuatorsAvailable: 'switch',
         videoActuatorsAvailable: 'switch',
         deleted: 'indicator'
+    },
+    roomExtProperties: {
+        humidity: 'value.humidity'
     }
 };

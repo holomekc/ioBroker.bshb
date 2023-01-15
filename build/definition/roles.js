@@ -166,6 +166,9 @@ exports.ROLES = {
         visualActuatorsAvailable: 'switch',
         videoActuatorsAvailable: 'switch',
         deleted: 'indicator'
+    },
+    roomExtProperties: {
+        humidity: 'value.humidity'
     }
 };
 //# sourceMappingURL=roles.js.map

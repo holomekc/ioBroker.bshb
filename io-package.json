@@ -3,6 +3,18 @@
         "name": "bshb",
         "version": "0.2.1",
         "news": {
+			"0.2.2": {
+				"de": "Unterstützung für Räume.",
+				"en": "Support for rooms.",
+				"ru": "Поддержка помещений.",
+				"pt": "Apoio aos quartos.",
+				"nl": "Steun voor kamers.",
+				"fr": "Soutien pour les salles.",
+				"it": "Supporto per le stanze.",
+				"es": "Soporte para salas.",
+				"pl": "Wsparcie dla pomieszczeń.",
+				"zh-cn": "对房间的支持。"
+			},
 			"0.2.1": {
 				"de": "Unterstützung für weitere Dienste.",
 				"en": "Support for additional services.",
@@ -110,18 +122,6 @@
 				"es": "Actualización a la versión api 2.1. Añadir soporte para los perfiles de alarma.",
 				"pl": "Aktualizacja do api-wersji 2.1. Dodaj wsparcie dla profili alarmowych.",
 				"zh-cn": "更新到api-版本2.1。增加对报警配置文件的支持。"
-			},
-			"0.1.12": {
-				"de": "Zustände, Einheiten und Bereinigung",
-				"en": "States, units and cleanup",
-				"ru": "Государства, подразделения и очистка",
-				"pt": "Estados, unidades e limpeza",
-				"nl": "Staten, eenheden en opruiming",
-				"fr": "États, unités et nettoyage",
-				"it": "Stati, unità e pulizia",
-				"es": "Estados, unidades y limpieza",
-				"pl": "Państwa, jednostki i czyszczenie",
-				"zh-cn": "国家、单位和清理"
 			}
         },
         "titleLang": {

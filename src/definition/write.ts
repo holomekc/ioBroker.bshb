@@ -13,5 +13,8 @@ export const WRITE: { [TypeName: string]: { [KeyName: string]: boolean } } = {
         available: false,
         state: false,
         deleted: false
+    },
+    roomExtProperties: {
+        humidity: false
     }
 }

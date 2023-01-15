@@ -16,6 +16,9 @@ exports.WRITE = {
         available: false,
         state: false,
         deleted: false
+    },
+    roomExtProperties: {
+        humidity: false
     }
 };
 //# sourceMappingURL=write.js.map

@@ -15,6 +15,7 @@ const bshb_general_update_handler_1 = require("./controller/handler/bshb-general
 const bshb_air_purity_guardian_handler_1 = require("./controller/handler/bshb-air-purity-guardian-handler");
 const bshb_motion_lights_handler_1 = require("./controller/handler/bshb-motion-lights-handler");
 const bshb_water_alarm_handler_1 = require("./controller/handler/bshb-water-alarm-handler");
+const bshb_room_handler_1 = require("./controller/handler/bshb-room-handler");
 /**
  * This controller encapsulates bosch-smart-home-bridge and provides it to iobroker.bshb
  *
@@ -51,6 +52,7 @@ class BshbController {
             this.handlers.push(new bshb_air_purity_guardian_handler_1.BshbAirPurityGuardianHandler(this.bshb, this.boschSmartHomeBridge));
             this.handlers.push(new bshb_motion_lights_handler_1.BshbMotionLightsHandler(this.bshb, this.boschSmartHomeBridge));
             this.handlers.push(new bshb_water_alarm_handler_1.BshbWaterAlarmHandler(this.bshb, this.boschSmartHomeBridge));
+            this.handlers.push(new bshb_room_handler_1.BshbRoomHandler(this.bshb, this.boschSmartHomeBridge));
             this.handlers.push(new bshb_device_handler_1.BshbDeviceHandler(this.bshb, this.boschSmartHomeBridge));
             this.handlers.push(new bshb_open_door_window_handler_1.BshbOpenDoorWindowHandler(this.bshb, this.boschSmartHomeBridge));
             this.$rateLimit.pipe((0, rxjs_1.concatMap)(data => {
