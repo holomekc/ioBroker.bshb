@@ -6,5 +6,7 @@
     "systemPassword-detail": "配对后即可移除",
     "pairingDelay": "配对尝试期间的延迟（毫秒",
     "pairingDelay-detail": "配对过程中的等待时间",
-    "rateLimit": "控制器调用之间的延迟，单位为ms"
+    "rateLimit": "控制器调用之间的延迟，单位为ms",
+    "skipServerCertificateCheck": "跳过检查服务器证书",
+    "skipServerCertificateCheck-detail": "降低了连接的安全性。使用时风险自负。"
 }

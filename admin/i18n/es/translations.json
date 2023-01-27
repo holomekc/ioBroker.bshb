@@ -6,5 +6,7 @@
     "systemPassword-detail": "Se puede quitar después del emparejamiento",
     "pairingDelay": "Retardo durante los intentos de emparejamiento en ms",
     "pairingDelay-detail": "Tiempo de espera durante los intentos de emparejamiento",
-    "rateLimit": "Retraso entre llamadas del controlador en ms"
+    "rateLimit": "Retraso entre llamadas del controlador en ms",
+    "skipServerCertificateCheck": "Omitir la comprobación del certificado del servidor",
+    "skipServerCertificateCheck-detail": "Reduce la seguridad de la conexión. Utilícelo bajo su propia responsabilidad."
 }

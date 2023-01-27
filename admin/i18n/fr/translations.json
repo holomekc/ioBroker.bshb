@@ -6,5 +6,7 @@
     "systemPassword-detail": "Peut être retiré après l'appairage",
     "pairingDelay": "Délai pendant les tentatives d'appairage en ms",
     "pairingDelay-detail": "Temps d'attente pendant les tentatives de pairage",
-    "rateLimit": "Délai entre les appels du contrôleur en ms"
+    "rateLimit": "Délai entre les appels du contrôleur en ms",
+    "skipServerCertificateCheck": "Ignorer la vérification du certificat du serveur",
+    "skipServerCertificateCheck-detail": "Réduit la sécurité de la connexion. A utiliser à vos risques et périls."
 }

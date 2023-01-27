@@ -27,6 +27,7 @@ declare global {
             systemPassword: string;
             pairingDelay: number;
             rateLimit: number;
+            skipServerCertificateCheck: boolean;
 
             // Or use a catch-all approach
             [key: string]: any;
@@ -73,6 +74,12 @@ export class Bshb extends utils.Adapter {
         this.config.identifier = 'ioBroker.bshb_' + notPrefixedIdentifier;
         this.config.systemPassword = this.config.systemPassword ? this.config.systemPassword.trim() : '';
         this.config.certsPath = this.config.certsPath ? this.config.certsPath.trim() : '';
+
+        if (typeof this.config.skipServerCertificateCheck === 'undefined') {
+            this.config.skipServerCertificateCheck = false;
+        } else if (this.config.skipServerCertificateCheck) {
+            this.log.warn('Server certificate check skipped due to configuration. Use at your own risk.')
+        }
 
         // The adapters config (in the instance object everything under the attribute "native") is accessible via
         // this.config:

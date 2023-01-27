@@ -1,7 +1,7 @@
 {
     "common": {
         "name": "bshb",
-        "version": "0.2.1",
+        "version": "0.2.2",
         "news": {
 			"0.2.2": {
 				"de": "Unterstützung für Räume.",
@@ -187,7 +187,8 @@
 		"identifier": "",
 		"systemPassword": "",
 		"pairingDelay": 10000,
-		"rateLimit": 1000
+		"rateLimit": 1000,
+		"skipServerCertificateCheck": false
     },
     "objects": [],
     "instanceObjects": []

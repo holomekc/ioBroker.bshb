@@ -6,5 +6,7 @@
     "systemPassword-detail": "Kann nach dem Koppeln entfernt werden",
     "pairingDelay": "Verzögerung bei Kopplungsversuchen in ms",
     "pairingDelay-detail": "Wartezeit während des Kopplungsprozesses",
-    "rateLimit": "Verzögerung zwischen Controller Aufrufen in ms"
+    "rateLimit": "Verzögerung zwischen Controller Aufrufen in ms",
+    "skipServerCertificateCheck": "Überprüfung des Serverzertifikats überspringen",
+    "skipServerCertificateCheck-detail": "Reduziert die Sicherheit der Verbindung. Nutzung auf eigene Gefahr."
 }

@@ -42,6 +42,14 @@
             "min": 1000,
             "sm": 12,
             "md": 6
+        },
+        "skipServerCertificateCheck": {
+            "type": "checkbox",
+            "label": "skipServerCertificateCheck",
+            "help": "skipServerCertificateCheck-detail",
+            "newLine": true,
+            "sm": 12,
+            "md": 6
         }
     }
 }

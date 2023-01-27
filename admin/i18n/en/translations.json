@@ -6,5 +6,7 @@
     "systemPassword-detail": "Can be removed after pairing",
     "pairingDelay": "Delay during pairing attempts in ms",
     "pairingDelay-detail": "Time waiting during pairing process attempts",
-    "rateLimit": "Delay between controller calls in ms"
+    "rateLimit": "Delay between controller calls in ms",
+    "skipServerCertificateCheck": "Skip server certificate check",
+    "skipServerCertificateCheck-detail": "Reduces the security of the connection. Use at your own risk."
 }

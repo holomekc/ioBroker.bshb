@@ -6,5 +6,7 @@
     "systemPassword-detail": "Może być usunięty po sparowaniu.",
     "pairingDelay": "Opóźnienie podczas prób parowania w ms",
     "pairingDelay-detail": "Czas oczekiwania podczas prób parowania",
-    "rateLimit": "Opóźnienie między wywołaniami kontrolera w ms"
+    "rateLimit": "Opóźnienie między wywołaniami kontrolera w ms",
+    "skipServerCertificateCheck": "Pomiń sprawdzanie certyfikatu serwera",
+    "skipServerCertificateCheck-detail": "Zmniejsza bezpieczeństwo połączenia. Używaj na własne ryzyko."
 }

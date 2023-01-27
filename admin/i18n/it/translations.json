@@ -6,5 +6,7 @@
     "systemPassword-detail": "Può essere rimosso dopo l'accoppiamento",
     "pairingDelay": "Ritardo durante i tentativi di accoppiamento in ms",
     "pairingDelay-detail": "Tempo di attesa durante i tentativi del processo di accoppiamento",
-    "rateLimit": "Ritardo tra le chiamate del controllore in ms"
+    "rateLimit": "Ritardo tra le chiamate del controllore in ms",
+    "skipServerCertificateCheck": "Saltare la verifica del certificato del server",
+    "skipServerCertificateCheck-detail": "Riduce la sicurezza della connessione. Utilizzare a proprio rischio e pericolo."
 }

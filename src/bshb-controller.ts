@@ -48,6 +48,7 @@ export class BshbController {
                 .withClientCert(clientCert)
                 .withClientPrivateKey(clientPrivateKey)
                 .withLogger(new BshbLogger(bshb))
+                .withIgnoreCertificateCheck(this.bshb.config.skipServerCertificateCheck)
                 .build();
 
             this.handlers = [];

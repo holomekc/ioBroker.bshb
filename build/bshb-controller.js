@@ -43,6 +43,7 @@ class BshbController {
                 .withClientCert(clientCert)
                 .withClientPrivateKey(clientPrivateKey)
                 .withLogger(new bshb_logger_1.BshbLogger(bshb))
+                .withIgnoreCertificateCheck(this.bshb.config.skipServerCertificateCheck)
                 .build();
             this.handlers = [];
             this.handlers.push(new bshb_general_update_handler_1.BshbGeneralUpdateHandler(this.bshb, this.boschSmartHomeBridge));

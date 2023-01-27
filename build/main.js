@@ -150,6 +150,12 @@ class Bshb extends utils.Adapter {
         this.config.identifier = 'ioBroker.bshb_' + notPrefixedIdentifier;
         this.config.systemPassword = this.config.systemPassword ? this.config.systemPassword.trim() : '';
         this.config.certsPath = this.config.certsPath ? this.config.certsPath.trim() : '';
+        if (typeof this.config.skipServerCertificateCheck === 'undefined') {
+            this.config.skipServerCertificateCheck = false;
+        }
+        else if (this.config.skipServerCertificateCheck) {
+            this.log.warn('Server certificate check skipped due to configuration. Use at your own risk.');
+        }
         // The adapters config (in the instance object everything under the attribute "native") is accessible via
         // this.config:
         this.log.debug('config host: ' + this.config.host);
