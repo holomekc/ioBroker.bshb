@@ -259,6 +259,8 @@ export class BshbDeviceHandler extends BshbHandler {
 
                 this.bshb.log.debug(`Device ${device.id} detected.`);
 
+                const deviceStatusId = `${device.id}.status`;
+
                 return this.setObjectNotExistsAsync(device.id, {
                     type: 'device',
                     common: {
@@ -266,6 +268,33 @@ export class BshbDeviceHandler extends BshbHandler {
                     },
                     native: {device: device},
                 }).pipe(
+                    tap(obj => {
+                        if (obj && obj._bshbCreated) {
+                            this.addRoom(device.id, undefined as unknown as string, undefined as unknown as string, device.roomId);
+                        }
+                    }),
+                    switchMap(obj => {
+                        return this.setObjectNotExistsAsync(deviceStatusId, {
+                            type: 'state',
+                            common: {
+                                name: 'status',
+                                type: 'string',
+                                role: 'state',
+                                read: true,
+                                write: false,
+                                states: {
+                                    AVAILABLE: 'AVAILABLE',
+                                    DISCOVERED: 'DISCOVERED',
+                                    UNAVAILABLE: 'UNAVAILABLE',
+                                    COMMUNICATION_ERROR: 'COMMUNICATION_ERROR',
+                                    UNDEFINED: 'UNDEFINED'
+                                }
+                            },
+                            native: {}
+                        });
+                    }),
+                    switchMap(() => from(this.bshb.getStateAsync(deviceStatusId))),
+                    switchMap(state => this.setInitialStateValueIfNotSet(deviceStatusId, state, device.status)),
                     switchMap(() => {
                         this.cachedDevices.set(this.bshb.namespace + '.' + device.id, device);
 

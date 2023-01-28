@@ -202,13 +202,37 @@ class BshbDeviceHandler extends bshb_handler_1.BshbHandler {
         const devices = this.getBshcClient().getDevices({ timeout: this.long_timeout }).pipe((0, operators_1.switchMap)(response => (0, rxjs_1.from)(response.parsedResponse)), (0, rxjs_1.mergeMap)(device => {
             const name = this.getDeviceName(device);
             this.bshb.log.debug(`Device ${device.id} detected.`);
+            const deviceStatusId = `${device.id}.status`;
             return this.setObjectNotExistsAsync(device.id, {
                 type: 'device',
                 common: {
                     name: name
                 },
                 native: { device: device },
-            }).pipe((0, operators_1.switchMap)(() => {
+            }).pipe((0, operators_1.tap)(obj => {
+                if (obj && obj._bshbCreated) {
+                    this.addRoom(device.id, undefined, undefined, device.roomId);
+                }
+            }), (0, operators_1.switchMap)(obj => {
+                return this.setObjectNotExistsAsync(deviceStatusId, {
+                    type: 'state',
+                    common: {
+                        name: 'status',
+                        type: 'string',
+                        role: 'state',
+                        read: true,
+                        write: false,
+                        states: {
+                            AVAILABLE: 'AVAILABLE',
+                            DISCOVERED: 'DISCOVERED',
+                            UNAVAILABLE: 'UNAVAILABLE',
+                            COMMUNICATION_ERROR: 'COMMUNICATION_ERROR',
+                            UNDEFINED: 'UNDEFINED'
+                        }
+                    },
+                    native: {}
+                });
+            }), (0, operators_1.switchMap)(() => (0, rxjs_1.from)(this.bshb.getStateAsync(deviceStatusId))), (0, operators_1.switchMap)(state => this.setInitialStateValueIfNotSet(deviceStatusId, state, device.status)), (0, operators_1.switchMap)(() => {
                 this.cachedDevices.set(this.bshb.namespace + '.' + device.id, device);
                 const rootDeviceName = 'BSHC';
                 // root device. This should be the bosch smart home controller only. It does not exist as a
