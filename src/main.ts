@@ -10,8 +10,6 @@ import {LogLevel} from './log-level';
 import * as fs from 'fs';
 import Timeout = NodeJS.Timeout;
 
-const {v4: uuidv4} = require('uuid'); // Used commonjs because es did not work for some reason...
-
 /**
  * @author Christopher Holomek
  * @since 27.09.2019
@@ -63,7 +61,7 @@ export class Bshb extends utils.Adapter {
         this.log.silly('onReady called. Load configuration');
 
         if (!this.config.identifier) {
-            this.config.identifier = uuidv4();
+            this.config.identifier = BshbUtils.generateIdentifier();
             this.updateConfig({
                 identifier: this.config.identifier
             });

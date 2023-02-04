@@ -34,7 +34,6 @@ const client_cert_1 = require("./client-cert");
 const bosch_smart_home_bridge_1 = require("bosch-smart-home-bridge");
 const log_level_1 = require("./log-level");
 const fs = __importStar(require("fs"));
-const { v4: uuidv4 } = require('uuid'); // Used commonjs because es did not work for some reason...
 class Bshb extends utils.Adapter {
     constructor(options = {}) {
         super({
@@ -140,7 +139,7 @@ class Bshb extends utils.Adapter {
         // make sure that identifier is valid regarding Bosch T&C
         this.log.silly('onReady called. Load configuration');
         if (!this.config.identifier) {
-            this.config.identifier = uuidv4();
+            this.config.identifier = bosch_smart_home_bridge_1.BshbUtils.generateIdentifier();
             this.updateConfig({
                 identifier: this.config.identifier
             });
