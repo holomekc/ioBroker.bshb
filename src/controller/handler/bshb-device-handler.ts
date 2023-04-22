@@ -25,7 +25,7 @@ export class BshbDeviceHandler extends BshbHandler {
                 // skip errors here
                 this.bshb.log.warn('Failure during detection in BshbDeviceHandler. Continue with cached data. This only works if the adapter has been started successfully at least once. New devices may not be recognized. ' + err);
                 return of(undefined);
-            })
+            }),
         );
 
         return concat(cache, devices);
@@ -49,7 +49,7 @@ export class BshbDeviceHandler extends BshbHandler {
                                 if (obj) {
                                     this.bshb.setState(id, {
                                         val: this.mapValueToStorage(resultEntry.state[stateKey]),
-                                        ack: true
+                                        ack: true,
                                     });
                                     return of(undefined);
                                 } else {
@@ -60,7 +60,7 @@ export class BshbDeviceHandler extends BshbHandler {
                             }),
                             tap(() => {
                                 this.handleBshcUpdateSpecialCases(id, cachedDeviceService.device, cachedDeviceService.deviceService, resultEntry.state[stateKey]);
-                            })
+                            }),
                         ).subscribe(this.handleBshcUpdateError(`path=${resultEntry.path}`));
                     });
                 }
@@ -117,9 +117,9 @@ export class BshbDeviceHandler extends BshbHandler {
             switchMap(() => this.setObjectNotExistsAsync('info.cache', {
                 type: 'folder',
                 common: {
-                    name: 'cache'
+                    name: 'cache',
                 },
-                native: {}
+                native: {},
             })),
             switchMap(() => this.setObjectNotExistsAsync('info.cache.rooms', {
                 type: 'state',
@@ -130,7 +130,7 @@ export class BshbDeviceHandler extends BshbHandler {
                     read: true,
                     write: false,
                 },
-                native: {}
+                native: {},
             })));
 
         const rooms = preparation.pipe(
@@ -144,7 +144,7 @@ export class BshbDeviceHandler extends BshbHandler {
                     this.bshb.log.debug('Restore cache room: ' + key);
                     this.cachedRooms.set(key, value);
                 }
-            })
+            }),
         );
 
         const devices = rooms.pipe(
@@ -157,8 +157,8 @@ export class BshbDeviceHandler extends BshbHandler {
             // Restore device
             tap(obj => {
                 this.bshb.log.debug('Restore cache device: ' + obj.native.device.id);
-                this.cachedDevices.set(this.bshb.namespace + '.' + obj.native.device.id, obj.native.device)
-            })
+                this.cachedDevices.set(this.bshb.namespace + '.' + obj.native.device.id, obj.native.device);
+            }),
         );
 
         const deviceServices = devices.pipe(
@@ -174,9 +174,9 @@ export class BshbDeviceHandler extends BshbHandler {
                 this.bshb.log.silly('Restore cache device service: ' + id);
                 this.cachedDeviceServices.set(channelObj.native.deviceService.path, {
                     device: channelObj.native.device,
-                    deviceService: channelObj.native.deviceService
-                })
-            })
+                    deviceService: channelObj.native.deviceService,
+                });
+            }),
         );
 
         const states = deviceServices.pipe(
@@ -192,20 +192,20 @@ export class BshbDeviceHandler extends BshbHandler {
                     device: stateObj.native.device,
                     deviceService: stateObj.native.deviceService,
                     id: id,
-                    stateKey: stateObj.native.state
-                })
-            })
+                    stateKey: stateObj.native.state,
+                });
+            }),
         );
 
         return states.pipe(
             tap({
-                complete: () => this.bshb.log.info('Restoring cache finished')
+                complete: () => this.bshb.log.info('Restoring cache finished'),
             }),
             switchMap(() => of<void>(undefined)),
             catchError(err => {
-                this.bshb.log.warn('Restoring Cache failed. We continue anyway. ' + err)
+                this.bshb.log.warn('Restoring Cache failed. We continue anyway. ' + err);
                 return of<void>(undefined);
-            })
+            }),
         );
     }
 
@@ -231,12 +231,12 @@ export class BshbDeviceHandler extends BshbHandler {
                 complete: () => {
                     const result: { [key: string]: string } = {};
                     this.cachedRooms.forEach((value, key) => {
-                        result[key] = value
-                    })
+                        result[key] = value;
+                    });
                     // Cache result at the end
                     this.bshb.setState('info.cache.rooms', {val: this.mapValueToStorage(result), ack: true});
-                }
-            })
+                },
+            }),
         );
 
         const devices = this.getBshcClient().getDevices({timeout: this.long_timeout}).pipe(
@@ -251,7 +251,7 @@ export class BshbDeviceHandler extends BshbHandler {
                 return this.setObjectNotExistsAsync(device.id, {
                     type: 'device',
                     common: {
-                        name: name
+                        name: name,
                     },
                     native: {device: device},
                 }).pipe(
@@ -260,8 +260,7 @@ export class BshbDeviceHandler extends BshbHandler {
                             this.addRoom(device.id, undefined as unknown as string, undefined as unknown as string, device.roomId);
                         }
                     }),
-                    switchMap(obj => {
-                        return this.setObjectNotExistsAsync(deviceStatusId, {
+                    switchMap(() => this.setObjectNotExistsAsync(deviceStatusId, {
                             type: 'state',
                             common: {
                                 name: 'status',
@@ -274,12 +273,12 @@ export class BshbDeviceHandler extends BshbHandler {
                                     DISCOVERED: 'DISCOVERED',
                                     UNAVAILABLE: 'UNAVAILABLE',
                                     COMMUNICATION_ERROR: 'COMMUNICATION_ERROR',
-                                    UNDEFINED: 'UNDEFINED'
-                                }
+                                    UNDEFINED: 'UNDEFINED',
+                                },
                             },
-                            native: {}
-                        });
-                    }),
+                            native: {},
+                        }),
+                    ),
                     switchMap(() => from(this.bshb.getStateAsync(deviceStatusId))),
                     switchMap(state => this.setInitialStateValueIfNotSet(deviceStatusId, state, device.status)),
                     switchMap(() => {
@@ -292,28 +291,28 @@ export class BshbDeviceHandler extends BshbHandler {
                         return this.setObjectNotExistsAsync(device.rootDeviceId, {
                             type: 'device',
                             common: {
-                                name: rootDeviceName
+                                name: rootDeviceName,
                             },
                             native: {
                                 device: {
                                     id: device.rootDeviceId,
                                     roomId: device.roomId,
-                                    name: rootDeviceName
-                                }
-                            }
+                                    name: rootDeviceName,
+                                },
+                            },
                         });
                     }), tap(() => {
                             this.cachedDevices.set(this.bshb.namespace + '.' + device.rootDeviceId, {
                                 device: {
-                                    id: device.rootDeviceId
-                                }
+                                    id: device.rootDeviceId,
+                                },
                             });
-                        }
+                        },
                     ));
             }), switchMap(() => of<void>(undefined)));
 
         return concat(rooms, devices, this.checkDeviceServices()).pipe(tap({
-            complete: () => this.bshb.log.info('Detecting devices finished')
+            complete: () => this.bshb.log.info('Detecting devices finished'),
         }));
     }
 
@@ -334,7 +333,7 @@ export class BshbDeviceHandler extends BshbHandler {
                         } else {
                             return this.importChannels(ioBrokerDevice.native.device, deviceService);
                         }
-                    })
+                    }),
                 );
             }),
             switchMap(() => of(undefined)));
@@ -354,7 +353,7 @@ export class BshbDeviceHandler extends BshbHandler {
         return this.setObjectNotExistsAsync(id, {
             type: 'channel',
             common: {
-                name: name
+                name: name,
             },
             native: {device: device, deviceService: deviceService},
         }).pipe(
@@ -366,11 +365,11 @@ export class BshbDeviceHandler extends BshbHandler {
             }),
             // add fault holder
             switchMap(() =>
-                this.importSimpleState(id, device, deviceService, 'faults', BshbDeviceHandler.getFaults(deviceService), false)
+                this.importSimpleState(id, device, deviceService, 'faults', BshbDeviceHandler.getFaults(deviceService), false),
             ),
             tap(() => this.cachedDeviceServices.set(deviceService.path, {
                 device: device,
-                deviceService: deviceService
+                deviceService: deviceService,
             })),
             switchMap(() => this.importStates(id, device, deviceService)));
     }
@@ -395,7 +394,7 @@ export class BshbDeviceHandler extends BshbHandler {
 
         let name;
         if (deviceService) {
-            name = this.getDeviceName(device) + '.' + deviceService.id + '.' + stateKey
+            name = this.getDeviceName(device) + '.' + deviceService.id + '.' + stateKey;
         } else {
             name = this.getDeviceName(device) + '.' + stateKey;
         }
@@ -404,13 +403,13 @@ export class BshbDeviceHandler extends BshbHandler {
 
         const role = BshbDefinition.determineRole(deviceType, stateKey, stateValue);
         const unit = BshbDefinition.determineUnit(deviceType, stateKey);
-        const states = BshbDefinition.determineStates(deviceType, stateKey)
+        const states = BshbDefinition.determineStates(deviceType, stateKey);
 
         this.cachedStates.set(this.bshb.namespace + '.' + id, {
             device: device,
             deviceService: deviceService,
             id: id,
-            stateKey: stateKey
+            stateKey: stateKey,
         });
 
         return this.setObjectNotExistsAsync(id, {
@@ -422,12 +421,12 @@ export class BshbDeviceHandler extends BshbHandler {
                 read: true,
                 write: typeof write === 'undefined' ? BshbDefinition.determineWrite(deviceType, stateKey) : write,
                 unit: unit,
-                states: states
+                states: states,
             },
             native: {device: device, deviceService: deviceService, state: stateKey},
         }).pipe(
             switchMap(() => from(this.bshb.getStateAsync(id))),
-            switchMap(state => this.setInitialStateValueIfNotSet(id, state, stateValue))
+            switchMap(state => this.setInitialStateValueIfNotSet(id, state, stateValue)),
         );
     }
 
@@ -497,12 +496,12 @@ export class BshbDeviceHandler extends BshbHandler {
             if (value === 'SYSTEM_DISARMED') {
                 this.bshb.setState('intrusionDetectionSystem.IntrusionDetectionControl.remainingTimeUntilArmed', {
                     val: -1,
-                    ack: true
+                    ack: true,
                 });
             } else if (value === 'SYSTEM_ARMED') {
                 this.bshb.setState('intrusionDetectionSystem.IntrusionDetectionControl.remainingTimeUntilArmed', {
                     val: 0,
-                    ack: true
+                    ack: true,
                 });
             }
         }

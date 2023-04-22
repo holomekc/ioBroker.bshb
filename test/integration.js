@@ -584,7 +584,7 @@ tests.integration(path.join(__dirname, '..'), {
                         resolve(undefined);
                     }
                 });
-            })).timeout(1000000);
+            })).timeout(10000);
         })
     }
 });

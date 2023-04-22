@@ -42,7 +42,7 @@ class BshbDeviceHandler extends bshb_handler_1.BshbHandler {
                             if (obj) {
                                 this.bshb.setState(id, {
                                     val: this.mapValueToStorage(resultEntry.state[stateKey]),
-                                    ack: true
+                                    ack: true,
                                 });
                                 return (0, rxjs_1.of)(undefined);
                             }
@@ -96,9 +96,9 @@ class BshbDeviceHandler extends bshb_handler_1.BshbHandler {
         const preparation = start.pipe((0, operators_1.switchMap)(() => this.setObjectNotExistsAsync('info.cache', {
             type: 'folder',
             common: {
-                name: 'cache'
+                name: 'cache',
             },
-            native: {}
+            native: {},
         })), (0, operators_1.switchMap)(() => this.setObjectNotExistsAsync('info.cache.rooms', {
             type: 'state',
             common: {
@@ -108,7 +108,7 @@ class BshbDeviceHandler extends bshb_handler_1.BshbHandler {
                 read: true,
                 write: false,
             },
-            native: {}
+            native: {},
         })));
         const rooms = preparation.pipe(
         // Restore rooms cache
@@ -137,7 +137,7 @@ class BshbDeviceHandler extends bshb_handler_1.BshbHandler {
             this.bshb.log.silly('Restore cache device service: ' + id);
             this.cachedDeviceServices.set(channelObj.native.deviceService.path, {
                 device: channelObj.native.device,
-                deviceService: channelObj.native.deviceService
+                deviceService: channelObj.native.deviceService,
             });
         }));
         const states = deviceServices.pipe((0, rxjs_1.mergeMap)(obj => (0, rxjs_1.from)(this.bshb.getStatesOfAsync(obj.native.device.id, obj.native.deviceService.id))), (0, operators_1.switchMap)(result => (0, rxjs_1.from)(result)), (0, rxjs_1.filter)(obj => obj.native.device && obj.native.device.id &&
@@ -149,11 +149,11 @@ class BshbDeviceHandler extends bshb_handler_1.BshbHandler {
                 device: stateObj.native.device,
                 deviceService: stateObj.native.deviceService,
                 id: id,
-                stateKey: stateObj.native.state
+                stateKey: stateObj.native.state,
             });
         }));
         return states.pipe((0, operators_1.tap)({
-            complete: () => this.bshb.log.info('Restoring cache finished')
+            complete: () => this.bshb.log.info('Restoring cache finished'),
         }), (0, operators_1.switchMap)(() => (0, rxjs_1.of)(undefined)), (0, operators_1.catchError)(err => {
             this.bshb.log.warn('Restoring Cache failed. We continue anyway. ' + err);
             return (0, rxjs_1.of)(undefined);
@@ -180,7 +180,7 @@ class BshbDeviceHandler extends bshb_handler_1.BshbHandler {
                 });
                 // Cache result at the end
                 this.bshb.setState('info.cache.rooms', { val: this.mapValueToStorage(result), ack: true });
-            }
+            },
         }));
         const devices = this.getBshcClient().getDevices({ timeout: this.long_timeout }).pipe((0, operators_1.switchMap)(response => (0, rxjs_1.from)(response.parsedResponse)), (0, rxjs_1.mergeMap)(device => {
             const name = this.getDeviceName(device);
@@ -189,33 +189,31 @@ class BshbDeviceHandler extends bshb_handler_1.BshbHandler {
             return this.setObjectNotExistsAsync(device.id, {
                 type: 'device',
                 common: {
-                    name: name
+                    name: name,
                 },
                 native: { device: device },
             }).pipe((0, operators_1.tap)(obj => {
                 if (obj && obj._bshbCreated) {
                     this.addRoom(device.id, undefined, undefined, device.roomId);
                 }
-            }), (0, operators_1.switchMap)(obj => {
-                return this.setObjectNotExistsAsync(deviceStatusId, {
-                    type: 'state',
-                    common: {
-                        name: 'status',
-                        type: 'string',
-                        role: 'state',
-                        read: true,
-                        write: false,
-                        states: {
-                            AVAILABLE: 'AVAILABLE',
-                            DISCOVERED: 'DISCOVERED',
-                            UNAVAILABLE: 'UNAVAILABLE',
-                            COMMUNICATION_ERROR: 'COMMUNICATION_ERROR',
-                            UNDEFINED: 'UNDEFINED'
-                        }
+            }), (0, operators_1.switchMap)(() => this.setObjectNotExistsAsync(deviceStatusId, {
+                type: 'state',
+                common: {
+                    name: 'status',
+                    type: 'string',
+                    role: 'state',
+                    read: true,
+                    write: false,
+                    states: {
+                        AVAILABLE: 'AVAILABLE',
+                        DISCOVERED: 'DISCOVERED',
+                        UNAVAILABLE: 'UNAVAILABLE',
+                        COMMUNICATION_ERROR: 'COMMUNICATION_ERROR',
+                        UNDEFINED: 'UNDEFINED',
                     },
-                    native: {}
-                });
-            }), (0, operators_1.switchMap)(() => (0, rxjs_1.from)(this.bshb.getStateAsync(deviceStatusId))), (0, operators_1.switchMap)(state => this.setInitialStateValueIfNotSet(deviceStatusId, state, device.status)), (0, operators_1.switchMap)(() => {
+                },
+                native: {},
+            })), (0, operators_1.switchMap)(() => (0, rxjs_1.from)(this.bshb.getStateAsync(deviceStatusId))), (0, operators_1.switchMap)(state => this.setInitialStateValueIfNotSet(deviceStatusId, state, device.status)), (0, operators_1.switchMap)(() => {
                 this.cachedDevices.set(this.bshb.namespace + '.' + device.id, device);
                 const rootDeviceName = 'BSHC';
                 // root device. This should be the bosch smart home controller only. It does not exist as a
@@ -223,26 +221,26 @@ class BshbDeviceHandler extends bshb_handler_1.BshbHandler {
                 return this.setObjectNotExistsAsync(device.rootDeviceId, {
                     type: 'device',
                     common: {
-                        name: rootDeviceName
+                        name: rootDeviceName,
                     },
                     native: {
                         device: {
                             id: device.rootDeviceId,
                             roomId: device.roomId,
-                            name: rootDeviceName
-                        }
-                    }
+                            name: rootDeviceName,
+                        },
+                    },
                 });
             }), (0, operators_1.tap)(() => {
                 this.cachedDevices.set(this.bshb.namespace + '.' + device.rootDeviceId, {
                     device: {
-                        id: device.rootDeviceId
-                    }
+                        id: device.rootDeviceId,
+                    },
                 });
             }));
         }), (0, operators_1.switchMap)(() => (0, rxjs_1.of)(undefined)));
         return (0, rxjs_1.concat)(rooms, devices, this.checkDeviceServices()).pipe((0, operators_1.tap)({
-            complete: () => this.bshb.log.info('Detecting devices finished')
+            complete: () => this.bshb.log.info('Detecting devices finished'),
         }));
     }
     checkDeviceServices() {
@@ -274,7 +272,7 @@ class BshbDeviceHandler extends bshb_handler_1.BshbHandler {
         return this.setObjectNotExistsAsync(id, {
             type: 'channel',
             common: {
-                name: name
+                name: name,
             },
             native: { device: device, deviceService: deviceService },
         }).pipe((0, operators_1.tap)(obj => {
@@ -286,7 +284,7 @@ class BshbDeviceHandler extends bshb_handler_1.BshbHandler {
         // add fault holder
         (0, operators_1.switchMap)(() => this.importSimpleState(id, device, deviceService, 'faults', BshbDeviceHandler.getFaults(deviceService), false)), (0, operators_1.tap)(() => this.cachedDeviceServices.set(deviceService.path, {
             device: device,
-            deviceService: deviceService
+            deviceService: deviceService,
         })), (0, operators_1.switchMap)(() => this.importStates(id, device, deviceService)));
     }
     importStates(idPrefix, device, deviceService) {
@@ -321,7 +319,7 @@ class BshbDeviceHandler extends bshb_handler_1.BshbHandler {
             device: device,
             deviceService: deviceService,
             id: id,
-            stateKey: stateKey
+            stateKey: stateKey,
         });
         return this.setObjectNotExistsAsync(id, {
             type: 'state',
@@ -332,7 +330,7 @@ class BshbDeviceHandler extends bshb_handler_1.BshbHandler {
                 read: true,
                 write: typeof write === 'undefined' ? bshb_definition_1.BshbDefinition.determineWrite(deviceType, stateKey) : write,
                 unit: unit,
-                states: states
+                states: states,
             },
             native: { device: device, deviceService: deviceService, state: stateKey },
         }).pipe((0, operators_1.switchMap)(() => (0, rxjs_1.from)(this.bshb.getStateAsync(id))), (0, operators_1.switchMap)(state => this.setInitialStateValueIfNotSet(id, state, stateValue)));
@@ -401,13 +399,13 @@ class BshbDeviceHandler extends bshb_handler_1.BshbHandler {
             if (value === 'SYSTEM_DISARMED') {
                 this.bshb.setState('intrusionDetectionSystem.IntrusionDetectionControl.remainingTimeUntilArmed', {
                     val: -1,
-                    ack: true
+                    ack: true,
                 });
             }
             else if (value === 'SYSTEM_ARMED') {
                 this.bshb.setState('intrusionDetectionSystem.IntrusionDetectionControl.remainingTimeUntilArmed', {
                     val: 0,
-                    ack: true
+                    ack: true,
                 });
             }
         }
