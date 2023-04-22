@@ -1,10 +1,10 @@
 import {BshbHandler} from './bshb-handler';
-import {filter, from, map, mergeMap, Observable, of, switchMap, tap} from 'rxjs';
+import {filter, from, map, mergeMap, Observable, switchMap, tap} from 'rxjs';
 import {BshbDefinition} from '../../bshb-definition';
 
 export class BshbClimateHandler extends BshbHandler {
     private climateTextActivateRegex = /bshb\.\d+\.(roomClimateControl_hz_\d+)\.ClimateSchedule\.activeScheduleId/;
-    private climateSwitchActivateRegex= /bshb\.\d+\.(roomClimateControl_hz_\d+)\.ClimateSchedule\.(.*?)\.active/;
+    private climateSwitchActivateRegex = /bshb\.\d+\.(roomClimateControl_hz_\d+)\.ClimateSchedule\.(.*?)\.active/;
 
     handleDetection(): Observable<void> {
         return this.detectClimateSchedules().pipe(tap({
@@ -15,7 +15,8 @@ export class BshbClimateHandler extends BshbHandler {
 
     handleBshcUpdate(resultEntry: any): boolean {
         if (resultEntry.id === 'RoomClimateControl') {
-            this.getAndProcessDeviceSchedule(resultEntry.deviceId, resultEntry.state?.roomControlMode).subscribe();
+            this.getAndProcessDeviceSchedule(resultEntry.deviceId, resultEntry.state?.roomControlMode)
+                .subscribe(this.handleBshcUpdateError(`deviceId=${resultEntry.deviceId}`));
 
             return true;
         }
@@ -28,32 +29,18 @@ export class BshbClimateHandler extends BshbHandler {
         const matchSwitchActivate = this.climateSwitchActivateRegex.exec(id);
 
         if (matchTextActivate) {
-            this.bshb.log.debug(`Found climate trigger with deviceId=${matchTextActivate[1]} and value=${state.val}`);
+            this.bshb.log.debug(`Found climate trigger with deviceId=${matchTextActivate[1]}, value=${state.val}`);
 
             this.mapValueFromStorage(id, state.val).pipe(
                 switchMap(val => this.getBshcClient().activateClimateSchedules(matchTextActivate[1], val)),
-            ).subscribe({
-                next: () => {
-                    // nothing so far
-                },
-                error: error => {
-                    this.bshb.log.warn(`Could not send update for climate with deviceId=${matchTextActivate[1]} and value=${state.val}: ${error}`);
-                },
-            });
+            ).subscribe(this.handleBshcSendError(`deviceId=${matchTextActivate[1]}, value=${state.val}`));
 
             return true;
-        } else if(matchSwitchActivate) {
-            this.bshb.log.debug(`Found climate trigger with deviceId=${matchSwitchActivate[1]}, id=${matchSwitchActivate[2]} and value=${state.val}`);
+        } else if (matchSwitchActivate) {
+            this.bshb.log.debug(`Found climate trigger with deviceId=${matchSwitchActivate[1]}, id=${matchSwitchActivate[2]}, value=${state.val}`);
 
             this.getBshcClient().activateClimateSchedules(matchSwitchActivate[1], matchSwitchActivate[2])
-                .subscribe({
-                next: () => {
-                    // nothing so far
-                },
-                error: error => {
-                    this.bshb.log.warn(`Could not send update for climate with deviceId=${matchSwitchActivate[1]}, id=${matchSwitchActivate[2]} and value=${state.val}: ${error}`);
-                },
-            });
+                .subscribe(this.handleBshcSendError(`deviceId=${matchSwitchActivate[1]}, id=${matchSwitchActivate[2]}, value=${state.val}`));
         }
         return false;
     }
@@ -198,7 +185,7 @@ export class BshbClimateHandler extends BshbHandler {
                             type: 'boolean',
                             role: 'switch',
                             read: false,
-                            write: true
+                            write: true,
                         },
                         native: {},
                     }).pipe(
@@ -210,5 +197,9 @@ export class BshbClimateHandler extends BshbHandler {
                 }),
             )),
         );
+    }
+
+    name(): string {
+        return 'climateHandler';
     }
 }

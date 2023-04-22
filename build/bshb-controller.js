@@ -10,7 +10,7 @@ const bshb_scenario_handler_1 = require("./controller/handler/bshb-scenario-hand
 const bshb_device_handler_1 = require("./controller/handler/bshb-device-handler");
 const bshb_messages_handler_1 = require("./controller/handler/bshb-messages-handler");
 const bshb_open_door_window_handler_1 = require("./controller/handler/bshb-open-door-window-handler");
-const bshb_intrusion_detection_1 = require("./controller/handler/bshb-intrusion-detection");
+const bshb_intrusion_detection_handler_1 = require("./controller/handler/bshb-intrusion-detection-handler");
 const bshb_general_update_handler_1 = require("./controller/handler/bshb-general-update-handler");
 const bshb_air_purity_guardian_handler_1 = require("./controller/handler/bshb-air-purity-guardian-handler");
 const bshb_motion_lights_handler_1 = require("./controller/handler/bshb-motion-lights-handler");
@@ -25,6 +25,11 @@ const bshb_climate_handler_1 = require("./controller/handler/bshb-climate-handle
  * @since 27.09.2019
  */
 class BshbController {
+    bshb;
+    boschSmartHomeBridge;
+    clientName = 'ioBroker.bshb';
+    $rateLimit = new rxjs_1.Subject();
+    handlers;
     /**
      * Create a new instance of {@link BshbController}
      *
@@ -37,8 +42,6 @@ class BshbController {
      */
     constructor(bshb, clientCert, clientPrivateKey) {
         this.bshb = bshb;
-        this.clientName = 'ioBroker.bshb';
-        this.$rateLimit = new rxjs_1.Subject();
         try {
             this.boschSmartHomeBridge = bosch_smart_home_bridge_1.BoschSmartHomeBridgeBuilder.builder()
                 .withHost(bshb.config.host)
@@ -52,7 +55,7 @@ class BshbController {
             this.handlers.push(new bshb_scenario_handler_1.BshbScenarioHandler(this.bshb, this.boschSmartHomeBridge));
             this.handlers.push(new bshb_device_status_update_handler_1.BshbDeviceStatusUpdateHandler(this.bshb, this.boschSmartHomeBridge));
             this.handlers.push(new bshb_messages_handler_1.BshbMessagesHandler(this.bshb, this.boschSmartHomeBridge));
-            this.handlers.push(new bshb_intrusion_detection_1.BshbIntrusionDetection(this.bshb, this.boschSmartHomeBridge));
+            this.handlers.push(new bshb_intrusion_detection_handler_1.BshbIntrusionDetectionHandler(this.bshb, this.boschSmartHomeBridge));
             this.handlers.push(new bshb_air_purity_guardian_handler_1.BshbAirPurityGuardianHandler(this.bshb, this.boschSmartHomeBridge));
             this.handlers.push(new bshb_motion_lights_handler_1.BshbMotionLightsHandler(this.bshb, this.boschSmartHomeBridge));
             this.handlers.push(new bshb_water_alarm_handler_1.BshbWaterAlarmHandler(this.bshb, this.boschSmartHomeBridge));

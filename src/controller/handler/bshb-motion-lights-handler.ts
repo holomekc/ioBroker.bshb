@@ -33,14 +33,7 @@ export class BshbMotionLightsHandler extends BshbHandler {
                             return this.importState(key, resultEntry);
                         }
                     })
-                ).subscribe({
-                    next: () => {
-                        // nothing so far
-                    },
-                    error: error => {
-                        this.bshb.log.warn(`Could not handle update for motionlight with id=${resultEntry.id}. ${error}`);
-                    }
-                });
+                ).subscribe(this.handleBshcUpdateError(`id=${resultEntry.id}`));
             });
             return true;
         }
@@ -58,14 +51,7 @@ export class BshbMotionLightsHandler extends BshbHandler {
             this.mapValueFromStorage(id, state.val).pipe(
                 map(mappedValue => data[cachedState.key] = mappedValue),
                 switchMap(() => this.getBshcClient().updateMotionLights(cachedState.id, data, {timeout: this.long_timeout}))
-            ).subscribe({
-                next: () => {
-                    // nothing so far
-                },
-                error: error => {
-                    this.bshb.log.warn(`Could not send update for motionlight with id=${match[1]} and value=${state.val}: ${error}`);
-                }
-            });
+            ).subscribe(this.handleBshcSendError(`id=${match[1]}, value=${state.val}`));
             return true
         }
         return false;
@@ -127,5 +113,9 @@ export class BshbMotionLightsHandler extends BshbHandler {
             switchMap(() => from(this.bshb.getStateAsync(id))),
             switchMap(state => this.setInitialStateValueIfNotSet(id, state, value))
         );
+    }
+
+    name(): string {
+        return 'motionLightsHandler';
     }
 }

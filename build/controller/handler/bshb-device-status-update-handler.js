@@ -17,10 +17,13 @@ class BshbDeviceStatusUpdateHandler extends bshb_handler_1.BshbHandler {
         if (resultEntry['@type'] === 'message' && resultEntry.sourceType === 'DEVICE' && resultEntry.sourceId) {
             this.bshb.log.debug('Try updating status of device ' + resultEntry.sourceId);
             const statusId = `${resultEntry.sourceId}.status`;
-            this.getBshcClient().getDevice(resultEntry.sourceId).pipe((0, operators_1.switchMap)(result => this.setInitialStateValueIfNotSet(statusId, null, result.parsedResponse.status))).subscribe();
+            this.getBshcClient().getDevice(resultEntry.sourceId).pipe((0, operators_1.switchMap)(result => this.setInitialStateValueIfNotSet(statusId, null, result.parsedResponse.status))).subscribe(this.handleBshcUpdateError(`id=${resultEntry.id}`));
             return true;
         }
         return false;
+    }
+    name() {
+        return 'deviceStatusUpdateHandler';
     }
 }
 exports.BshbDeviceStatusUpdateHandler = BshbDeviceStatusUpdateHandler;

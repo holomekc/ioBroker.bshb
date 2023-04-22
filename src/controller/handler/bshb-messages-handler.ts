@@ -15,15 +15,7 @@ export class BshbMessagesHandler extends BshbHandler {
 
             this.bshb.log.debug('Updating messages...');
             // we just trigger detection on changes of scenarios
-            this.detectMessages().subscribe({
-                next: () => {
-                    // we do nothing here because we do not need to.
-                    this.bshb.log.debug('Updating messages finished');
-                }, error: error => {
-                    this.bshb.log.warn('something went wrong during message detection');
-                    this.bshb.log.warn(error);
-                }
-            });
+            this.detectMessages().subscribe(this.handleBshcUpdateError(`id=${resultEntry.id}`));
 
             return true;
         }
@@ -33,7 +25,7 @@ export class BshbMessagesHandler extends BshbHandler {
     public handleDetection(): Observable<void> {
         return this.detectMessages().pipe(tap({
             subscribe: () => this.bshb.log.info('Start detecting messages...'),
-            finalize: () => this.bshb.log.info('Detecting messages finished')
+            finalize: () => this.bshb.log.info('Detecting messages finished'),
         }));
     }
 
@@ -49,18 +41,21 @@ export class BshbMessagesHandler extends BshbHandler {
                 type: 'array',
                 role: 'list',
                 write: false,
-                read: true
+                read: true,
             },
             native: {
                 id: 'messages',
-                name: 'messages'
+                name: 'messages',
             },
         }).pipe(
             switchMap(() => this.getBshcClient().getMessages({timeout: this.long_timeout})),
             map(response => response.parsedResponse),
             tap(messages => this.bshb.setState('messages', {val: this.mapValueToStorage(messages), ack: true})),
-            switchMap(() => of(undefined))
+            switchMap(() => of(undefined)),
         );
     }
 
+    name(): string {
+        return 'messageHandler';
+    }
 }

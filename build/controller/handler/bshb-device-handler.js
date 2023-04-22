@@ -14,13 +14,10 @@ const log_level_1 = require("../../log-level");
  * @since 18.01.2020
  */
 class BshbDeviceHandler extends bshb_handler_1.BshbHandler {
-    constructor() {
-        super(...arguments);
-        this.cachedRooms = new Map();
-        this.cachedDevices = new Map();
-        this.cachedStates = new Map();
-        this.cachedDeviceServices = new Map();
-    }
+    cachedRooms = new Map();
+    cachedDevices = new Map();
+    cachedStates = new Map();
+    cachedDeviceServices = new Map();
     handleDetection() {
         const cache = this.restoreCache();
         const devices = this.detectDevices().pipe((0, operators_1.catchError)(err => {
@@ -56,7 +53,7 @@ class BshbDeviceHandler extends bshb_handler_1.BshbHandler {
                             }
                         }), (0, operators_1.tap)(() => {
                             this.handleBshcUpdateSpecialCases(id, cachedDeviceService.device, cachedDeviceService.deviceService, resultEntry.state[stateKey]);
-                        })).subscribe();
+                        })).subscribe(this.handleBshcUpdateError(`path=${resultEntry.path}`));
                     });
                 }
                 // fault handling
@@ -87,21 +84,8 @@ class BshbDeviceHandler extends bshb_handler_1.BshbHandler {
                 if (utils_1.Utils.isLevelActive(this.bshb.log.level, log_level_1.LogLevel.debug)) {
                     this.bshb.log.debug('Data which will be send: ' + JSON.stringify(data));
                 }
-                this.getBshcClient().putState(cachedState.deviceService.path, data, { timeout: this.long_timeout }).subscribe({
-                    next: response => {
-                        if (response) {
-                            if (utils_1.Utils.isLevelActive(this.bshb.log.level, log_level_1.LogLevel.debug)) {
-                                this.bshb.log.debug(`HTTP response. status=${response.incomingMessage.statusCode},
-                     body=${JSON.stringify(response.parsedResponse)}`);
-                            }
-                        }
-                        else {
-                            this.bshb.log.debug('no response');
-                        }
-                    }, error: error => {
-                        this.bshb.log.error(error);
-                    }
-                });
+                this.getBshcClient().putState(cachedState.deviceService.path, data, { timeout: this.long_timeout })
+                    .subscribe(this.handleBshcSendError(`path=${cachedState.deviceService.path}`));
             });
             return true;
         }
@@ -427,6 +411,9 @@ class BshbDeviceHandler extends bshb_handler_1.BshbHandler {
                 });
             }
         }
+    }
+    name() {
+        return 'deviceHandler';
     }
 }
 exports.BshbDeviceHandler = BshbDeviceHandler;

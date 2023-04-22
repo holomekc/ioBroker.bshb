@@ -8,6 +8,7 @@ exports.BshbLogger = void 0;
  * @since 27.09.2019
  */
 class BshbLogger {
+    adapter;
     constructor(adapter) {
         this.adapter = adapter;
     }

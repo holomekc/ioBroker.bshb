@@ -17,8 +17,8 @@ export class Utils {
     public static getCertificateKeys(identifier: string) {
         return {
             cert: 'bshb_' + identifier + '_cert',
-            key: 'bshb_' + identifier + '_key'
-        }
+            key: 'bshb_' + identifier + '_key',
+        };
     }
 
     /**
@@ -63,6 +63,21 @@ export class Utils {
                 break;
         }
         return result;
+    }
 
+    public static handleError(message?: string, cause?: Error) {
+        return Utils.errorToString(new Error(message, {cause: cause}));
+    }
+
+    public static errorToString(error: Error) {
+        let result = '';
+        if (error) {
+            result += error;
+            const cause = error.cause;
+            if (cause && cause instanceof Error) {
+                result += '\n  [cause] ' + this.errorToString(cause);
+            }
+        }
+        return result;
     }
 }

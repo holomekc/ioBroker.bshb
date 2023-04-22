@@ -1,8 +1,8 @@
 import {BshbHandler} from './bshb-handler';
-import {concat, EMPTY, from, last, map, mergeMap, Observable, of, switchMap, tap} from 'rxjs';
+import {concat, EMPTY, from, last, map, mergeMap, Observable, switchMap, tap} from 'rxjs';
 import {BshbDefinition} from '../../bshb-definition';
 
-export class BshbIntrusionDetection extends BshbHandler {
+export class BshbIntrusionDetectionHandler extends BshbHandler {
     private readonly folderName: string = 'intrusionDetectionControl';
     private intrusionDetectionControlRegex = /bshb\.\d+\.intrusionDetectionControl\.(.*)/;
 
@@ -21,7 +21,7 @@ export class BshbIntrusionDetection extends BshbHandler {
             resultEntry['@type'] === 'securityGapState') {
             from(this.flattenData(resultEntry['@type'], resultEntry)).pipe(
                 mergeMap(d => this.detectIntrusionData(d.type, d.key, d.value)),
-            ).subscribe();
+            ).subscribe(this.handleBshcUpdateError(`id=${resultEntry.id}`));
         }
 
         return false;
@@ -53,7 +53,7 @@ export class BshbIntrusionDetection extends BshbHandler {
         const match = this.intrusionDetectionControlRegex.exec(id);
 
         if (match) {
-            this.bshb.log.debug(`Found intrusionDetectionControl trigger with id=${match[1]} and value=${state.val}`);
+            this.bshb.log.debug(`Found intrusionDetectionControl trigger with id=${match[1]}, value=${state.val}`);
 
             if (state.val) {
                 const control = match[1];
@@ -79,12 +79,9 @@ export class BshbIntrusionDetection extends BshbHandler {
                         return false;
                 }
 
-                command.subscribe(() => {
-                    this.bshb.log.info(`intrusionDetectionControl with id=${match[1]} triggered`);
-                    this.bshb.setState(id, {val: false, ack: true});
-                }, error => {
-                    this.bshb.log.warn(`Could not send trigger for intrusionDetectionControl with id=${match[1]} and value=${state.val}: ` + error);
-                });
+                command.pipe(
+                    tap(() => this.bshb.setState(id, {val: false, ack: true}))
+                ).subscribe(this.handleBshcSendError(`id=${match[1]}, value=${state.val}`));
             }
             return true;
         }
@@ -181,7 +178,7 @@ export class BshbIntrusionDetection extends BshbHandler {
                     read: true,
                     write: false,
                     unit: unit,
-                    states: states
+                    states: states,
                 },
                 native: {},
             }).pipe(
@@ -262,5 +259,9 @@ export class BshbIntrusionDetection extends BshbHandler {
                 subscriber.complete();
             });
         });
+    }
+
+    name(): string {
+        return 'intrusionDetectionHandler';
     }
 }

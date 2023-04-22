@@ -18,7 +18,7 @@ class Utils {
     static getCertificateKeys(identifier) {
         return {
             cert: 'bshb_' + identifier + '_cert',
-            key: 'bshb_' + identifier + '_key'
+            key: 'bshb_' + identifier + '_key',
         };
     }
     /**
@@ -60,6 +60,20 @@ class Utils {
             case 'error':
                 result = toCheck >= log_level_1.LogLevel.error;
                 break;
+        }
+        return result;
+    }
+    static handleError(message, cause) {
+        return Utils.errorToString(new Error(message, { cause: cause }));
+    }
+    static errorToString(error) {
+        let result = '';
+        if (error) {
+            result += error;
+            const cause = error.cause;
+            if (cause && cause instanceof Error) {
+                result += '\n  [cause] ' + this.errorToString(cause);
+            }
         }
         return result;
     }

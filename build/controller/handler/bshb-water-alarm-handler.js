@@ -5,11 +5,8 @@ const bshb_handler_1 = require("./bshb-handler");
 const rxjs_1 = require("rxjs");
 const bshb_definition_1 = require("../../bshb-definition");
 class BshbWaterAlarmHandler extends bshb_handler_1.BshbHandler {
-    constructor() {
-        super(...arguments);
-        this.regex = /bshb\.\d+\.waterAlarm\..*/;
-        this.cachedStates = new Map();
-    }
+    regex = /bshb\.\d+\.waterAlarm\..*/;
+    cachedStates = new Map();
     handleDetection() {
         return this.detectWaterAlarm().pipe((0, rxjs_1.switchMap)(() => this.createMuteAction()), (0, rxjs_1.tap)({
             subscribe: () => this.bshb.log.info('Start detecting water alarm...'),
@@ -33,14 +30,7 @@ class BshbWaterAlarmHandler extends bshb_handler_1.BshbHandler {
                     else {
                         return this.importState(key, resultEntry);
                     }
-                })).subscribe({
-                    next: () => {
-                        // nothing so far
-                    },
-                    error: error => {
-                        this.bshb.log.warn(`Could not handle update for waterAlarmSystemState. ${error}`);
-                    }
-                });
+                })).subscribe(this.handleBshcUpdateError());
             });
             return true;
         }
@@ -50,14 +40,9 @@ class BshbWaterAlarmHandler extends bshb_handler_1.BshbHandler {
         const match = this.regex.exec(id);
         if (match) {
             if (id === `${this.bshb.namespace}.waterAlarm.waterAlarmSystemState.mute`) {
-                this.getBshcClient().muteWaterAlarm({ timeout: this.long_timeout }).subscribe({
-                    next: () => {
-                        this.bshb.setState(id, { val: false, ack: true });
-                    },
-                    error: error => {
-                        this.bshb.log.warn(`Could not mute water alarm: ${error}`);
-                    }
-                });
+                this.getBshcClient().muteWaterAlarm({ timeout: this.long_timeout })
+                    .pipe((0, rxjs_1.tap)(() => this.bshb.setState(id, { val: false, ack: true })))
+                    .subscribe(this.handleBshcSendError('mute'));
             }
             else {
                 (0, rxjs_1.zip)((0, rxjs_1.from)(this.bshb.getStateAsync('waterAlarm.waterAlarmSystemState.visualActuatorsAvailable')), (0, rxjs_1.from)(this.bshb.getStateAsync('waterAlarm.waterAlarmSystemState.videoActuatorsAvailable'))).pipe((0, rxjs_1.switchMap)(result => {
@@ -66,14 +51,7 @@ class BshbWaterAlarmHandler extends bshb_handler_1.BshbHandler {
                         videoActuatorsAvailable: result[1] ? result[1].val : false,
                     };
                     return this.getBshcClient().updateWaterAlarm(data, { timeout: this.long_timeout });
-                })).subscribe({
-                    next: () => {
-                        // nothing so far
-                    },
-                    error: error => {
-                        this.bshb.log.warn(`Could not send update for waterAlarmSystemState and value=${state.val}: ${error}`);
-                    }
-                });
+                })).subscribe(this.handleBshcSendError(`value=${state.val}`));
             }
             return true;
         }
@@ -133,6 +111,9 @@ class BshbWaterAlarmHandler extends bshb_handler_1.BshbHandler {
             },
             native: {}
         }).pipe((0, rxjs_1.switchMap)(() => (0, rxjs_1.from)(this.bshb.getStateAsync(id))), (0, rxjs_1.switchMap)(state => this.setInitialStateValueIfNotSet(id, state, value)));
+    }
+    name() {
+        return 'waterAlarmHandler';
     }
 }
 exports.BshbWaterAlarmHandler = BshbWaterAlarmHandler;

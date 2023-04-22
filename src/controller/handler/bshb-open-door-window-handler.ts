@@ -23,15 +23,8 @@ export class BshbOpenDoorWindowHandler extends BshbHandler {
         if (condition1 || condition2) {
             this.bshb.log.debug('Updating open doors/windows state...');
 
-            this.detectOpenDoorsAndWindows().subscribe({
-                next: () => {
-                    // we do nothing here because we do not need to.
-                    this.bshb.log.debug('Updating open doors/windows finished');
-                }, error: error => {
-                    this.bshb.log.warn('something went wrong during open doors/windows detection');
-                    this.bshb.log.warn(error);
-                }
-            });
+            this.detectOpenDoorsAndWindows()
+                .subscribe(this.handleBshcUpdateError(`condition1=${condition1}, condition2=${condition2}`));
             return true;
         }
         return false;
@@ -216,4 +209,7 @@ export class BshbOpenDoorWindowHandler extends BshbHandler {
         }
     }
 
+    name(): string {
+        return 'OpenDoorWindowHandler';
+    }
 }

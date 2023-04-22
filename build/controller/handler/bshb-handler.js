@@ -3,6 +3,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.BshbHandler = void 0;
 const operators_1 = require("rxjs/operators");
 const rxjs_1 = require("rxjs");
+const utils_1 = require("../../utils");
 /**
  * Abstract handler which can be used to handle the following things:<br/>
  * 1. detecting devices etc.<br/>
@@ -13,6 +14,10 @@ const rxjs_1 = require("rxjs");
  * @since 18.01.2020
  */
 class BshbHandler {
+    bshb;
+    boschSmartHomeBridge;
+    long_timeout = 20000;
+    enumChain = new rxjs_1.Subject();
     /**
      * Create a new handler
      *
@@ -24,8 +29,6 @@ class BshbHandler {
     constructor(bshb, boschSmartHomeBridge) {
         this.bshb = bshb;
         this.boschSmartHomeBridge = boschSmartHomeBridge;
-        this.long_timeout = 20000;
-        this.enumChain = new rxjs_1.Subject();
         this.enumChain.pipe((0, rxjs_1.concatMap)(enumObj => {
             if (enumObj.itemId) {
                 return (0, rxjs_1.from)(this.bshb.addStateToEnumAsync(enumObj.type, enumObj.name, enumObj.deviceId, enumObj.deviceServiceId, enumObj.itemId));
@@ -35,7 +38,7 @@ class BshbHandler {
             }
         })).subscribe({
             next: () => { },
-            error: err => this.bshb.log.warn(`Could not add enum: ${err}`)
+            error: err => this.bshb.log.warn(utils_1.Utils.handleError('Could not add enum', err))
         });
     }
     /**
@@ -144,6 +147,21 @@ class BshbHandler {
             // we do not wait
             return (0, rxjs_1.of)(undefined);
         }
+    }
+    handleBshcUpdateError(...params) {
+        return {
+            next: () => this.bshb.log.debug(`Handled update for "${this.name()}" successfully.`),
+            error: err => this.logWarn(`Could not handle update for "${this.name()}" with ${params}.`, err)
+        };
+    }
+    handleBshcSendError(...params) {
+        return {
+            next: () => this.bshb.log.debug(`Send message for "${this.name()}" successfully.`),
+            error: err => this.logWarn(`Could not send update for "${this.name()}" with ${params}.`, err)
+        };
+    }
+    logWarn(message, cause) {
+        this.bshb.log.warn(utils_1.Utils.handleError(message, cause));
     }
 }
 exports.BshbHandler = BshbHandler;

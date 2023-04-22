@@ -5,11 +5,8 @@ const bshb_handler_1 = require("./bshb-handler");
 const rxjs_1 = require("rxjs");
 const bshb_definition_1 = require("../../bshb-definition");
 class BshbMotionLightsHandler extends bshb_handler_1.BshbHandler {
-    constructor() {
-        super(...arguments);
-        this.regex = /bshb\.\d+\.motionlight\.(.*)/;
-        this.cachedStates = new Map();
-    }
+    regex = /bshb\.\d+\.motionlight\.(.*)/;
+    cachedStates = new Map();
     handleDetection() {
         return this.detectMotionLights().pipe((0, rxjs_1.tap)({
             subscribe: () => this.bshb.log.info('Start detecting motion lights...'),
@@ -32,14 +29,7 @@ class BshbMotionLightsHandler extends bshb_handler_1.BshbHandler {
                     else {
                         return this.importState(key, resultEntry);
                     }
-                })).subscribe({
-                    next: () => {
-                        // nothing so far
-                    },
-                    error: error => {
-                        this.bshb.log.warn(`Could not handle update for motionlight with id=${resultEntry.id}. ${error}`);
-                    }
-                });
+                })).subscribe(this.handleBshcUpdateError(`id=${resultEntry.id}`));
             });
             return true;
         }
@@ -50,14 +40,7 @@ class BshbMotionLightsHandler extends bshb_handler_1.BshbHandler {
         if (match) {
             const cachedState = this.cachedStates.get(id);
             const data = {};
-            this.mapValueFromStorage(id, state.val).pipe((0, rxjs_1.map)(mappedValue => data[cachedState.key] = mappedValue), (0, rxjs_1.switchMap)(() => this.getBshcClient().updateMotionLights(cachedState.id, data, { timeout: this.long_timeout }))).subscribe({
-                next: () => {
-                    // nothing so far
-                },
-                error: error => {
-                    this.bshb.log.warn(`Could not send update for motionlight with id=${match[1]} and value=${state.val}: ${error}`);
-                }
-            });
+            this.mapValueFromStorage(id, state.val).pipe((0, rxjs_1.map)(mappedValue => data[cachedState.key] = mappedValue), (0, rxjs_1.switchMap)(() => this.getBshcClient().updateMotionLights(cachedState.id, data, { timeout: this.long_timeout }))).subscribe(this.handleBshcSendError(`id=${match[1]}, value=${state.val}`));
             return true;
         }
         return false;
@@ -102,6 +85,9 @@ class BshbMotionLightsHandler extends bshb_handler_1.BshbHandler {
             },
             native: {}
         }).pipe((0, rxjs_1.switchMap)(() => (0, rxjs_1.from)(this.bshb.getStateAsync(id))), (0, rxjs_1.switchMap)(state => this.setInitialStateValueIfNotSet(id, state, value)));
+    }
+    name() {
+        return 'motionLightsHandler';
     }
 }
 exports.BshbMotionLightsHandler = BshbMotionLightsHandler;

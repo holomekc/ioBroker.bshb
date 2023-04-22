@@ -1,7 +1,8 @@
 import {tap} from 'rxjs/operators';
 import {Bshb} from '../../main';
 import {BoschSmartHomeBridge} from 'bosch-smart-home-bridge';
-import {concatMap, from, map, Observable, of, Subject, switchMap} from 'rxjs';
+import {concatMap, from, map, Observable, Observer, of, Subject, switchMap} from 'rxjs';
+import {Utils} from '../../utils';
 
 /**
  * Abstract handler which can be used to handle the following things:<br/>
@@ -40,9 +41,11 @@ export abstract class BshbHandler {
             }
         })).subscribe({
             next: () => {},
-            error: err => this.bshb.log.warn(`Could not add enum: ${err}`)
+            error: err => this.bshb.log.warn(Utils.handleError('Could not add enum', err))
         });
     }
+
+    abstract name(): string;
 
     /**
      * detect devices or something else of bshc
@@ -186,5 +189,23 @@ export abstract class BshbHandler {
             // we do not wait
             return of(undefined);
         }
+    }
+
+    public handleBshcUpdateError(...params: any[]): Partial<Observer<any>> {
+        return {
+            next: () => this.bshb.log.debug(`Handled update for "${this.name()}" successfully.`),
+            error: err => this.logWarn(`Could not handle update for "${this.name()}" with ${params}.`, err)
+        };
+    }
+
+    public handleBshcSendError(...params: any[]): Partial<Observer<any>> {
+        return {
+            next: () => this.bshb.log.debug(`Send message for "${this.name()}" successfully.`),
+            error: err => this.logWarn(`Could not send update for "${this.name()}" with ${params}.`, err)
+        };
+    }
+
+    public logWarn(message?: string, cause?: Error) {
+        this.bshb.log.warn(Utils.handleError(message, cause))
     }
 }

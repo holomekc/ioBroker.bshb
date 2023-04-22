@@ -6,16 +6,13 @@ const rxjs_1 = require("rxjs");
 const bshb_definition_1 = require("../../bshb-definition");
 const operators_1 = require("rxjs/operators");
 class BshbAirPurityGuardianHandler extends bshb_handler_1.BshbHandler {
-    constructor() {
-        super(...arguments);
-        this.regex = /bshb\.\d+\.airPurityGuardian\.(.*)/;
-        this.roomRegex = /^airPurityGuardian_(.*)$/;
-        this.cachedStates = new Map();
-    }
+    regex = /bshb\.\d+\.airPurityGuardian\.(.*)/;
+    roomRegex = /^airPurityGuardian_(.*)$/;
+    cachedStates = new Map();
     handleDetection() {
         return this.detectAirPurityGuardian().pipe((0, rxjs_1.tap)({
             subscribe: () => this.bshb.log.info('Start detecting air purity guardian...'),
-            finalize: () => this.bshb.log.info('Detecting air purity guardian finished')
+            finalize: () => this.bshb.log.info('Detecting air purity guardian finished'),
         }));
     }
     handleBshcUpdate(resultEntry) {
@@ -27,21 +24,14 @@ class BshbAirPurityGuardianHandler extends bshb_handler_1.BshbHandler {
                     if (obj) {
                         this.bshb.setState(id, {
                             val: this.mapValueToStorage(resultEntry[key]),
-                            ack: true
+                            ack: true,
                         });
                         return (0, rxjs_1.of)(undefined);
                     }
                     else {
                         return this.importState(key, resultEntry);
                     }
-                })).subscribe({
-                    next: () => {
-                        // nothing so far
-                    },
-                    error: error => {
-                        this.bshb.log.warn(`Could not handle update for airPurityGuardian with id=${resultEntry.id}. ${error}`);
-                    }
-                });
+                })).subscribe(this.handleBshcUpdateError(`id=${resultEntry.id}`));
             });
             return true;
         }
@@ -52,14 +42,7 @@ class BshbAirPurityGuardianHandler extends bshb_handler_1.BshbHandler {
         if (match) {
             const cachedState = this.cachedStates.get(id);
             const data = {};
-            this.mapValueFromStorage(id, state.val).pipe((0, rxjs_1.map)(mappedValue => data[cachedState.key] = mappedValue), (0, rxjs_1.switchMap)(() => this.getBshcClient().updateAirPurityGuardian(cachedState.id, data, { timeout: this.long_timeout }))).subscribe({
-                next: () => {
-                    // nothing so far
-                },
-                error: error => {
-                    this.bshb.log.warn(`Could not send update for airPurityGuardian with id=${match[1]} and value=${state.val}: ${error}`);
-                }
-            });
+            this.mapValueFromStorage(id, state.val).pipe((0, rxjs_1.map)(mappedValue => data[cachedState.key] = mappedValue), (0, rxjs_1.switchMap)(() => this.getBshcClient().updateAirPurityGuardian(cachedState.id, data, { timeout: this.long_timeout }))).subscribe(this.handleBshcSendError(`id=${match[1]}, value=${state.val}`));
             return true;
         }
         return false;
@@ -69,9 +52,9 @@ class BshbAirPurityGuardianHandler extends bshb_handler_1.BshbHandler {
             type: 'folder',
             common: {
                 name: 'airPurityGuardian',
-                read: true
+                read: true,
             },
-            native: {}
+            native: {},
         }).pipe((0, rxjs_1.switchMap)(() => this.getBshcClient().getAirPurityGuardian({ timeout: this.long_timeout })), (0, rxjs_1.mergeMap)(response => (0, rxjs_1.from)(response.parsedResponse)), (0, rxjs_1.mergeMap)(airPurityGuardian => this.addAirPurityGuardian(airPurityGuardian)), (0, rxjs_1.switchMap)(() => (0, rxjs_1.of)(undefined)));
     }
     addAirPurityGuardian(airPurityGuardian) {
@@ -86,9 +69,9 @@ class BshbAirPurityGuardianHandler extends bshb_handler_1.BshbHandler {
         return (0, rxjs_1.zip)(this.setObjectNotExistsAsync(`airPurityGuardian.${airPurityGuardian.id}`, {
             type: 'channel',
             common: {
-                name: airPurityGuardian.name
+                name: airPurityGuardian.name,
             },
-            native: {}
+            native: {},
         }), roomAndFunctions).pipe((0, rxjs_1.tap)(objAndRoom => {
             const obj = objAndRoom[0];
             const room = objAndRoom[1];
@@ -106,7 +89,7 @@ class BshbAirPurityGuardianHandler extends bshb_handler_1.BshbHandler {
         const value = airPurityGuardian[key];
         this.cachedStates.set(`${this.bshb.namespace}.${id}`, {
             id: airPurityGuardian.id,
-            key: key
+            key: key,
         });
         return this.setObjectNotExistsAsync(id, {
             type: 'state',
@@ -115,10 +98,13 @@ class BshbAirPurityGuardianHandler extends bshb_handler_1.BshbHandler {
                 type: bshb_definition_1.BshbDefinition.determineType(value),
                 role: bshb_definition_1.BshbDefinition.determineRole('airPurityGuardian', key, value),
                 read: true,
-                write: true
+                write: true,
             },
-            native: {}
+            native: {},
         }).pipe((0, rxjs_1.switchMap)(() => (0, rxjs_1.from)(this.bshb.getStateAsync(id))), (0, rxjs_1.switchMap)(state => this.setInitialStateValueIfNotSet(id, state, value)));
+    }
+    name() {
+        return 'airPurityGuardianHander';
     }
 }
 exports.BshbAirPurityGuardianHandler = BshbAirPurityGuardianHandler;

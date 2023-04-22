@@ -5,14 +5,8 @@ const bshb_handler_1 = require("./bshb-handler");
 const rxjs_1 = require("rxjs");
 class BshbGeneralUpdateHandler extends bshb_handler_1.BshbHandler {
     handleBshcUpdate(resultEntry) {
-        (0, rxjs_1.from)(this.bshb.setStateAsync('updates', { val: this.mapValueToStorage(resultEntry), ack: true })).subscribe({
-            next: () => {
-                // We do not log this because all updates can be seen on silly anyway and this would be too much I guess.
-            }, error: error => {
-                this.bshb.log.warn('Error occurred while updating "updates" state.');
-                this.bshb.log.warn(error);
-            }
-        });
+        (0, rxjs_1.from)(this.bshb.setStateAsync('updates', { val: this.mapValueToStorage(resultEntry), ack: true }))
+            .subscribe(this.handleBshcUpdateError(`id=${resultEntry.id}`));
         // We do not mark all updates as handled.
         return false;
     }
@@ -34,6 +28,9 @@ class BshbGeneralUpdateHandler extends bshb_handler_1.BshbHandler {
     sendUpdateToBshc(id, state) {
         // not needed
         return false;
+    }
+    name() {
+        return 'generalUpdateHandler';
     }
 }
 exports.BshbGeneralUpdateHandler = BshbGeneralUpdateHandler;

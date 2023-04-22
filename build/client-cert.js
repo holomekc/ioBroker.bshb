@@ -8,6 +8,8 @@ exports.ClientCert = void 0;
  * @since 01.12.2019
  */
 class ClientCert {
+    _certificate;
+    _privateKey;
     constructor(certificate, privateKey) {
         this._certificate = certificate;
         this._privateKey = privateKey;

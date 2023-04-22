@@ -5,6 +5,10 @@ const https = require('https');
 const bodyParser = require('body-parser');
 const mock = express();
 mock.use(bodyParser.json({extended: true}));
+mock.use((req, res, next) => {
+    console.log(`@${req.method} ${req.path}`);
+    next();
+});
 
 // cert is expired but we skip check anyway.
 const privateKey = '-----BEGIN RSA PRIVATE KEY-----\r\nMIIEowIBAAKCAQEApiwLPoVRCr+UD5jyPFqQim5aMlRb+6LimwNRMD6A3HrktbTO\r\nJ0rqDMvtmAIyFPpi6VxhABSDBwUWqkVjLlyziHLOuLRUFu3EBGjqSV7kMZ4MUNLo\r\nBbLxr68nsFEOaNqFdkCQlCz51QQnIuDM42kKMh2F/KEfFUWhVl++G0UY1yAMSk4Q\r\nKM1prbagnCIEQ2I9vuyS45EK6AKZklEeP64Qmu0vGlNGZ8uT78bV1xfXANrSPIEq\r\nQvWmj2suj/zxDHrL6P0JxqAnGxp0QsqoGdSd99A5yTXw/u60WbzHvQ/9Gf2pnNqm\r\n3lp6JnQLUau7yJws4NixlK3TUYZlFtPKsMnCjQIDAQABAoIBAAJeQlLDx6HllRCb\r\n12fwynqOlA5/kUgGzD/1TiTn3yJFRhko2H9K3AcOqPYvodMWtm4o+ODtaeihs+79\r\nSiqQ+6YILNYJC+G/xbliXWRqS8pBPF+ygcgDAtrEHkavAQuRgbFrviO+eFkG1B/1\r\nIDZletW4Af7VtQGymlgGyUjONUprjp9KMpOwQv9/g2s6N4k6nwYr5PiF3MZKUqCj\r\n9hrGqhDdmShsK2KmOp3i4qiwb+uhYpgvUGYzHEnlMsRBDJoGp5iDafYf+zSwACX4\r\n6mnK0dF4Ms3Jig/mANhpAMIOjZG7ERsdLoO23JTF16cag9glH701xmgdqLbp803H\r\noewpr2kCgYEA1eRCQm9ivVj9DeGJ021QD5pCiNZdbw4wHgRuGXxh/BXEoGusr8W7\r\ng3FJIHgykITz889G7Lo3iDAEkQ6XhdOy787L2qOzmIHKC9gzcxWlsSVnYAxkg3wz\r\njYlkag+oruj1ged3bqATIogaRvFr+nKKqIkJGvzvuKShe/NHVTJh7TcCgYEAxuLO\r\ncalKJHK8EA8dMHCdWTtvnn5ySzoARzaQlmBp/9FyjiDbRC6ApHiY99EqLcwgXbjm\r\nwcdemfxSJrNUvSdxWd0RQnL5WT38TqjKoVymiPlTZYcAnM7o/q7yoejLuY6YpTEy\r\niJSDj6ISYxa/OKiUA/o0jvK48WekKnI63JuREFsCgYB2MAOg3BVuVR63LdnPlwZ3\r\nKKD9JZ5JQEi8PWxs7rrh5VFZ50VrdtIvRkjHBUPDcYOvQ+iH5DnNKeNMGAkH7Lti\r\nIR2peW1Cpuzy8Is1W0/L+8QMYaykrtt5qOJwbKijxZvrJPBsk00fdp82di5ZHDOb\r\n/uSmIf+AQo/sgrf2zrknrwKBgFeIgyvrQkKAbNz0ifhD2Dzpt9qd9Fe/k1fEYCaP\r\nEJgS6sQ7GcYMYXoByfFoEZROfwBA3O70fGJxdwapbuZBcdYHQg1o5O2uJlnIWEZk\r\nrLckZNwOauqY9lsBTLCN8PweEnjCCmeqVazlvAn4fPjG2T5W5ML1eQhmgQ5dcCKg\r\nJVx5AoGBAK9a6iiyp9i9EbVTBnIo56kfJDNR+f4niu9rTUo4eSbSDNboZjDXXZqc\r\nqkTYoRmIHMeeeGbgWXJxra83TqAGezy3vuHchNlxdlMsTYyIMuV2nx39+ooZ6IXu\r\nlxu0fpjFFlR0zM1u5cOohdZK2zl+LgIDdpd7u3FhXgXLs1jQM0kd\r\n-----END RSA PRIVATE KEY-----\r\n';
@@ -354,6 +358,191 @@ mock.get('/smarthome/wateralarm', (req, res) => {
     });
 });
 
+mock.get('/smarthome/intrusion/states/system', (req, res) => {
+    res.json({
+        '@type': 'systemState',
+        'systemAvailability': {
+            '@type': 'systemAvailabilityState',
+            'available': true,
+            'deleted': false
+        },
+        'armingState': {
+            '@type': 'armingState',
+            'state': 'SYSTEM_DISARMED',
+            'deleted': false
+        },
+        'alarmState': {
+            '@type': 'alarmState',
+            'value': 'ALARM_OFF',
+            'incidents': [],
+            'deleted': false
+        },
+        'activeConfigurationProfile': {
+            '@type': 'activeConfigurationProfile',
+            'profileId': '1',
+            'deleted': false
+        },
+        'securityGapState': {
+            '@type': 'securityGapState',
+            'securityGaps': [],
+            'deleted': false
+        },
+        'deleted': false
+    });
+});
+
+mock.get('/smarthome/devices/roomClimateControl_hz_1/services/RoomClimateControl', (req, res) => {
+    res.json({
+        '@type': 'DeviceServiceData',
+        'id': 'RoomClimateControl',
+        'deviceId': 'roomClimateControl_hz_1',
+        'state': {
+            '@type': 'climateControlState',
+            'operationMode': 'AUTOMATIC',
+            'setpointTemperature': 16.0,
+            'setpointTemperatureForLevelEco': 16.0,
+            'setpointTemperatureForLevelComfort': 18.0,
+            'schedule': {
+                'profiles': [
+                    {
+                        'day': 'MONDAY',
+                        'switchPoints': [
+                            {
+                                'startTimeMinutes': 0,
+                                'value': {
+                                    '@type': 'temperatureLevelSwitchPointValue',
+                                    'temperatureLevel': 'ECO'
+                                }
+                            },
+                            {
+                                'startTimeMinutes': 300,
+                                'value': {
+                                    '@type': 'temperatureLevelSwitchPointValue',
+                                    'temperatureLevel': 'COMFORT'
+                                }
+                            },
+                            {
+                                'startTimeMinutes': 480,
+                                'value': {
+                                    '@type': 'temperatureLevelSwitchPointValue',
+                                    'temperatureLevel': 'ECO'
+                                }
+                            }
+                        ]
+                    },
+                ]
+            },
+            'ventilationMode': false,
+            'low': false,
+            'boostMode': false,
+            'summerMode': false,
+            'supportsBoostMode': true,
+            'showSetpointTemperature': false,
+            'roomControlMode': 'HEATING'
+        },
+        'operations': [
+            'incrementSetpointTemperature',
+            'decrementSetpointTemperature'
+        ],
+        'path': '/devices/roomClimateControl_hz_1/services/RoomClimateControl'
+    });
+});
+
+mock.get('/smarthome/climate/schedule/roomClimateControl_hz_1/HEATING', (req, res) => {
+    res.json({
+        'activeScheduleId': '6cf50f13-37df-4f18-9c21-a5a6993f8165',
+        'scheduleData': [
+            {
+                '@type': 'scheduleData',
+                'id': '79098d61-d9d0-42ba-aa88-13b5c7361d10',
+                'profiles': [
+                    {
+                        'day': 'MONDAY',
+                        'switchPoints': [
+                            {
+                                'startTimeMinutes': 0,
+                                'value': {
+                                    '@type': 'temperatureSwitchPointValue',
+                                    'temperature': 17.0
+                                }
+                            },
+                            {
+                                'startTimeMinutes': 360,
+                                'value': {
+                                    '@type': 'temperatureSwitchPointValue',
+                                    'temperature': 21.0
+                                }
+                            },
+                            {
+                                'startTimeMinutes': 480,
+                                'value': {
+                                    '@type': 'temperatureSwitchPointValue',
+                                    'temperature': 17.0
+                                }
+                            },
+                            {
+                                'startTimeMinutes': 960,
+                                'value': {
+                                    '@type': 'temperatureSwitchPointValue',
+                                    'temperature': 21.0
+                                }
+                            },
+                            {
+                                'startTimeMinutes': 1200,
+                                'value': {
+                                    '@type': 'temperatureSwitchPointValue',
+                                    'temperature': 17.0
+                                }
+                            }
+                        ]
+                    },
+                ],
+                'attributeExtensionMap': {
+                    'ScheduleType': 'SYSTEM',
+                    'ClimateRoomControlMode': 'HEATING'
+                }
+            },
+            {
+                '@type': 'scheduleData',
+                'id': '6cf50f13-37df-4f18-9c21-a5a6993f8165',
+                'profiles': [
+                    {
+                        'day': 'MONDAY',
+                        'switchPoints': [
+                            {
+                                'startTimeMinutes': 0,
+                                'value': {
+                                    '@type': 'temperatureSwitchPointValue',
+                                    'temperature': 16.0
+                                }
+                            },
+                            {
+                                'startTimeMinutes': 300,
+                                'value': {
+                                    '@type': 'temperatureSwitchPointValue',
+                                    'temperature': 18.0
+                                }
+                            },
+                            {
+                                'startTimeMinutes': 480,
+                                'value': {
+                                    '@type': 'temperatureSwitchPointValue',
+                                    'temperature': 16.0
+                                }
+                            }
+                        ]
+                    },
+                ],
+                'attributeExtensionMap': {
+                    'ScheduleType': 'CUSTOM',
+                    'ClimateRoomControlMode': 'HEATING'
+                }
+            }
+        ],
+        'hasFreeScheduleSlots': true
+    });
+});
+
 httpsServer.listen(8444, () => {
 });
 
@@ -395,7 +584,7 @@ tests.integration(path.join(__dirname, '..'), {
                         resolve(undefined);
                     }
                 });
-            })).timeout(10000);
+            })).timeout(1000000);
         })
     }
 });

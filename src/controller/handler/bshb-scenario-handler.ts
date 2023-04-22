@@ -23,15 +23,7 @@ export class BshbScenarioHandler extends BshbHandler {
 
             this.bshb.log.debug('Updating scenarios...');
             // we just trigger detection on changes of scenarios
-            this.detectScenarios().subscribe({
-                next: () => {
-                    // we do nothing here because we do not need to.
-                    this.bshb.log.debug('Updating scenarios finished');
-                }, error: error => {
-                    this.bshb.log.warn('something went wrong during scenario detection');
-                    this.bshb.log.warn(error);
-                }
-            });
+            this.detectScenarios().subscribe(this.handleBshcUpdateError());
 
             return true;
         } else if (resultEntry['@type'] === 'scenarioTriggered') {
@@ -43,15 +35,7 @@ export class BshbScenarioHandler extends BshbHandler {
                     val: false,
                     ack: true
                 })))
-            ).subscribe({
-                next: () => {
-                    // we do nothing here because we do not need to.
-                    this.bshb.log.debug(`Scenario with id=${resultEntry['id']} was triggered.`);
-                }, error: error => {
-                    this.bshb.log.warn('Error occurred while updating scenario after it receiving trigger.');
-                    this.bshb.log.warn(error);
-                }
-            });
+            ).subscribe(this.handleBshcUpdateError(`id=${resultEntry['id']}`));
             return true;
         }
         return false;
@@ -63,13 +47,8 @@ export class BshbScenarioHandler extends BshbHandler {
         if (match) {
             this.bshb.log.debug(`Found scenario trigger with id=${match[1]} and value=${state.val}`);
             if (state.val) {
-                this.getBshcClient().triggerScenario(match[1], {timeout: this.long_timeout}).subscribe({
-                    next: () => {
-                        this.bshb.log.info(`Scenario with id=${match[1]} triggered`);
-                    }, error: error => {
-                        this.bshb.log.warn(`Could not send trigger for scenario with id=${match[1]} and value=${state.val}: ` + error)
-                    }
-                });
+                this.getBshcClient().triggerScenario(match[1], {timeout: this.long_timeout})
+                    .subscribe(this.handleBshcSendError(`id=${match[1]}, value=${state.val}`));
             }
             return true;
         }
@@ -143,5 +122,9 @@ export class BshbScenarioHandler extends BshbHandler {
                 }
             })
         );
+    }
+
+    name(): string {
+        return 'scenarioHandler';
     }
 }

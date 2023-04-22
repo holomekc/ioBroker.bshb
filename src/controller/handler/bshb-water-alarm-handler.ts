@@ -1,5 +1,5 @@
 import {BshbHandler} from './bshb-handler';
-import {from, map, merge, mergeMap, Observable, of, switchMap, tap, zip} from 'rxjs';
+import {from, map, mergeMap, Observable, of, switchMap, tap, zip} from 'rxjs';
 import {BshbDefinition} from '../../bshb-definition';
 
 export class BshbWaterAlarmHandler extends BshbHandler {
@@ -37,14 +37,7 @@ export class BshbWaterAlarmHandler extends BshbHandler {
                             return this.importState(key, resultEntry);
                         }
                     })
-                ).subscribe({
-                    next: () => {
-                        // nothing so far
-                    },
-                    error: error => {
-                        this.bshb.log.warn(`Could not handle update for waterAlarmSystemState. ${error}`);
-                    }
-                });
+                ).subscribe(this.handleBshcUpdateError());
             });
             return true;
         }
@@ -57,14 +50,11 @@ export class BshbWaterAlarmHandler extends BshbHandler {
 
         if (match) {
             if(id === `${this.bshb.namespace}.waterAlarm.waterAlarmSystemState.mute`) {
-                this.getBshcClient().muteWaterAlarm({timeout: this.long_timeout}).subscribe({
-                    next: () => {
-                        this.bshb.setState(id, {val: false, ack: true});
-                    },
-                    error: error => {
-                        this.bshb.log.warn(`Could not mute water alarm: ${error}`);
-                    }
-                });
+                this.getBshcClient().muteWaterAlarm({timeout: this.long_timeout})
+                    .pipe(
+                        tap(() => this.bshb.setState(id, {val: false, ack: true}))
+                    )
+                    .subscribe(this.handleBshcSendError('mute'));
             } else {
 
                 zip(
@@ -78,14 +68,7 @@ export class BshbWaterAlarmHandler extends BshbHandler {
                         };
                         return this.getBshcClient().updateWaterAlarm(data, {timeout: this.long_timeout});
                     })
-                ).subscribe({
-                    next: () => {
-                        // nothing so far
-                    },
-                    error: error => {
-                        this.bshb.log.warn(`Could not send update for waterAlarmSystemState and value=${state.val}: ${error}`);
-                    }
-                });
+                ).subscribe(this.handleBshcSendError(`value=${state.val}`));
             }
             return true
         }
@@ -164,5 +147,9 @@ export class BshbWaterAlarmHandler extends BshbHandler {
             switchMap(() => from(this.bshb.getStateAsync(id))),
             switchMap(state => this.setInitialStateValueIfNotSet(id, state, value))
         );
+    }
+
+    name(): string {
+        return 'waterAlarmHandler';
     }
 }

@@ -1,5 +1,5 @@
 import {BshbHandler} from './bshb-handler';
-import {from, Observable, of} from 'rxjs';
+import {Observable, of} from 'rxjs';
 import {switchMap} from 'rxjs/operators';
 
 export class BshbDeviceStatusUpdateHandler extends BshbHandler {
@@ -21,11 +21,15 @@ export class BshbDeviceStatusUpdateHandler extends BshbHandler {
 
             this.getBshcClient().getDevice(resultEntry.sourceId).pipe(
                 switchMap(result => this.setInitialStateValueIfNotSet(statusId, null, result.parsedResponse.status))
-            ).subscribe();
+            ).subscribe(this.handleBshcUpdateError(`id=${resultEntry.id}`));
 
             return true;
         }
         return false;
+    }
+
+    name(): string {
+        return 'deviceStatusUpdateHandler';
     }
 
 }

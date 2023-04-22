@@ -63,7 +63,7 @@ export class Bshb extends utils.Adapter {
         if (!this.config.identifier) {
             this.config.identifier = BshbUtils.generateIdentifier();
             this.updateConfig({
-                identifier: this.config.identifier
+                identifier: this.config.identifier,
             });
         }
 
@@ -76,7 +76,7 @@ export class Bshb extends utils.Adapter {
         if (typeof this.config.skipServerCertificateCheck === 'undefined') {
             this.config.skipServerCertificateCheck = false;
         } else if (this.config.skipServerCertificateCheck) {
-            this.log.warn('Server certificate check skipped due to configuration. Use at your own risk.')
+            this.log.warn('Server certificate check skipped due to configuration. Use at your own risk.');
         }
 
         // The adapters config (in the instance object everything under the attribute "native") is accessible via
@@ -91,7 +91,7 @@ export class Bshb extends utils.Adapter {
             this.config.rateLimit = 1000;
             this.log.debug('config rateLimit not set using default: 1000');
             this.updateConfig({
-                rateLimit: this.config.rateLimit
+                rateLimit: this.config.rateLimit,
             });
         }
 
@@ -106,8 +106,8 @@ export class Bshb extends utils.Adapter {
                 this.bshbController = new BshbController(this, clientCert.certificate, clientCert.privateKey);
                 this.init(this.bshbController);
             }, error: error => {
-                this.log.error('Could not initialize adapter. See more details in error: ' + error);
-            }
+                this.log.error(Utils.handleError('Could not initialize adapter. See more details in error', error));
+            },
         });
     }
 
@@ -143,7 +143,10 @@ export class Bshb extends utils.Adapter {
         });
     }
 
-    private generateCertificate(clientCert: ClientCert, obj: ioBroker.Object, certificateKeys: { cert: string; key: string }, subscriber: Subscriber<ClientCert>) {
+    private generateCertificate(clientCert: ClientCert, obj: ioBroker.Object, certificateKeys: {
+        cert: string;
+        key: string
+    }, subscriber: Subscriber<ClientCert>) {
         // no certificates found.
         this.log.info('Could not find client certificate. Check for old configuration');
         const migrationResult = this.migration();
@@ -162,7 +165,7 @@ export class Bshb extends utils.Adapter {
             error: error => {
                 subscriber.error(error);
                 subscriber.complete();
-            }
+            },
         });
     }
 
@@ -243,21 +246,27 @@ export class Bshb extends utils.Adapter {
     private init(bshbController: BshbController) {
         // start pairing if needed
         bshbController.pairDeviceIfNeeded(this.config.systemPassword).pipe(catchError((err: any) => {
-                this.log.error('Something went wrong during initialization');
-                this.log.error(err);
+                this.log.error(Utils.handleError('Something went wrong during initialization', err));
                 return EMPTY;
             }),
             // Everything is ok. We check for devices first
-            switchMap(() => bshbController.startDetection()),
+            switchMap(() => bshbController.startDetection().pipe(
+                catchError((err: any) => {
+                    this.log.error(Utils.handleError('Something went wrong during detection', err));
+                    return EMPTY;
+                }),
+            )),
             takeUntil(this.alive))
-            .subscribe(() => {
-                this.log.info('Subscribe to ioBroker states');
+            .subscribe({
+                next: () => {
+                    this.log.info('Subscribe to ioBroker states');
 
-                // register for changes
-                this.subscribeStates('*');
+                    // register for changes
+                    this.subscribeStates('*');
 
-                // now we want to subscribe to BSHC for changes
-                this.startPolling(bshbController);
+                    // now we want to subscribe to BSHC for changes
+                    this.startPolling(bshbController);
+                },
             });
     }
 
@@ -283,7 +292,7 @@ export class Bshb extends utils.Adapter {
         this.setObjectNotExists('info', {
             type: 'channel',
             common: {
-                name: 'Information'
+                name: 'Information',
             },
             native: {},
         }, (err, obj) => {
@@ -297,7 +306,7 @@ export class Bshb extends utils.Adapter {
                         role: 'indicator.connected',
                         read: true,
                         write: false,
-                        def: false
+                        def: false,
                     },
                     native: {},
                 }, (err, obj) => {
@@ -365,7 +374,7 @@ export class Bshb extends utils.Adapter {
                                 const bshbError = (error as BshbError);
                                 if (bshbError.cause && bshbError.cause instanceof BshbError) {
                                     if (bshbError.errorType === BshbErrorType.TIMEOUT) {
-                                        this.log.info('LongPolling connection timed-out before BSHC closed connection.  Try to reconnect.')
+                                        this.log.info('LongPolling connection timed-out before BSHC closed connection.  Try to reconnect.');
                                     } else if (bshbError.errorType === BshbErrorType.ABORT) {
                                         this.log.warn('Connection to BSHC closed by adapter. Try to reconnect.');
                                     } else {
@@ -380,7 +389,7 @@ export class Bshb extends utils.Adapter {
                                 this.log.warn('Something went wrong during long polling. Try again later.');
                                 this.poll(10000);
                             }
-                        }
+                        },
                     });
                 } else {
                     bshbController.getBshcClient().unsubscribe(response.parsedResponse.result).subscribe(() => {

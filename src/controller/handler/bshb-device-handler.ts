@@ -1,5 +1,5 @@
 import {BshbHandler} from './bshb-handler';
-import {Observable, from, concat, of, mergeMap, filter} from 'rxjs';
+import {concat, filter, from, mergeMap, Observable, of} from 'rxjs';
 import {catchError, switchMap, tap} from 'rxjs/operators';
 import {BshbDefinition} from '../../bshb-definition';
 import {Utils} from '../../utils';
@@ -61,7 +61,7 @@ export class BshbDeviceHandler extends BshbHandler {
                             tap(() => {
                                 this.handleBshcUpdateSpecialCases(id, cachedDeviceService.device, cachedDeviceService.deviceService, resultEntry.state[stateKey]);
                             })
-                        ).subscribe();
+                        ).subscribe(this.handleBshcUpdateError(`path=${resultEntry.path}`));
                     });
                 }
 
@@ -101,20 +101,8 @@ export class BshbDeviceHandler extends BshbHandler {
                     this.bshb.log.debug('Data which will be send: ' + JSON.stringify(data));
                 }
 
-                this.getBshcClient().putState(cachedState.deviceService.path, data, {timeout: this.long_timeout}).subscribe({
-                    next: response => {
-                        if (response) {
-                            if (Utils.isLevelActive(this.bshb.log.level, LogLevel.debug)) {
-                                this.bshb.log.debug(`HTTP response. status=${response.incomingMessage.statusCode},
-                     body=${JSON.stringify(response.parsedResponse)}`);
-                            }
-                        } else {
-                            this.bshb.log.debug('no response');
-                        }
-                    }, error: error => {
-                        this.bshb.log.error(error);
-                    }
-                });
+                this.getBshcClient().putState(cachedState.deviceService.path, data, {timeout: this.long_timeout})
+                    .subscribe(this.handleBshcSendError(`path=${cachedState.deviceService.path}`));
             });
 
             return true;
@@ -518,6 +506,10 @@ export class BshbDeviceHandler extends BshbHandler {
                 });
             }
         }
+    }
+
+    name(): string {
+        return 'deviceHandler';
     }
 
 }
