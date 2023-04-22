@@ -16,9 +16,9 @@ class BshbScenarioHandler extends bshb_handler_1.BshbHandler {
         this.scenarioRegex = /bshb\.\d+\.scenarios\.(.*)/;
     }
     handleDetection() {
-        this.bshb.log.info('Start detecting scenarios...');
         return this.detectScenarios().pipe((0, rxjs_1.tap)({
-            complete: () => this.bshb.log.info('Detecting scenarios finished')
+            subscribe: () => this.bshb.log.info('Start detecting scenarios...'),
+            finalize: () => this.bshb.log.info('Detecting scenarios finished')
         }));
     }
     handleBshcUpdate(resultEntry) {

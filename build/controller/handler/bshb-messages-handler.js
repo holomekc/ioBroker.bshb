@@ -29,9 +29,9 @@ class BshbMessagesHandler extends bshb_handler_1.BshbHandler {
         return false;
     }
     handleDetection() {
-        this.bshb.log.info('Start detecting messages...');
         return this.detectMessages().pipe((0, rxjs_1.tap)({
-            complete: () => this.bshb.log.info('Detecting messages finished')
+            subscribe: () => this.bshb.log.info('Start detecting messages...'),
+            finalize: () => this.bshb.log.info('Detecting messages finished')
         }));
     }
     sendUpdateToBshc(id, state) {

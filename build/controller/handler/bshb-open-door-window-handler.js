@@ -6,9 +6,9 @@ const rxjs_1 = require("rxjs");
 const operators_1 = require("rxjs/operators");
 class BshbOpenDoorWindowHandler extends bshb_handler_1.BshbHandler {
     handleDetection() {
-        this.bshb.log.info('Start detecting open doors/windows...');
         return this.detectOpenDoorsAndWindows().pipe((0, rxjs_1.tap)({
-            complete: () => this.bshb.log.info('Detecting open doors/windows finished')
+            subscribe: () => this.bshb.log.info('Start detecting open doors/windows...'),
+            finalize: () => this.bshb.log.info('Detecting open doors/windows finished')
         }));
     }
     handleBshcUpdate(resultEntry) {

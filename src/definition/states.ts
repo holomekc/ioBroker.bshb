@@ -1,49 +1,49 @@
 const enabledDisabled = {
     'ENABLED': 'ENABLED',
-    'DISABLED': 'DISABLED'
+    'DISABLED': 'DISABLED',
 };
 
 const rating = {
     'GOOD': 'GOOD',
     'MEDIUM': 'MEDIUM',
     'BAD': 'BAD',
-    'UNKNOWN': 'UNKNOWN'
+    'UNKNOWN': 'UNKNOWN',
 };
 
 export const STATES: { [TypeName: string]: { [KeyName: string]: { [Key: string]: string } } } = {
     armDisarmPushNotificationState: {
-        state: enabledDisabled
+        state: enabledDisabled,
     },
     remoteAccessState: {
-        state: enabledDisabled
+        state: enabledDisabled,
     },
     remotePushNotificationState: {
-        state: enabledDisabled
+        state: enabledDisabled,
     },
     softwareUpdateState: {
         swUpdateState: {
             'NO_UPDATE_AVAILABLE': 'NO_UPDATE_AVAILABLE',
             'DOWNLOADING': 'DOWNLOADING',
             'UPDATE_AVAILABLE': 'UPDATE_AVAILABLE',
-            'UPDATE_IN_PROGRESS': 'UPDATE_IN_PROGRESS'
+            'UPDATE_IN_PROGRESS': 'UPDATE_IN_PROGRESS',
         },
         swUpdateLastResult: {
             'UPDATE_SUCCESS': 'UPDATE_SUCCESS',
             'UPDATE_FAIL': 'UPDATE_FAIL',
-            'DOWNLOAD_FAILED': 'DOWNLOAD_FAILED'
-        }
+            'DOWNLOAD_FAILED': 'DOWNLOAD_FAILED',
+        },
     },
     cameraNotificationState: {
-        value: enabledDisabled
+        value: enabledDisabled,
     },
     privacyModeState: {
-        value: enabledDisabled
+        value: enabledDisabled,
     },
     childLockState: {
         childLock: {
             'ON': 'ON',
-            'OFF': 'OFF'
-        }
+            'OFF': 'OFF',
+        },
     },
     valveTappetState: {
         value: {
@@ -58,36 +58,36 @@ export const STATES: { [TypeName: string]: { [KeyName: string]: { [Key: string]:
             'RANGE_TOO_BIG': 'RANGE_TOO_BIG',
             'RANGE_TOO_SMALL': 'RANGE_TOO_SMALL',
             'ERROR': 'ERROR',
-            'UNKNOWN': 'UNKNOWN'
-        }
+            'UNKNOWN': 'UNKNOWN',
+        },
     },
     shutterContactState: {
         value: {
             'OPEN': 'OPEN',
-            'CLOSED': 'CLOSED'
-        }
+            'CLOSED': 'CLOSED',
+        },
     },
     powerSwitchState: {
         switchState: {
             'ON': 'ON',
-            'OFF': 'OFF'
-        }
+            'OFF': 'OFF',
+        },
     },
     powerSwitchProgramState: {
         operationMode: {
             'MANUAL': 'MANUAL',
-            'SCHEDULE': 'SCHEDULE'
-        }
+            'SCHEDULE': 'SCHEDULE',
+        },
     },
     routingState: {
-        value: enabledDisabled
+        value: enabledDisabled,
     },
     hueBlinkingState: {
         blinkingState: {
             'OFF': 'OFF',
             'ON': 'ON',
-            'UNKNOWN': 'UNKNOWN'
-        }
+            'UNKNOWN': 'UNKNOWN',
+        },
     },
     hueBridgeSearcherState: {
         searcherState: {
@@ -96,7 +96,7 @@ export const STATES: { [TypeName: string]: { [KeyName: string]: { [Key: string]:
             'BRIDGES_FOUND': 'BRIDGES_FOUND',
             'NO_BRIDGE_FOUND': 'NO_BRIDGE_FOUND',
             'ERROR': 'ERROR',
-            'UNKNOWN': 'UNKNOWN'
+            'UNKNOWN': 'UNKNOWN',
         },
         value: {
             'BRIDGE_SEARCH_REQUESTED': 'BRIDGE_SEARCH_REQUESTED',
@@ -104,8 +104,8 @@ export const STATES: { [TypeName: string]: { [KeyName: string]: { [Key: string]:
             'BRIDGES_FOUND': 'BRIDGES_FOUND',
             'NO_BRIDGE_FOUND': 'NO_BRIDGE_FOUND',
             'ERROR': 'ERROR',
-            'UNKNOWN': 'UNKNOWN'
-        }
+            'UNKNOWN': 'UNKNOWN',
+        },
     },
     communicationQualityState: {
         quality: {
@@ -113,18 +113,18 @@ export const STATES: { [TypeName: string]: { [KeyName: string]: { [Key: string]:
             'BAD': 'BAD',
             'NORMAL': 'NORMAL',
             'UNKNOWN': 'UNKNOWN',
-            'FETCHING': 'FETCHING'
+            'FETCHING': 'FETCHING',
         },
         requestState: {
             'REQUEST': 'REQUEST',
-        }
+        },
     },
     multiswitchConfigurationState: {
         updateState: {
             'UPDATING': 'UPDATING',
             'UP_TO_DATE': 'UP_TO_DATE',
-            'UNKNOWN': 'UNKNOWN'
-        }
+            'UNKNOWN': 'UNKNOWN',
+        },
     },
     airQualityLevelState: {
         combinedRating: rating,
@@ -152,11 +152,11 @@ export const STATES: { [TypeName: string]: { [KeyName: string]: { [Key: string]:
             'WARM_STUFFY': 'WARM_STUFFY',
             'WARM_HUMID_STUFFY': 'WARM_HUMID_STUFFY',
             'WARM_DRY_STUFFY': 'WARM_DRY_STUFFY',
-            'UNKNOWN': 'UNKNOWN'
+            'UNKNOWN': 'UNKNOWN',
         },
         temperatureRating: rating,
         humidityRating: rating,
-        purityRating: rating
+        purityRating: rating,
     },
     smokeDetectorCheckState: {
         value: {
@@ -166,36 +166,36 @@ export const STATES: { [TypeName: string]: { [KeyName: string]: { [Key: string]:
             'SMOKE_TEST_REQUESTED': 'SMOKE_TEST_REQUESTED',
             'COMMUNICATION_TEST_SENT': 'COMMUNICATION_TEST_SENT',
             'COMMUNICATION_TEST_OK': 'COMMUNICATION_TEST_OK',
-            'COMMUNICATION_TEST_REQUESTED': 'COMMUNICATION_TEST_REQUESTED'
-        }
+            'COMMUNICATION_TEST_REQUESTED': 'COMMUNICATION_TEST_REQUESTED',
+        },
     },
     smokeSensitivityState: {
         smokeSensitivity: {
             'HIGH': 'HIGH',
             'MIDDLE': 'MIDDLE',
             'LOW': 'LOW',
-            'UNKNOWN': 'UNKNOWN'
-        }
+            'UNKNOWN': 'UNKNOWN',
+        },
     },
     walkTestState: {
         walkState: {
             'WALK_TEST_STARTED': 'WALK_TEST_STARTED',
             'WALK_TEST_STOPPED': 'WALK_TEST_STOPPED',
-            'WALK_TEST_UNKNOWN': 'WALK_TEST_UNKNOWN'
+            'WALK_TEST_UNKNOWN': 'WALK_TEST_UNKNOWN',
         },
         petImmunityState: {
             'WALK_TEST_STARTED': 'WALK_TEST_STARTED',
             'WALK_TEST_STOPPED': 'WALK_TEST_STOPPED',
-            'WALK_TEST_UNKNOWN': 'WALK_TEST_UNKNOWN'
-        }
+            'WALK_TEST_UNKNOWN': 'WALK_TEST_UNKNOWN',
+        },
     },
     intrusionDetectionControlState: {
         value: {
             'SYSTEM_ARMING': 'SYSTEM_ARMING',
             'SYSTEM_ARMED': 'SYSTEM_ARMED',
             'SYSTEM_DISARMED': 'SYSTEM_DISARMED',
-            'MUTE_ALARM': 'MUTE_ALARM'
-        }
+            'MUTE_ALARM': 'MUTE_ALARM',
+        },
     },
     surveillanceAlarmState: {
         value: {
@@ -203,22 +203,22 @@ export const STATES: { [TypeName: string]: { [KeyName: string]: { [Key: string]:
             'ALARM_OFF': 'ALARM_OFF',
             'ALARM_MUTED': 'ALARM_MUTED',
             'PRE_ALARM': 'PRE_ALARM',
-            'UNKNOWN': 'UNKNOWN'
-        }
+            'UNKNOWN': 'UNKNOWN',
+        },
     },
     climateControlState: {
         operationMode: {
             'MANUAL': 'MANUAL',
             'AUTOMATIC': 'AUTOMATIC',
             'OFF': 'OFF',
-            'UNKNOWN': 'UNKNOWN'
+            'UNKNOWN': 'UNKNOWN',
         },
         roomControlMode: {
             'OFF': 'OFF',
             'HEATING': 'HEATING',
             'COOLING': 'COOLING',
-            'UNKNOWN': 'UNKNOWN'
-        }
+            'UNKNOWN': 'UNKNOWN',
+        },
     },
     // Yale
     doorSensor: {
@@ -226,21 +226,44 @@ export const STATES: { [TypeName: string]: { [KeyName: string]: { [Key: string]:
             DOOR_CLOSED: 'DOOR_CLOSED',
             DOOR_OPEN: 'DOOR_OPEN',
             DOOR_UNKNOWN: 'DOOR_UNKNOWN',
-        }
+        },
     },
     lockActuator: {
-        lockState : {
+        lockState: {
             UNLOCKED: 'UNLOCKED',
             LOCKED: 'LOCKED',
             LOCKING: 'LOCKING',
-            UNLOCKING: 'UNLOCKING'
+            UNLOCKING: 'UNLOCKING',
         },
     },
     waterAlarmSystemState: {
         state: {
             WATER_ALARM: 'WATER_ALARM',
             ALARM_OFF: 'ALARM_OFF',
-            ALARM_MUTED: 'ALARM_MUTED'
+            ALARM_MUTED: 'ALARM_MUTED',
+        },
+    },
+    ClimateSchedule: {
+        ScheduleType: {
+            CUSTOM: 'CUSTOM',
+            SYSTEM: 'SYSTEM',
         }
-    }
+    },
+    // instruction detection api data
+    armingState: {
+        state: {
+            SYSTEM_ARMING: 'SYSTEM_ARMING',
+            SYSTEM_ARMED: 'SYSTEM_ARMED',
+            SYSTEM_DISARMED: 'SYSTEM_DISARMED',
+        },
+    },
+    alarmState: {
+        value: {
+            ALARM_OFF: 'ALARM_OFF',
+            PRE_ALARM: 'PRE_ALARM',
+            ALARM_ON: 'ALARM_ON',
+            ALARM_MUTED: 'ALARM_MUTED',
+            UNKNOWN: 'UNKNOWN',
+        },
+    },
 };

@@ -8,12 +8,11 @@ export class BshbWaterAlarmHandler extends BshbHandler {
     private cachedStates = new Map<string, any>();
 
     handleDetection(): Observable<void> {
-        this.bshb.log.info('Start detecting water alarm...');
-
         return this.detectWaterAlarm().pipe(
             switchMap(() => this.createMuteAction()),
             tap({
-                complete: () => this.bshb.log.info('Detecting water alarm finished')
+                subscribe: () => this.bshb.log.info('Start detecting water alarm...'),
+                finalize: () => this.bshb.log.info('Detecting water alarm finished')
             })
         );
     }

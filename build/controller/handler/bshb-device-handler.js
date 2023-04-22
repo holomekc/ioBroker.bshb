@@ -182,8 +182,7 @@ class BshbDeviceHandler extends bshb_handler_1.BshbHandler {
      * detect devices will search for all devices and device states and load them to iobroker.
      */
     detectDevices() {
-        this.bshb.log.info('Start detecting devices...');
-        const rooms = this.getBshcClient().getRooms({ timeout: this.long_timeout }).pipe((0, operators_1.switchMap)(response => {
+        const rooms = this.getBshcClient().getRooms({ timeout: this.long_timeout }).pipe((0, operators_1.tap)(() => this.bshb.log.info('Start detecting devices...')), (0, operators_1.switchMap)(response => {
             this.bshb.log.debug(`Found ${(response.parsedResponse.length)} rooms.`);
             return (0, rxjs_1.from)(response.parsedResponse);
         }), (0, operators_1.switchMap)(room => {

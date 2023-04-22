@@ -10,10 +10,9 @@ export class BshbAirPurityGuardianHandler extends BshbHandler {
     private cachedStates = new Map<string, any>();
 
     handleDetection(): Observable<void> {
-        this.bshb.log.info('Start detecting air purity guardian...');
-
         return this.detectAirPurityGuardian().pipe(tap({
-            complete: () => this.bshb.log.info('Detecting air purity guardian finished')
+            subscribe: () => this.bshb.log.info('Start detecting air purity guardian...'),
+            finalize: () => this.bshb.log.info('Detecting air purity guardian finished')
         }));
     }
 

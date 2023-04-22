@@ -9,10 +9,9 @@ export class BshbRoomHandler extends BshbHandler {
     private cachedStates = new Map<string, any>();
 
     handleDetection(): Observable<void> {
-        this.bshb.log.info('Start detecting messages...');
-
         return this.detectRooms().pipe(tap({
-            complete: () => this.bshb.log.info('Detecting rooms finished')
+            subscribe: () => this.bshb.log.info('Start detecting rooms...'),
+            finalize: () => this.bshb.log.info('Detecting rooms finished')
         }));
     }
 

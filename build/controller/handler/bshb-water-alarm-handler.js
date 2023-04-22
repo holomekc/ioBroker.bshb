@@ -11,9 +11,9 @@ class BshbWaterAlarmHandler extends bshb_handler_1.BshbHandler {
         this.cachedStates = new Map();
     }
     handleDetection() {
-        this.bshb.log.info('Start detecting water alarm...');
         return this.detectWaterAlarm().pipe((0, rxjs_1.switchMap)(() => this.createMuteAction()), (0, rxjs_1.tap)({
-            complete: () => this.bshb.log.info('Detecting water alarm finished')
+            subscribe: () => this.bshb.log.info('Start detecting water alarm...'),
+            finalize: () => this.bshb.log.info('Detecting water alarm finished')
         }));
     }
     handleBshcUpdate(resultEntry) {

@@ -6,10 +6,9 @@ import {switchMap} from 'rxjs/operators';
 export class BshbOpenDoorWindowHandler extends BshbHandler {
 
     public handleDetection(): Observable<void> {
-        this.bshb.log.info('Start detecting open doors/windows...');
-
         return this.detectOpenDoorsAndWindows().pipe(tap({
-            complete: () => this.bshb.log.info('Detecting open doors/windows finished')
+            subscribe: () => this.bshb.log.info('Start detecting open doors/windows...'),
+            finalize: () => this.bshb.log.info('Detecting open doors/windows finished')
         }));
     }
 

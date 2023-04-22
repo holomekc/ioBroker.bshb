@@ -13,9 +13,9 @@ class BshbAirPurityGuardianHandler extends bshb_handler_1.BshbHandler {
         this.cachedStates = new Map();
     }
     handleDetection() {
-        this.bshb.log.info('Start detecting air purity guardian...');
         return this.detectAirPurityGuardian().pipe((0, rxjs_1.tap)({
-            complete: () => this.bshb.log.info('Detecting air purity guardian finished')
+            subscribe: () => this.bshb.log.info('Start detecting air purity guardian...'),
+            finalize: () => this.bshb.log.info('Detecting air purity guardian finished')
         }));
     }
     handleBshcUpdate(resultEntry) {

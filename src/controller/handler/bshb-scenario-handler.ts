@@ -12,10 +12,9 @@ export class BshbScenarioHandler extends BshbHandler {
     private scenarioRegex = /bshb\.\d+\.scenarios\.(.*)/;
 
     public handleDetection(): Observable<void> {
-        this.bshb.log.info('Start detecting scenarios...');
-
         return this.detectScenarios().pipe(tap({
-            complete: () => this.bshb.log.info('Detecting scenarios finished')
+            subscribe: () => this.bshb.log.info('Start detecting scenarios...'),
+            finalize: () => this.bshb.log.info('Detecting scenarios finished')
         }));
     }
 

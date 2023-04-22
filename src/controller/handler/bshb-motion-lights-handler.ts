@@ -8,10 +8,9 @@ export class BshbMotionLightsHandler extends BshbHandler {
     private cachedStates = new Map<string, any>();
 
     handleDetection(): Observable<void> {
-        this.bshb.log.info('Start detecting motion lights...');
-
         return this.detectMotionLights().pipe(tap({
-            complete: () => this.bshb.log.info('Detecting motion lights finished')
+            subscribe: () => this.bshb.log.info('Start detecting motion lights...'),
+            finalize: () => this.bshb.log.info('Detecting motion lights finished')
         }));
     }
 

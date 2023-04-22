@@ -1,12 +1,12 @@
 export const ROLES: { [TypeName: string]: { [KeyName: string]: string } } = {
     binarySwitchState: {
-        on: 'switch'
+        on: 'switch',
     },
     temperatureLevelState: {
-        temperature: 'value.temperature'
+        temperature: 'value.temperature',
     },
     colorState: {
-        rgb: 'level.color.rgb'
+        rgb: 'level.color.rgb',
     },
     climateControlState: {
         setpointTemperature: 'level.temperature',
@@ -18,40 +18,40 @@ export const ROLES: { [TypeName: string]: { [KeyName: string]: string } } = {
         showSetpointTemperature: 'switch',
         summerMode: 'switch',
         supportsBoostMode: 'indicator',
-        ventilationMode: 'indicator'
+        ventilationMode: 'indicator',
     },
     colorTemperatureState: {
-        colorTemperature: 'level.color.temperature'
+        colorTemperature: 'level.color.temperature',
     },
     multiLevelSwitchState: {
-        level: 'level.dimmer'
+        level: 'level.dimmer',
     },
     temperatureOffsetState: {
         offset: 'level',
         stepSize: 'level',
         minOffset: 'level',
-        maxOffset: 'level'
+        maxOffset: 'level',
     },
     childLockState: {
-        childLock: 'text'
+        childLock: 'text',
     },
     valveTappetState: {
         position: 'level.valve',
-        value: 'text'
+        value: 'text',
     },
     shutterContactState: {
-        value: 'text'
+        value: 'text',
     },
     // Twinguard
     smokeSensitivityState: {
         smokeSensitivity: 'text',
-        preAlarmEnabled: 'indicator'
+        preAlarmEnabled: 'indicator',
     },
     twinguardNightlyPromiseState: {
-        nightlyPromiseEnabled: 'indicator'
+        nightlyPromiseEnabled: 'indicator',
     },
     communicationQualityState: {
-        quality: 'text'
+        quality: 'text',
     },
     airQualityLevelState: {
         combinedRating: 'text',
@@ -61,14 +61,14 @@ export const ROLES: { [TypeName: string]: { [KeyName: string]: string } } = {
         humidity: 'value.humidity',
         humidityRating: 'text',
         purity: 'value',
-        purityRating: 'text'
+        purityRating: 'text',
     },
     smokeDetectorCheckState: {
-        value: 'text'
+        value: 'text',
     },
     surveillanceAlarmState: {
         value: 'text',
-        incidents: 'list'
+        incidents: 'list',
     },
     intrusionDetectionControlState: {
         value: 'text',
@@ -76,79 +76,79 @@ export const ROLES: { [TypeName: string]: { [KeyName: string]: string } } = {
         actuators: 'list',
         armActivationDelayTime: 'level',
         alarmActivationDelayTime: 'level',
-        remainingTimeUntilArmed: 'value'
+        remainingTimeUntilArmed: 'value',
     },
     hueBridgeSearcherState: {
         searcherState: 'text',
-        value: 'text'
+        value: 'text',
     },
     armDisarmPushNotificationState: {
-        state: 'text'
+        state: 'text',
     },
     remoteAccessState: {
-        state: 'text'
+        state: 'text',
     },
     remotePushNotificationState: {
-        state: 'text'
+        state: 'text',
     },
     softwareUpdateState: {
         swUpdateState: 'text',
         swUpdateLastResult: 'text',
         swUpdateAvailableVersion: 'text',
-        swInstalledVersion: 'text'
+        swInstalledVersion: 'text',
     },
     ventilationDelayState: {
         devices: 'list',
-        delay: 'level'
+        delay: 'level',
     },
     powerMeterState: {
         powerConsumption: 'value.power.consumption',
-        energyConsumption: 'value.power.consumption'
+        energyConsumption: 'value.power.consumption',
     },
     powerSwitchState: {
         switchState: 'text',
-        automaticPowerOffTime: 'value'
+        automaticPowerOffTime: 'value',
     },
     powerSwitchProgramState: {
         operationMode: 'text',
-        schedule: 'state'
+        schedule: 'state',
     },
     routingState: {
-        value: 'text'
+        value: 'text',
     },
     // Twist
     multiswitchConfigurationState: {
         pages: 'list',
         supportedPages: 'list',
         locale: 'text',
-        updateState: 'text'
+        updateState: 'text',
     },
     // Motion Sensor
     latestMotionState: {
-        latestMotionDetected: 'date'
+        latestMotionDetected: 'date',
     },
     walkTestState: {
         petImmunityState: 'text',
-        walkState: 'text'
+        walkState: 'text',
     },
     // Presence Simulation Configuration
     presenceSimulationConfigurationState: {
         enabled: 'switch',
         runningStartTime: 'date',
-        runningEndTime: 'date'
+        runningEndTime: 'date',
     },
     presenceSimulationSchedulingState: {
-        schedule: 'list'
+        schedule: 'list',
     },
     // Yale
     doorSensor: {
-        doorState: 'text'
+        doorState: 'text',
     },
     lockActuator: {
-        lockState : 'text',
+        lockState: 'text',
     },
     airPurityGuardian: {
-        enabled: 'switch'
+        enabled: 'switch',
     },
     motionlight: {
         enabled: 'switch',
@@ -156,15 +156,33 @@ export const ROLES: { [TypeName: string]: { [KeyName: string]: string } } = {
         darknessThresholdLux: 'level.color.luminance',
         lightsOffDelay: 'level.timer',
         illuminanceLux: 'level.color.luminance',
-        lightIds: 'list'
+        lightIds: 'list',
     },
     waterAlarmSystemState: {
         available: 'indicator',
         visualActuatorsAvailable: 'switch',
         videoActuatorsAvailable: 'switch',
-        deleted: 'indicator'
+        deleted: 'indicator',
     },
     roomExtProperties: {
-        humidity: 'value.humidity'
-    }
+        humidity: 'value.humidity',
+    },
+    // instruction detection api data
+    systemAvailability: {
+        available: 'switch',
+    },
+    armingState: {
+        remainingTimeUntilArmed: 'value',
+        state: 'text',
+    },
+    alarmState: {
+        value: 'text',
+        incidents: 'list',
+    },
+    activeConfigurationProfile: {
+        profileId: 'text',
+    },
+    securityGapState: {
+        securityGaps: 'list',
+    },
 };

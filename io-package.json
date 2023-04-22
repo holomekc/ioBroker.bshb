@@ -1,8 +1,20 @@
 {
     "common": {
         "name": "bshb",
-        "version": "0.2.2",
+        "version": "0.2.3",
         "news": {
+			"0.2.3": {
+				"de": "Updating the controller interface, climate schedule and other improvements.",
+				"en": "Support for rooms.",
+				"ru": "Обновление интерфейса контроллера, климатического расписания и другие улучшения.",
+				"pt": "Actualização da interface do controlador, calendário climático e outras melhorias.",
+				"nl": "Update van de controller interface, klimaatschema en andere verbeteringen.",
+				"fr": "Mise à jour de l'interface du contrôleur, calendrier climatique et autres améliorations.",
+				"it": "Aggiornamento dell'interfaccia del controllore, del calendario climatico e altri miglioramenti.",
+				"es": "Actualización de la interfaz del controlador, calendario climático y otras mejoras.",
+				"pl": "Aktualizacja interfejsu sterownika, harmonogramu klimatycznego i innych usprawnień.",
+				"zh-cn": "更新控制器界面，气候时间表和其他改进。"
+			},
 			"0.2.2": {
 				"de": "Unterstützung für Räume.",
 				"en": "Support for rooms.",
@@ -110,18 +122,6 @@
 				"es": "Se han añadido los tipos de RoomControlMode. Actualización para js-controller 3.x.x. Esto serializa objetos y arrays. Por favor, compruebe su lógica.",
 				"pl": "Dodano typy RoomControlMode. Aktualizacja dla js-controller 3.x.x. To serializuje obiekty i tablice. Proszę sprawdzić swoje logiki.",
 				"zh-cn": "增加了RoomControlMode类型。针对js-controller 3.x.x的更新。这可以序列化对象和数组。请检查你的逻辑学。"
-			},
-			"0.1.13": {
-				"de": "Update auf Api-Version 2.1. Unterstützung für Alarmprofile hinzufügen.",
-				"en": "Update to api-version 2.1. Add support for intrusion detection profiles.",
-				"ru": "Обновление до api-версии 2.1. Добавить поддержку профилей сигнализации.",
-				"pt": "Actualização para a api-versão 2.1. Adicionar suporte para perfis de alarme.",
-				"nl": "Update naar api-versie 2.1. Ondersteuning voor alarmprofielen toegevoegd.",
-				"fr": "Mise à jour de la version 2.1 de l'api. Ajout de la prise en charge des profils d'alarme.",
-				"it": "Aggiornamento alla versione api 2.1. Aggiungere il supporto per i profili di allarme.",
-				"es": "Actualización a la versión api 2.1. Añadir soporte para los perfiles de alarma.",
-				"pl": "Aktualizacja do api-wersji 2.1. Dodaj wsparcie dla profili alarmowych.",
-				"zh-cn": "更新到api-版本2.1。增加对报警配置文件的支持。"
 			}
         },
         "titleLang": {

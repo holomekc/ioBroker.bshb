@@ -11,9 +11,9 @@ class BshbMotionLightsHandler extends bshb_handler_1.BshbHandler {
         this.cachedStates = new Map();
     }
     handleDetection() {
-        this.bshb.log.info('Start detecting motion lights...');
         return this.detectMotionLights().pipe((0, rxjs_1.tap)({
-            complete: () => this.bshb.log.info('Detecting motion lights finished')
+            subscribe: () => this.bshb.log.info('Start detecting motion lights...'),
+            finalize: () => this.bshb.log.info('Detecting motion lights finished')
         }));
     }
     handleBshcUpdate(resultEntry) {

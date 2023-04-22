@@ -31,10 +31,9 @@ export class BshbMessagesHandler extends BshbHandler {
     }
 
     public handleDetection(): Observable<void> {
-        this.bshb.log.info('Start detecting messages...');
-
         return this.detectMessages().pipe(tap({
-            complete: () => this.bshb.log.info('Detecting messages finished')
+            subscribe: () => this.bshb.log.info('Start detecting messages...'),
+            finalize: () => this.bshb.log.info('Detecting messages finished')
         }));
     }
 
