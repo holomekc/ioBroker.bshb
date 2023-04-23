@@ -1,18 +1,32 @@
 {
     "common": {
         "name": "bshb",
-        "version": "0.2.3",
+        "version": "0.2.4",
         "news": {
+			"0.2.4": {
+				"de": "Aktualisierung des Adapters auf die neuesten Anforderungen.",
+				"en": "Update the adapter to the latest requirements.",
+				"ru": "Обновление адаптера до последних требований.",
+				"pt": "Actualização do adaptador para os requisitos mais recentes.",
+				"nl": "Updaten van de adapter naar de laatste eisen.",
+				"fr": "Mise à jour de l'adaptateur pour répondre aux dernières exigences.",
+				"it": "Aggiornamento dell'adattatore ai requisiti più recenti.",
+				"es": "Actualizar el adaptador a los últimos requisitos.",
+				"pl": "Aktualizacja adaptera do najnowszych wymagań.",
+				"uk": "Оновлення адаптера до останніх вимог.",
+				"zh-cn": "更新适配器，使其符合最新要求。"
+			},
 			"0.2.3": {
-				"de": "Updating the controller interface, climate schedule and other improvements.",
-				"en": "Support for rooms.",
+				"de": "Aktualisierung der Controller-Schnittstelle, Klimaplan und andere Verbesserungen.",
+				"en": "Updating the controller interface, climate schedule and other improvements.",
 				"ru": "Обновление интерфейса контроллера, климатического расписания и другие улучшения.",
 				"pt": "Actualização da interface do controlador, calendário climático e outras melhorias.",
-				"nl": "Update van de controller interface, klimaatschema en andere verbeteringen.",
-				"fr": "Mise à jour de l'interface du contrôleur, calendrier climatique et autres améliorations.",
+				"nl": "Updaten van de controller interface, klimaat schema en andere verbeteringen.",
+				"fr": "Mise à jour de l'interface du contrôleur, du calendrier climatique et autres améliorations.",
 				"it": "Aggiornamento dell'interfaccia del controllore, del calendario climatico e altri miglioramenti.",
 				"es": "Actualización de la interfaz del controlador, calendario climático y otras mejoras.",
-				"pl": "Aktualizacja interfejsu sterownika, harmonogramu klimatycznego i innych usprawnień.",
+				"pl": "Aktualizacja interfejsu sterownika, harmonogramu klimatycznego i inne usprawnienia.",
+				"uk": "Оновлення інтерфейсу контролера, кліматичного розкладу та інші покращення.",
 				"zh-cn": "更新控制器界面，气候时间表和其他改进。"
 			},
 			"0.2.2": {
@@ -25,6 +39,7 @@
 				"it": "Supporto per le stanze.",
 				"es": "Soporte para salas.",
 				"pl": "Wsparcie dla pomieszczeń.",
+				"uk": "Підтримка номерів.",
 				"zh-cn": "对房间的支持。"
 			},
 			"0.2.1": {
@@ -37,6 +52,7 @@
 				"it": "Supporto per servizi aggiuntivi.",
 				"es": "Apoyo a los servicios adicionales.",
 				"pl": "Wsparcie dla usług dodatkowych.",
+				"uk": "Підтримка додаткових сервісів.",
 				"zh-cn": "支持额外的服务。"
 			},
 			"0.1.20": {
@@ -49,6 +65,7 @@
 				"it": "I problemi con openDoorsAndWindows sono stati risolti.",
 				"es": "Se han resuelto los problemas con openDoorsAndWindows.",
 				"pl": "Rozwiązano problemy z funkcją OpenDoorsAndWindows.",
+				"uk": "Виправлено проблеми з openDoorsAndWindows.",
 				"zh-cn": "修正了openDoorsAndWindows的问题。"
 			},
 			"0.1.19": {
@@ -61,6 +78,7 @@
 				"it": "Problemi con la configurazione iniziale risolti.",
 				"es": "Se han solucionado los problemas de la configuración inicial.",
 				"pl": "Naprawiono problemy z początkową konfiguracją.",
+				"uk": "Виправлено проблеми з початковим налаштуванням.",
 				"zh-cn": "初始设置的问题得到解决。"
 			},
 			"0.1.18": {
@@ -73,6 +91,7 @@
 				"it": "Ritardo tra le chiamate del controller configurabile.",
 				"es": "Retraso entre llamadas del controlador configurable.",
 				"pl": "Konfigurowalne opóźnienie między wywołaniami kontrolera.",
+				"uk": "Затримка між викликами контролера налаштовується.",
 				"zh-cn": "可配置控制器调用之间的延迟。"
 			},
 			"0.1.17": {
@@ -85,6 +104,7 @@
 				"it": "Valori di Yale aggiunti. Gli stati sono aggiornati all'avvio.",
 				"es": "Valores de Yale añadidos. Los estados se actualizan al inicio.",
 				"pl": "Dodano wartości Yale. Stany są aktualizowane podczas uruchamiania.",
+				"uk": "Додані значення Єльського університету. Стани оновлюються під час запуску.",
 				"zh-cn": "Yale的价值得到了补充。状态在启动时被更新。"
 			},
 			"0.1.16": {
@@ -97,6 +117,7 @@
 				"it": "Gli scenari innescati sono indicati da un cambiamento momentaneo da \"true\" a \"false\". Il nuovo stato \"updates\" accetta tutti i messaggi del controllore.",
 				"es": "Los escenarios desencadenados se indican con un cambio momentáneo de \"true\" a \"false\". El nuevo estado \"updates\" acepta todos los mensajes del controlador.",
 				"pl": "Scenariusze wyzwalane są wskazywane przez chwilową zmianę stanu z \"true\" na \"false\". Nowy stan \"updates\" przyjmuje wszystkie komunikaty od kontrolera.",
+				"uk": "Сценарії, що спрацювали, позначаються миттєвою зміною стану з \"true\" на \"false\". Новий стан \"оновлюється\" і приймає всі повідомлення від контролера.",
 				"zh-cn": "触发的情景通过从 \"true\" 到 \"false\" 的瞬间变化表示。新状态 \"updates\" 接受来自控制器的所有信息。"
 			},
 			"0.1.15": {
@@ -109,21 +130,10 @@
 				"it": "L'adattatore può ora essere riavviato senza connessione internet.",
 				"es": "El adaptador ahora puede reiniciarse sin conexión a Internet.",
 				"pl": "Adapter można teraz uruchomić ponownie bez połączenia z Internetem.",
+				"uk": "Тепер адаптер можна перезапустити без підключення до Інтернету.",
 				"zh-cn": "适配器现在可以在没有互联网连接的情况下重新启动。"
-			},
-			"0.1.14": {
-				"de": "RoomControlMode Typen hinzugefügt. Aktualisierung für js-controller 3.x.x. Dadurch werden Objekte und Arrays serialisiert. Bitte prüft Eure Logiken.",
-				"en": "RoomControlMode types added. Update for js-controller 3.x.x. This serializes objects and arrays. Please check your logics.",
-				"ru": "Добавлены типы RoomControlMode. Обновление для js-controller 3.x.x. Это сериализует объекты и массивы. Пожалуйста, проверьте вашу логику.",
-				"pt": "Tipos de RoomControlMode adicionados. Actualização para o js-controller 3.x.x. Isto serializa objectos e arrays. Por favor verifique as suas lógicas.",
-				"nl": "RoomControlMode types toegevoegd. Update voor js-controller 3.x.x. Dit serialiseert objecten en arrays. Controleer uw logica.",
-				"fr": "Ajout des types RoomControlMode. Mise à jour pour js-controller 3.x.x. Ceci sérialise les objets et les tableaux. Veuillez vérifier vos logiques.",
-				"it": "Aggiunti i tipi RoomControlMode. Aggiornamento per js-controller 3.x.x. Questo serializza oggetti e array. Per favore controlla le tue logiche.",
-				"es": "Se han añadido los tipos de RoomControlMode. Actualización para js-controller 3.x.x. Esto serializa objetos y arrays. Por favor, compruebe su lógica.",
-				"pl": "Dodano typy RoomControlMode. Aktualizacja dla js-controller 3.x.x. To serializuje obiekty i tablice. Proszę sprawdzić swoje logiki.",
-				"zh-cn": "增加了RoomControlMode类型。针对js-controller 3.x.x的更新。这可以序列化对象和数组。请检查你的逻辑学。"
 			}
-        },
+		},
         "titleLang": {
             "en": "Bosch Smart Home Bridge",
             "de": "Bosch Smart Home Bridge",
@@ -134,6 +144,7 @@
             "it": "Bosch Smart Home Bridge",
             "es": "Bosch Smart Home Bridge",
             "pl": "Bosch Smart Home Bridge",
+			"uk": "Bosch Smart Home Bridge",
             "zh-cn": "Bosch Smart Home Bridge"
         },
         "desc": {
@@ -146,6 +157,7 @@
             "it": "Integrazione dei dispositivi Smart Home Bosch",
             "es": "Integración de los dispositivos Smart Home de Bosch",
             "pl": "Integracja inteligentnych urządzeń domowych firmy Bosch",
+			"uk": "Інтеграція пристроїв Bosch для розумного дому",
             "zh-cn": "集成博世智能家居设备"
         },
         "authors": [
