@@ -23,10 +23,8 @@
 
 		"sourceMap": true,
 		"inlineSourceMap": false,
-		"watch": false,
 		"typeRoots": [
-			"node_modules/@types",
-			"node_modules/bosch-smart-home-bridge/@types"
+			"node_modules/@types"
 		]
 	},
 	"include": [

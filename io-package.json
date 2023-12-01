@@ -1,8 +1,21 @@
 {
     "common": {
         "name": "bshb",
-        "version": "0.2.4",
+        "version": "0.2.5",
         "news": {
+			"0.2.5": {
+				"de": "Unterstützung für benutzerdefinierte Zustände.",
+				"en": "Support for user defined states.",
+				"ru": "Поддержка состояний, определяемых пользователем.",
+				"pt": "Suporte para estados definidos pelo utilizador.",
+				"nl": "Ondersteuning voor door de gebruiker gedefinieerde toestanden.",
+				"fr": "Prise en charge des états définis par l'utilisateur.",
+				"it": "Supporto per gli stati definiti dall'utente.",
+				"es": "Soporte para estados definidos por el usuario.",
+				"pl": "Obsługa stanów zdefiniowanych przez użytkownika.",
+				"uk": "Підтримка станів, визначених користувачем.",
+				"zh-cn": "支持用户自定义状态。"
+			},
 			"0.2.4": {
 				"de": "Aktualisierung des Adapters auf die neuesten Anforderungen.",
 				"en": "Update the adapter to the latest requirements.",
@@ -119,19 +132,6 @@
 				"pl": "Scenariusze wyzwalane są wskazywane przez chwilową zmianę stanu z \"true\" na \"false\". Nowy stan \"updates\" przyjmuje wszystkie komunikaty od kontrolera.",
 				"uk": "Сценарії, що спрацювали, позначаються миттєвою зміною стану з \"true\" на \"false\". Новий стан \"оновлюється\" і приймає всі повідомлення від контролера.",
 				"zh-cn": "触发的情景通过从 \"true\" 到 \"false\" 的瞬间变化表示。新状态 \"updates\" 接受来自控制器的所有信息。"
-			},
-			"0.1.15": {
-				"de": "Adapter kann nun auch ohne Internetverbindung neu gestartet werden.",
-				"en": "Adapter can now be restarted without internet connection.",
-				"ru": "Теперь адаптер можно перезапустить без подключения к Интернету.",
-				"pt": "O adaptador pode agora ser reiniciado sem ligação à Internet.",
-				"nl": "De adapter kan nu opnieuw worden opgestart zonder internetverbinding.",
-				"fr": "L'adaptateur peut maintenant être redémarré sans connexion Internet.",
-				"it": "L'adattatore può ora essere riavviato senza connessione internet.",
-				"es": "El adaptador ahora puede reiniciarse sin conexión a Internet.",
-				"pl": "Adapter można teraz uruchomić ponownie bez połączenia z Internetem.",
-				"uk": "Тепер адаптер можна перезапустити без підключення до Інтернету.",
-				"zh-cn": "适配器现在可以在没有互联网连接的情况下重新启动。"
 			}
 		},
         "titleLang": {
@@ -192,8 +192,9 @@
 			{
 				"admin": ">=5.1.13"
 			}
-		]
-    },
+		],
+		"tier": 2
+	},
     "native": {
 		"host": "192.168.178.10",
 		"identifier": "",

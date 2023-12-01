@@ -35,6 +35,9 @@ If you want to support the work I would appreciate a small donation. This is 100
 
 ## Changelog
 
+### 0.2.5
+* (holomekc) Support for user defined states
+
 ### 0.2.4
 * (holomekc) Update the adapter to the latest requirements
 

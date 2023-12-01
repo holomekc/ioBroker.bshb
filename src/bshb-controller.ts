@@ -17,6 +17,7 @@ import {BshbWaterAlarmHandler} from './controller/handler/bshb-water-alarm-handl
 import {BshbRoomHandler} from './controller/handler/bshb-room-handler';
 import {BshbDeviceStatusUpdateHandler} from './controller/handler/bshb-device-status-update-handler';
 import {BshbClimateHandler} from './controller/handler/bshb-climate-handler';
+import {BshbUserDefinedStatesHandler} from './controller/handler/bshb-user-defined-states-handler';
 
 /**
  * This controller encapsulates bosch-smart-home-bridge and provides it to iobroker.bshb
@@ -56,6 +57,7 @@ export class BshbController {
             this.handlers = [];
             this.handlers.push(new BshbGeneralUpdateHandler(this.bshb, this.boschSmartHomeBridge));
             this.handlers.push(new BshbScenarioHandler(this.bshb, this.boschSmartHomeBridge));
+            this.handlers.push(new BshbUserDefinedStatesHandler(this.bshb, this.boschSmartHomeBridge));
             this.handlers.push(new BshbDeviceStatusUpdateHandler(this.bshb, this.boschSmartHomeBridge));
             this.handlers.push(new BshbMessagesHandler(this.bshb, this.boschSmartHomeBridge));
             this.handlers.push(new BshbIntrusionDetectionHandler(this.bshb, this.boschSmartHomeBridge));
