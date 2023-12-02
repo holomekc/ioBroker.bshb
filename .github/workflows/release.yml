@@ -106,11 +106,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ github.ref }}
+          tag_name: ${{ steps.extract_release.outputs.version }}
           release_name: Release ${{ steps.extract_release.outputs.version }}
           draft: true
-          # Prerelease versions create prereleases on Github
-          #prerelease: ${{ contains(steps.extract_release.outputs.VERSION, '-') }}
+          prerelease: false
           body: ${{ steps.extract_changelog.outputs.markdown }}
 
       - name: Upload Release Asset
