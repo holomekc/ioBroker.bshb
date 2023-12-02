@@ -1,208 +1,208 @@
 {
-    "common": {
-        "name": "bshb",
-        "version": "0.2.5",
-        "news": {
-			"0.2.5": {
-				"de": "Unterstützung für benutzerdefinierte Zustände.",
-				"en": "Support for user defined states.",
-				"ru": "Поддержка состояний, определяемых пользователем.",
-				"pt": "Suporte para estados definidos pelo utilizador.",
-				"nl": "Ondersteuning voor door de gebruiker gedefinieerde toestanden.",
-				"fr": "Prise en charge des états définis par l'utilisateur.",
-				"it": "Supporto per gli stati definiti dall'utente.",
-				"es": "Soporte para estados definidos por el usuario.",
-				"pl": "Obsługa stanów zdefiniowanych przez użytkownika.",
-				"uk": "Підтримка станів, визначених користувачем.",
-				"zh-cn": "支持用户自定义状态。"
-			},
-			"0.2.4": {
-				"de": "Aktualisierung des Adapters auf die neuesten Anforderungen.",
-				"en": "Update the adapter to the latest requirements.",
-				"ru": "Обновление адаптера до последних требований.",
-				"pt": "Actualização do adaptador para os requisitos mais recentes.",
-				"nl": "Updaten van de adapter naar de laatste eisen.",
-				"fr": "Mise à jour de l'adaptateur pour répondre aux dernières exigences.",
-				"it": "Aggiornamento dell'adattatore ai requisiti più recenti.",
-				"es": "Actualizar el adaptador a los últimos requisitos.",
-				"pl": "Aktualizacja adaptera do najnowszych wymagań.",
-				"uk": "Оновлення адаптера до останніх вимог.",
-				"zh-cn": "更新适配器，使其符合最新要求。"
-			},
-			"0.2.3": {
-				"de": "Aktualisierung der Controller-Schnittstelle, Klimaplan und andere Verbesserungen.",
-				"en": "Updating the controller interface, climate schedule and other improvements.",
-				"ru": "Обновление интерфейса контроллера, климатического расписания и другие улучшения.",
-				"pt": "Actualização da interface do controlador, calendário climático e outras melhorias.",
-				"nl": "Updaten van de controller interface, klimaat schema en andere verbeteringen.",
-				"fr": "Mise à jour de l'interface du contrôleur, du calendrier climatique et autres améliorations.",
-				"it": "Aggiornamento dell'interfaccia del controllore, del calendario climatico e altri miglioramenti.",
-				"es": "Actualización de la interfaz del controlador, calendario climático y otras mejoras.",
-				"pl": "Aktualizacja interfejsu sterownika, harmonogramu klimatycznego i inne usprawnienia.",
-				"uk": "Оновлення інтерфейсу контролера, кліматичного розкладу та інші покращення.",
-				"zh-cn": "更新控制器界面，气候时间表和其他改进。"
-			},
-			"0.2.2": {
-				"de": "Unterstützung für Räume.",
-				"en": "Support for rooms.",
-				"ru": "Поддержка помещений.",
-				"pt": "Apoio aos quartos.",
-				"nl": "Steun voor kamers.",
-				"fr": "Soutien pour les salles.",
-				"it": "Supporto per le stanze.",
-				"es": "Soporte para salas.",
-				"pl": "Wsparcie dla pomieszczeń.",
-				"uk": "Підтримка номерів.",
-				"zh-cn": "对房间的支持。"
-			},
-			"0.2.1": {
-				"de": "Unterstützung für weitere Dienste.",
-				"en": "Support for additional services.",
-				"ru": "Поддержка дополнительных услуг.",
-				"pt": "Apoio para serviços adicionais.",
-				"nl": "Steun voor aanvullende diensten.",
-				"fr": "Soutien aux services supplémentaires.",
-				"it": "Supporto per servizi aggiuntivi.",
-				"es": "Apoyo a los servicios adicionales.",
-				"pl": "Wsparcie dla usług dodatkowych.",
-				"uk": "Підтримка додаткових сервісів.",
-				"zh-cn": "支持额外的服务。"
-			},
-			"0.1.20": {
-				"de": "Probleme beim initialen Setup behoben.",
-				"en": "Fixed problems with openDoorsAndWindows.",
-				"ru": "Исправлены проблемы с openDoorsAndWindows.",
-				"pt": "Problemas corrigidos com portas e janelas abertas.",
-				"nl": "Probleme mit openDoorsAndWindows wurden behoben.",
-				"fr": "Les problèmes avec openDoorsAndWindows ont été résolus.",
-				"it": "I problemi con openDoorsAndWindows sono stati risolti.",
-				"es": "Se han resuelto los problemas con openDoorsAndWindows.",
-				"pl": "Rozwiązano problemy z funkcją OpenDoorsAndWindows.",
-				"uk": "Виправлено проблеми з openDoorsAndWindows.",
-				"zh-cn": "修正了openDoorsAndWindows的问题。"
-			},
-			"0.1.19": {
-				"de": "Probleme beim initialen Setup behoben.",
-				"en": "Problems with initial setup fixed.",
-				"ru": "Исправлены проблемы с начальной настройкой.",
-				"pt": "Problemas com a configuração inicial resolvidos.",
-				"nl": "Problemen met de eerste installatie opgelost.",
-				"fr": "Correction de problèmes lors de l'installation initiale.",
-				"it": "Problemi con la configurazione iniziale risolti.",
-				"es": "Se han solucionado los problemas de la configuración inicial.",
-				"pl": "Naprawiono problemy z początkową konfiguracją.",
-				"uk": "Виправлено проблеми з початковим налаштуванням.",
-				"zh-cn": "初始设置的问题得到解决。"
-			},
-			"0.1.18": {
-				"de": "Verzögerung zwischen Controller Aufrufen konfigurierbar.",
-				"en": "Delay between controller calls configurable.",
-				"ru": "Задержка между вызовами контроллера настраивается.",
-				"pt": "Atraso entre as chamadas do controlador configurável.",
-				"nl": "Vertraging tussen controller oproepen configureerbaar.",
-				"fr": "Délai configurable entre les appels du contrôleur.",
-				"it": "Ritardo tra le chiamate del controller configurabile.",
-				"es": "Retraso entre llamadas del controlador configurable.",
-				"pl": "Konfigurowalne opóźnienie między wywołaniami kontrolera.",
-				"uk": "Затримка між викликами контролера налаштовується.",
-				"zh-cn": "可配置控制器调用之间的延迟。"
-			},
-			"0.1.17": {
-				"de": "Yale Werte hinzugefügt. Zustände werden beim Start aktualisiert.",
-				"en": "Yale values added. States are updated at startup.",
-				"ru": "Добавлены значения Yale. Состояния обновляются при запуске.",
-				"pt": "Valores de Yale adicionados. Os Estados são actualizados no arranque.",
-				"nl": "Yale waarden toegevoegd. De staten worden bij het opstarten bijgewerkt.",
-				"fr": "Ajout des valeurs de Yale. Les états sont mis à jour au démarrage.",
-				"it": "Valori di Yale aggiunti. Gli stati sono aggiornati all'avvio.",
-				"es": "Valores de Yale añadidos. Los estados se actualizan al inicio.",
-				"pl": "Dodano wartości Yale. Stany są aktualizowane podczas uruchamiania.",
-				"uk": "Додані значення Єльського університету. Стани оновлюються під час запуску.",
-				"zh-cn": "Yale的价值得到了补充。状态在启动时被更新。"
-			},
-			"0.1.16": {
-				"de": "Ausgelöste Szenarien werden durch ein kurzzeitigen Wechseln von \"true\" nach \"false\" angezeigt. Neuer Zustand \"updates\" nimmt alle Nachrichten vom Controller entgegen.",
-				"en": "Triggered scenarios are indicated by a momentary change from \"true\" to \"false\". New state \"updates\" accepts all messages from the controller.",
-				"ru": "Триггерные сценарии обозначаются мгновенным изменением состояния с \"true\" на \"false\". Новое состояние \"updates\" принимает все сообщения от контроллера.",
-				"pt": "Os cenários desencadeados são indicados por uma mudança momentânea de \"true\" para \"false\". O novo estado \"updates\" aceita todas as mensagens do controlador.",
-				"nl": "Getriggerde scenario's worden aangegeven door een kortstondige verandering van \"true\" naar \"false\". Nieuwe toestand \"updates\" accepteert alle berichten van de controller.",
-				"fr": "Les scénarios déclenchés sont indiqués par un changement momentané de \"true\" à \"false\". Le nouvel état \"updates\" accepte tous les messages du contrôleur.",
-				"it": "Gli scenari innescati sono indicati da un cambiamento momentaneo da \"true\" a \"false\". Il nuovo stato \"updates\" accetta tutti i messaggi del controllore.",
-				"es": "Los escenarios desencadenados se indican con un cambio momentáneo de \"true\" a \"false\". El nuevo estado \"updates\" acepta todos los mensajes del controlador.",
-				"pl": "Scenariusze wyzwalane są wskazywane przez chwilową zmianę stanu z \"true\" na \"false\". Nowy stan \"updates\" przyjmuje wszystkie komunikaty od kontrolera.",
-				"uk": "Сценарії, що спрацювали, позначаються миттєвою зміною стану з \"true\" на \"false\". Новий стан \"оновлюється\" і приймає всі повідомлення від контролера.",
-				"zh-cn": "触发的情景通过从 \"true\" 到 \"false\" 的瞬间变化表示。新状态 \"updates\" 接受来自控制器的所有信息。"
-			}
-		},
-        "titleLang": {
-            "en": "Bosch Smart Home Bridge",
-            "de": "Bosch Smart Home Bridge",
-            "ru": "Bosch Smart Home Bridge",
-            "pt": "Bosch Smart Home Bridge",
-            "nl": "Bosch Smart Home Bridge",
-            "fr": "Bosch Smart Home Bridge",
-            "it": "Bosch Smart Home Bridge",
-            "es": "Bosch Smart Home Bridge",
-            "pl": "Bosch Smart Home Bridge",
-			"uk": "Bosch Smart Home Bridge",
-            "zh-cn": "Bosch Smart Home Bridge"
-        },
-        "desc": {
-            "en": "Integration of Bosch Smart Home devices",
-            "de": "Einbinden von Bosch Smart Home Geräten",
-            "ru": "Интеграция устройств Bosch Smart Home",
-            "pt": "Integração de dispositivos Bosch Smart Home",
-            "nl": "Integratie van Bosch Smart Home apparaten",
-            "fr": "Intégration des appareils Bosch Smart Home",
-            "it": "Integrazione dei dispositivi Smart Home Bosch",
-            "es": "Integración de los dispositivos Smart Home de Bosch",
-            "pl": "Integracja inteligentnych urządzeń domowych firmy Bosch",
-			"uk": "Інтеграція пристроїв Bosch для розумного дому",
-            "zh-cn": "集成博世智能家居设备"
-        },
-        "authors": [
-            "Christopher Holomek <holomekc.github@gmail.com>"
-        ],
-        "keywords": [
-            "Bosch"
-        ],
-        "license": "MIT",
-        "platform": "Javascript/Node.js",
-        "main": "build/main.js",
-        "icon": "bshb-logo.jpg",
-        "enabled": false,
-        "extIcon": "https://raw.githubusercontent.com/holomekc/ioBroker.bshb/master/admin/bshb-logo.jpg",
-        "readme": "https://github.com/holomekc/ioBroker.bshb/blob/master/README.md",
-        "loglevel": "info",
-        "mode": "daemon",
-        "type": "iot-systems",
-        "compact": true,
-		"adminUI": {
-			"config": "json",
-			"tab": "materialize"
-		},
-		"connectionType": "local",
-		"dataSource": "push",
-        "dependencies": [
-            {
-                "js-controller": ">=3.3.22"
-            }
-        ],
-		"globalDependencies": [
-			{
-				"admin": ">=5.1.13"
-			}
-		],
-		"tier": 2
-	},
-    "native": {
-		"host": "192.168.178.10",
-		"identifier": "",
-		"systemPassword": "",
-		"pairingDelay": 10000,
-		"rateLimit": 1000,
-		"skipServerCertificateCheck": false
+  "common": {
+    "name": "bshb",
+    "version": "0.2.6",
+    "news": {
+      "0.2.6": {
+        "de": "Unterstützung für benutzerdefinierte Zustände.",
+        "en": "Support for user defined states.",
+        "ru": "Поддержка состояний, определяемых пользователем.",
+        "pt": "Suporte para estados definidos pelo utilizador.",
+        "nl": "Ondersteuning voor door de gebruiker gedefinieerde toestanden.",
+        "fr": "Prise en charge des états définis par l'utilisateur.",
+        "it": "Supporto per gli stati definiti dall'utente.",
+        "es": "Soporte para estados definidos por el usuario.",
+        "pl": "Obsługa stanów zdefiniowanych przez użytkownika.",
+        "uk": "Підтримка станів, визначених користувачем.",
+        "zh-cn": "支持用户自定义状态。"
+      },
+      "0.2.5": {
+        "de": "Unterstützung für benutzerdefinierte Zustände.",
+        "en": "Support for user defined states.",
+        "ru": "Поддержка состояний, определяемых пользователем.",
+        "pt": "Suporte para estados definidos pelo utilizador.",
+        "nl": "Ondersteuning voor door de gebruiker gedefinieerde toestanden.",
+        "fr": "Prise en charge des états définis par l'utilisateur.",
+        "it": "Supporto per gli stati definiti dall'utente.",
+        "es": "Soporte para estados definidos por el usuario.",
+        "pl": "Obsługa stanów zdefiniowanych przez użytkownika.",
+        "uk": "Підтримка станів, визначених користувачем.",
+        "zh-cn": "支持用户自定义状态。"
+      },
+      "0.2.4": {
+        "de": "Aktualisierung des Adapters auf die neuesten Anforderungen.",
+        "en": "Update the adapter to the latest requirements.",
+        "ru": "Обновление адаптера до последних требований.",
+        "pt": "Actualização do adaptador para os requisitos mais recentes.",
+        "nl": "Updaten van de adapter naar de laatste eisen.",
+        "fr": "Mise à jour de l'adaptateur pour répondre aux dernières exigences.",
+        "it": "Aggiornamento dell'adattatore ai requisiti più recenti.",
+        "es": "Actualizar el adaptador a los últimos requisitos.",
+        "pl": "Aktualizacja adaptera do najnowszych wymagań.",
+        "uk": "Оновлення адаптера до останніх вимог.",
+        "zh-cn": "更新适配器，使其符合最新要求。"
+      },
+      "0.2.3": {
+        "de": "Aktualisierung der Controller-Schnittstelle, Klimaplan und andere Verbesserungen.",
+        "en": "Updating the controller interface, climate schedule and other improvements.",
+        "ru": "Обновление интерфейса контроллера, климатического расписания и другие улучшения.",
+        "pt": "Actualização da interface do controlador, calendário climático e outras melhorias.",
+        "nl": "Updaten van de controller interface, klimaat schema en andere verbeteringen.",
+        "fr": "Mise à jour de l'interface du contrôleur, du calendrier climatique et autres améliorations.",
+        "it": "Aggiornamento dell'interfaccia del controllore, del calendario climatico e altri miglioramenti.",
+        "es": "Actualización de la interfaz del controlador, calendario climático y otras mejoras.",
+        "pl": "Aktualizacja interfejsu sterownika, harmonogramu klimatycznego i inne usprawnienia.",
+        "uk": "Оновлення інтерфейсу контролера, кліматичного розкладу та інші покращення.",
+        "zh-cn": "更新控制器界面，气候时间表和其他改进。"
+      },
+      "0.2.2": {
+        "de": "Unterstützung für Räume.",
+        "en": "Support for rooms.",
+        "ru": "Поддержка помещений.",
+        "pt": "Apoio aos quartos.",
+        "nl": "Steun voor kamers.",
+        "fr": "Soutien pour les salles.",
+        "it": "Supporto per le stanze.",
+        "es": "Soporte para salas.",
+        "pl": "Wsparcie dla pomieszczeń.",
+        "uk": "Підтримка номерів.",
+        "zh-cn": "对房间的支持。"
+      },
+      "0.2.1": {
+        "de": "Unterstützung für weitere Dienste.",
+        "en": "Support for additional services.",
+        "ru": "Поддержка дополнительных услуг.",
+        "pt": "Apoio para serviços adicionais.",
+        "nl": "Steun voor aanvullende diensten.",
+        "fr": "Soutien aux services supplémentaires.",
+        "it": "Supporto per servizi aggiuntivi.",
+        "es": "Apoyo a los servicios adicionales.",
+        "pl": "Wsparcie dla usług dodatkowych.",
+        "uk": "Підтримка додаткових сервісів.",
+        "zh-cn": "支持额外的服务。"
+      },
+      "0.1.20": {
+        "de": "Probleme beim initialen Setup behoben.",
+        "en": "Fixed problems with openDoorsAndWindows.",
+        "ru": "Исправлены проблемы с openDoorsAndWindows.",
+        "pt": "Problemas corrigidos com portas e janelas abertas.",
+        "nl": "Probleme mit openDoorsAndWindows wurden behoben.",
+        "fr": "Les problèmes avec openDoorsAndWindows ont été résolus.",
+        "it": "I problemi con openDoorsAndWindows sono stati risolti.",
+        "es": "Se han resuelto los problemas con openDoorsAndWindows.",
+        "pl": "Rozwiązano problemy z funkcją OpenDoorsAndWindows.",
+        "uk": "Виправлено проблеми з openDoorsAndWindows.",
+        "zh-cn": "修正了openDoorsAndWindows的问题。"
+      },
+      "0.1.19": {
+        "de": "Probleme beim initialen Setup behoben.",
+        "en": "Problems with initial setup fixed.",
+        "ru": "Исправлены проблемы с начальной настройкой.",
+        "pt": "Problemas com a configuração inicial resolvidos.",
+        "nl": "Problemen met de eerste installatie opgelost.",
+        "fr": "Correction de problèmes lors de l'installation initiale.",
+        "it": "Problemi con la configurazione iniziale risolti.",
+        "es": "Se han solucionado los problemas de la configuración inicial.",
+        "pl": "Naprawiono problemy z początkową konfiguracją.",
+        "uk": "Виправлено проблеми з початковим налаштуванням.",
+        "zh-cn": "初始设置的问题得到解决。"
+      },
+      "0.1.18": {
+        "de": "Verzögerung zwischen Controller Aufrufen konfigurierbar.",
+        "en": "Delay between controller calls configurable.",
+        "ru": "Задержка между вызовами контроллера настраивается.",
+        "pt": "Atraso entre as chamadas do controlador configurável.",
+        "nl": "Vertraging tussen controller oproepen configureerbaar.",
+        "fr": "Délai configurable entre les appels du contrôleur.",
+        "it": "Ritardo tra le chiamate del controller configurabile.",
+        "es": "Retraso entre llamadas del controlador configurable.",
+        "pl": "Konfigurowalne opóźnienie między wywołaniami kontrolera.",
+        "uk": "Затримка між викликами контролера налаштовується.",
+        "zh-cn": "可配置控制器调用之间的延迟。"
+      },
+      "0.1.17": {
+        "de": "Yale Werte hinzugefügt. Zustände werden beim Start aktualisiert.",
+        "en": "Yale values added. States are updated at startup.",
+        "ru": "Добавлены значения Yale. Состояния обновляются при запуске.",
+        "pt": "Valores de Yale adicionados. Os Estados são actualizados no arranque.",
+        "nl": "Yale waarden toegevoegd. De staten worden bij het opstarten bijgewerkt.",
+        "fr": "Ajout des valeurs de Yale. Les états sont mis à jour au démarrage.",
+        "it": "Valori di Yale aggiunti. Gli stati sono aggiornati all'avvio.",
+        "es": "Valores de Yale añadidos. Los estados se actualizan al inicio.",
+        "pl": "Dodano wartości Yale. Stany są aktualizowane podczas uruchamiania.",
+        "uk": "Додані значення Єльського університету. Стани оновлюються під час запуску.",
+        "zh-cn": "Yale的价值得到了补充。状态在启动时被更新。"
+      }
     },
-    "objects": [],
-    "instanceObjects": []
+    "titleLang": {
+      "en": "Bosch Smart Home Bridge",
+      "de": "Bosch Smart Home Bridge",
+      "ru": "Bosch Smart Home Bridge",
+      "pt": "Bosch Smart Home Bridge",
+      "nl": "Bosch Smart Home Bridge",
+      "fr": "Bosch Smart Home Bridge",
+      "it": "Bosch Smart Home Bridge",
+      "es": "Bosch Smart Home Bridge",
+      "pl": "Bosch Smart Home Bridge",
+      "uk": "Bosch Smart Home Bridge",
+      "zh-cn": "Bosch Smart Home Bridge"
+    },
+    "desc": {
+      "en": "Integration of Bosch Smart Home devices",
+      "de": "Einbinden von Bosch Smart Home Geräten",
+      "ru": "Интеграция устройств Bosch Smart Home",
+      "pt": "Integração de dispositivos Bosch Smart Home",
+      "nl": "Integratie van Bosch Smart Home apparaten",
+      "fr": "Intégration des appareils Bosch Smart Home",
+      "it": "Integrazione dei dispositivi Smart Home Bosch",
+      "es": "Integración de los dispositivos Smart Home de Bosch",
+      "pl": "Integracja inteligentnych urządzeń domowych firmy Bosch",
+      "uk": "Інтеграція пристроїв Bosch для розумного дому",
+      "zh-cn": "集成博世智能家居设备"
+    },
+    "authors": [
+      "Christopher Holomek <holomekc.github@gmail.com>"
+    ],
+    "keywords": [
+      "Bosch"
+    ],
+    "license": "MIT",
+    "platform": "Javascript/Node.js",
+    "main": "build/main.js",
+    "icon": "bshb-logo.jpg",
+    "enabled": false,
+    "extIcon": "https://raw.githubusercontent.com/holomekc/ioBroker.bshb/master/admin/bshb-logo.jpg",
+    "readme": "https://github.com/holomekc/ioBroker.bshb/blob/master/README.md",
+    "loglevel": "info",
+    "mode": "daemon",
+    "type": "iot-systems",
+    "compact": true,
+    "adminUI": {
+      "config": "json",
+      "tab": "materialize"
+    },
+    "connectionType": "local",
+    "dataSource": "push",
+    "dependencies": [
+      {
+        "js-controller": ">=3.3.22"
+      }
+    ],
+    "globalDependencies": [
+      {
+        "admin": ">=5.1.13"
+      }
+    ],
+    "tier": 2
+  },
+  "native": {
+    "host": "192.168.178.10",
+    "identifier": "",
+    "systemPassword": "",
+    "pairingDelay": 10000,
+    "rateLimit": 1000,
+    "skipServerCertificateCheck": false
+  },
+  "objects": [],
+  "instanceObjects": []
 }

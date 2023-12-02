@@ -1,6 +1,6 @@
 import {BshbHandler} from './bshb-handler';
-import {Observable, of, from, tap, switchMap, mergeMap, last} from 'rxjs';
-import {catchError, delay} from 'rxjs/operators';
+import {from, last, mergeMap, Observable, of, switchMap, tap} from 'rxjs';
+import {catchError} from 'rxjs/operators';
 
 /**
  * This handler is used to detect user defined states of bshc
@@ -35,11 +35,9 @@ export class BshbUserDefinedStatesHandler extends BshbHandler {
 
         if (match) {
             this.bshb.log.debug(`Found user defined state with id=${match[1]} and value=${state.val}`);
-            if (state.val) {
-                this.getBshcClient().setUserDefinedState(
-                    match[1], state.val as boolean, {timeout: this.long_timeout}
-                ).subscribe(this.handleBshcSendError(`id=${match[1]}, value=${state.val}`));
-            }
+            this.getBshcClient().setUserDefinedState(
+                match[1], state.val as boolean, {timeout: this.long_timeout}
+            ).subscribe(this.handleBshcSendError(`id=${match[1]}, value=${state.val}`));
             return true;
         }
 

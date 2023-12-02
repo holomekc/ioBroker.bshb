@@ -32,9 +32,7 @@ class BshbUserDefinedStatesHandler extends bshb_handler_1.BshbHandler {
         const match = this.userDefinedStateRegex.exec(id);
         if (match) {
             this.bshb.log.debug(`Found user defined state with id=${match[1]} and value=${state.val}`);
-            if (state.val) {
-                this.getBshcClient().setUserDefinedState(match[1], state.val, { timeout: this.long_timeout }).subscribe(this.handleBshcSendError(`id=${match[1]}, value=${state.val}`));
-            }
+            this.getBshcClient().setUserDefinedState(match[1], state.val, { timeout: this.long_timeout }).subscribe(this.handleBshcSendError(`id=${match[1]}, value=${state.val}`));
             return true;
         }
         return false;
