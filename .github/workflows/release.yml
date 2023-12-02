@@ -4,9 +4,6 @@ name: Release
 # as well as tags with a semantic version
 on:
   workflow_dispatch:
-    inputs:
-      release-notes:
-        type: string
 
 
 # Cancel previous PR/branch runs when a new commit is pushed
@@ -73,13 +70,18 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - name: Extract the version and commit body from the tag
+      - name: Extract the version from the tag
         id: extract_release
-        # The body may be multiline, therefore newlines and % need to be escaped
         run: |
-          VERSION="${{ github.ref }}"
-          VERSION=${VERSION##*/v}
-          echo "::set-output name=VERSION::$VERSION"
+          echo "tag=$(echo $GITHUB_REF | cut -d / -f 3)" >> $GITHUB_OUTPUT
+          echo "version=$(echo $GITHUB_REF | cut -d / -f 3 | sed 's/.\{3\}$//')" >> $GITHUB_OUTPUT
+
+      - name: Extract changelog
+        id: extract_changelog
+        uses: sean0x42/markdown-extract@v2
+        with:
+          file: README.md
+          pattern: ${{ steps.extract_release.outputs.version }}
 
       - name: Install Dependencies
         run: npm ci
@@ -99,11 +101,11 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: ${{ github.ref }}
-          release_name: Release v${{ steps.extract_release.outputs.VERSION }}
-          draft: false
+          release_name: Release ${{ steps.extract_release.outputs.version }}
+          draft: true
           # Prerelease versions create prereleases on Github
           #prerelease: ${{ contains(steps.extract_release.outputs.VERSION, '-') }}
-          body: ${{ github.event.inputs.release-notes }}
+          body: ${{ steps.extract_changelog.outputs.markdown }}
 
       # When using Sentry for error reporting, Sentry could be informed about new releases
       # To enable create a API-Token in Sentry (User settings, API keys)
