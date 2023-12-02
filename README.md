@@ -12,8 +12,6 @@
 
 [![NPM](https://nodei.co/npm/iobroker.bshb.png)](https://nodei.co/npm/iobroker.bshb/)
 
-[![Travis-CI](http://img.shields.io/travis/holomekc/ioBroker.bshb/master.svg)](https://travis-ci.org/holomekc/ioBroker.bshb) 
-
 ## bosch-smart-home-bridge adapter for ioBroker
 
 This adapter allows to communicate with Bosch Smart Home devices.
