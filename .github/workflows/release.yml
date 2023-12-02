@@ -75,8 +75,7 @@ jobs:
       - name: Extract the version from the tag
         id: extract_release
         run: |
-          echo "tag=$(echo $GITHUB_REF | cut -d / -f 3)" >> $GITHUB_OUTPUT
-          echo "version=$(echo $GITHUB_REF | cut -d / -f 3 | sed 's/.\{3\}$//')" >> $GITHUB_OUTPUT
+          echo "version=$(echo $GITHUB_REF | cut -d / -f 3)" >> $GITHUB_OUTPUT
 
       - name: Extract changelog
         id: extract_changelog
