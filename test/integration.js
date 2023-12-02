@@ -543,6 +543,18 @@ mock.get('/smarthome/climate/schedule/roomClimateControl_hz_1/HEATING', (req, re
     });
 });
 
+mock.get('/smarthome/userdefinedstates', (req, res) => {
+    res.json([
+        {
+            'deleted': false,
+            '@type': 'userDefinedState',
+            'name': 'Test123',
+            'id': 'd97014f1-2eeb-41ca-bd91-39b0f64e7908',
+            'state': true
+        }
+    ]);
+});
+
 httpsServer.listen(8444, () => {
 });
 
