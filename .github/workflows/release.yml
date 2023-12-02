@@ -75,7 +75,7 @@ jobs:
       - name: Extract the version from the tag
         id: extract_release
         run: |
-          echo "version=${{ github.ref }}" >> $GITHUB_OUTPUT
+          echo "version=$(git describe --tags)" >> $GITHUB_OUTPUT
 
       - name: Extract changelog
         id: extract_changelog
