@@ -8,6 +8,7 @@
 ![Number of Installations (latest)](http://iobroker.live/badges/bshb-installed.svg)
 ![Number of Installations (stable)](http://iobroker.live/badges/bshb-stable.svg)
 [![Known Vulnerabilities](https://snyk.io/test/github/holomekc/ioBroker.bshb/badge.svg)](https://snyk.io/test/github/holomekc/ioBroker.bshb)
+[![Main](https://github.com/holomekc/iobroker.bshb/actions/workflows/test.yml/badge.svg)](https://github.com/holomekc/iobroker.bshb/actions/workflows/test.yml)
 
 [![NPM](https://nodei.co/npm/iobroker.bshb.png)](https://nodei.co/npm/iobroker.bshb/)
 
