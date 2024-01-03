@@ -56,8 +56,8 @@ export class BshbRoomHandler extends BshbHandler {
         );
     }
 
-    sendUpdateToBshc(id: string, state: ioBroker.State): boolean {
-        return false;
+    sendUpdateToBshc(id: string, state: ioBroker.State): Observable<boolean> {
+        return of(false);
     }
 
     private detectRooms(): Observable<void> {

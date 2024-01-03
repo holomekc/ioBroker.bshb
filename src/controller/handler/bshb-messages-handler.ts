@@ -1,5 +1,5 @@
 import {BshbHandler} from './bshb-handler';
-import {Observable, tap, of, map} from 'rxjs';
+import {map, Observable, of, tap} from 'rxjs';
 import {switchMap} from 'rxjs/operators';
 
 /**
@@ -29,8 +29,8 @@ export class BshbMessagesHandler extends BshbHandler {
         }));
     }
 
-    public sendUpdateToBshc(id: string, state: ioBroker.State): boolean {
-        return false;
+    public sendUpdateToBshc(id: string, state: ioBroker.State): Observable<boolean> {
+        return of(false);
     }
 
     private detectMessages(): Observable<void> {

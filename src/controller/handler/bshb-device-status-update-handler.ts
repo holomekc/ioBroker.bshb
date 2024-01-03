@@ -8,9 +8,9 @@ export class BshbDeviceStatusUpdateHandler extends BshbHandler {
         return of(undefined);
     }
 
-    sendUpdateToBshc(id: string, state: ioBroker.State): boolean {
+    sendUpdateToBshc(id: string, state: ioBroker.State): Observable<boolean> {
         // Only read. So no sending.
-        return false;
+        return of(false);
     }
 
     handleBshcUpdate(resultEntry: any): boolean {

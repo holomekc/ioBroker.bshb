@@ -13,7 +13,6 @@ export class BshbLogger implements Logger {
     }
 
     fine(message?: any, ...optionalParams: any[]): void {
-        // We ignore fine so far. Because it is very detailed
         this.log('silly', message, optionalParams);
     }
 
@@ -26,7 +25,7 @@ export class BshbLogger implements Logger {
     }
 
     error(message?: any, ...optionalParams: any[]): void {
-        // debug may look strange here but we do not care about the logs of errors during http calls because we handle
+        // debug may look strange here, but we do not care about the logs of errors during http calls because we handle
         // them in the adapter. Errors would only confuse users.
         this.log('debug', message, optionalParams);
     }

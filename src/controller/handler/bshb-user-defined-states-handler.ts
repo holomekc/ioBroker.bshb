@@ -1,5 +1,5 @@
 import {BshbHandler} from './bshb-handler';
-import {from, last, mergeMap, Observable, of, switchMap, tap} from 'rxjs';
+import {from, last, map, mergeMap, Observable, of, switchMap, tap} from 'rxjs';
 import {catchError} from 'rxjs/operators';
 
 /**
@@ -30,18 +30,22 @@ export class BshbUserDefinedStatesHandler extends BshbHandler {
         return false;
     }
 
-    public sendUpdateToBshc(id: string, state: ioBroker.State): boolean {
+    public sendUpdateToBshc(id: string, state: ioBroker.State): Observable<boolean> {
         const match = this.userDefinedStateRegex.exec(id);
+
+        let result = of(false);
 
         if (match) {
             this.bshb.log.debug(`Found user defined state with id=${match[1]} and value=${state.val}`);
-            this.getBshcClient().setUserDefinedState(
+            result = this.getBshcClient().setUserDefinedState(
                 match[1], state.val as boolean, {timeout: this.long_timeout}
-            ).subscribe(this.handleBshcSendError(`id=${match[1]}, value=${state.val}`));
-            return true;
+            ).pipe(
+                tap(this.handleBshcSendError(`id=${match[1]}, value=${state.val}`)),
+                map(() => true)
+            );
         }
 
-        return false;
+        return result;
     }
 
     private detectUserDefinedStates(): Observable<void> {

@@ -35,6 +35,7 @@ class BshbIntrusionDetectionHandler extends bshb_handler_1.BshbHandler {
     }
     sendUpdateToBshc(id, state) {
         const match = this.intrusionDetectionControlRegex.exec(id);
+        let result = (0, rxjs_1.of)(false);
         if (match) {
             this.bshb.log.debug(`Found intrusionDetectionControl trigger with id=${match[1]}, value=${state.val}`);
             if (state.val) {
@@ -57,13 +58,12 @@ class BshbIntrusionDetectionHandler extends bshb_handler_1.BshbHandler {
                         command = this.getBshcClient().muteIntrusionDetectionSystem({ timeout: this.long_timeout });
                         break;
                     default:
-                        return false;
+                        return (0, rxjs_1.of)(false);
                 }
-                command.pipe((0, rxjs_1.tap)(() => this.bshb.setState(id, { val: false, ack: true }))).subscribe(this.handleBshcSendError(`id=${match[1]}, value=${state.val}`));
+                result = command.pipe((0, rxjs_1.tap)(() => this.bshb.setState(id, { val: false, ack: true })), (0, rxjs_1.tap)(this.handleBshcSendError(`id=${match[1]}, value=${state.val}`)), (0, rxjs_1.map)(() => true));
             }
-            return true;
         }
-        return false;
+        return result;
     }
     flattenData(type, data) {
         const result = [];

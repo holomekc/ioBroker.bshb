@@ -37,7 +37,8 @@ class BshbHandler {
                 return (0, rxjs_1.from)(this.bshb.addChannelToEnumAsync(enumObj.type, enumObj.name, enumObj.deviceId, enumObj.deviceServiceId));
             }
         })).subscribe({
-            next: () => { },
+            next: () => {
+            },
             error: err => this.bshb.log.warn(utils_1.Utils.handleError('Could not add enum', err))
         });
     }

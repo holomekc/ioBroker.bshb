@@ -1,5 +1,5 @@
 import {BshbHandler} from './bshb-handler';
-import {Observable, of, from, tap, switchMap, mergeMap, last} from 'rxjs';
+import {from, last, map, mergeMap, Observable, of, switchMap, tap} from 'rxjs';
 import {catchError, delay} from 'rxjs/operators';
 
 /**
@@ -41,19 +41,25 @@ export class BshbScenarioHandler extends BshbHandler {
         return false;
     }
 
-    public sendUpdateToBshc(id: string, state: ioBroker.State): boolean {
+    public sendUpdateToBshc(id: string, state: ioBroker.State): Observable<boolean> {
         const match = this.scenarioRegex.exec(id);
+
+        let result = of(false);
 
         if (match) {
             this.bshb.log.debug(`Found scenario trigger with id=${match[1]} and value=${state.val}`);
             if (state.val) {
-                this.getBshcClient().triggerScenario(match[1], {timeout: this.long_timeout})
-                    .subscribe(this.handleBshcSendError(`id=${match[1]}, value=${state.val}`));
+                result = this.getBshcClient().triggerScenario(match[1], {timeout: this.long_timeout})
+                    .pipe(
+                        tap(this.handleBshcSendError(`id=${match[1]}, value=${state.val}`)),
+                        map(() => true)
+                    );
+            } else {
+                result = of(true);
             }
-            return true;
         }
 
-        return false;
+        return result;
     }
 
     private detectScenarios(): Observable<void> {

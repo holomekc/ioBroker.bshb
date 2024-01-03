@@ -33,6 +33,9 @@ If you want to support the work I would appreciate a small donation. This is 100
 
 ## Changelog
 
+### 0.2.7
+* (holomekc) Update dependencies and fix rate limiting
+
 ### 0.2.6
 * (holomekc) Support for user defined states
 

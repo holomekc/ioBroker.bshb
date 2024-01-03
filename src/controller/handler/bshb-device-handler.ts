@@ -1,5 +1,5 @@
 import {BshbHandler} from './bshb-handler';
-import {concat, filter, from, mergeMap, Observable, of} from 'rxjs';
+import {concat, filter, from, map, mergeMap, Observable, of} from 'rxjs';
 import {catchError, switchMap, tap} from 'rxjs/operators';
 import {BshbDefinition} from '../../bshb-definition';
 import {Utils} from '../../utils';
@@ -82,8 +82,10 @@ export class BshbDeviceHandler extends BshbHandler {
         return false;
     }
 
-    public sendUpdateToBshc(id: string, state: ioBroker.State): boolean {
+    public sendUpdateToBshc(id: string, state: ioBroker.State): Observable<boolean> {
         let cachedState = this.cachedStates.get(id);
+
+        let result = of(false);
 
         if (cachedState && Utils.isLevelActive(this.bshb.log.level, LogLevel.debug)) {
             this.bshb.log.debug(`Send update to BSHC for id: ${id}. Cached state: ${JSON.stringify(cachedState)}`);
@@ -94,20 +96,21 @@ export class BshbDeviceHandler extends BshbHandler {
                 '@type': cachedState.deviceService.state['@type'],
             };
 
-            this.mapValueFromStorage(id, state.val).subscribe(value => {
-                data[cachedState.stateKey] = value;
+            result = this.mapValueFromStorage(id, state.val).pipe(
+                switchMap(value => {
+                    data[cachedState.stateKey] = value;
 
-                if (Utils.isLevelActive(this.bshb.log.level, LogLevel.debug)) {
-                    this.bshb.log.debug('Data which will be send: ' + JSON.stringify(data));
-                }
+                    if (Utils.isLevelActive(this.bshb.log.level, LogLevel.debug)) {
+                        this.bshb.log.debug('Data which will be send: ' + JSON.stringify(data));
+                    }
 
-                this.getBshcClient().putState(cachedState.deviceService.path, data, {timeout: this.long_timeout})
-                    .subscribe(this.handleBshcSendError(`path=${cachedState.deviceService.path}`));
-            });
-
-            return true;
+                    return this.getBshcClient().putState(cachedState.deviceService.path, data, {timeout: this.long_timeout});
+                }),
+                tap(this.handleBshcSendError(`path=${cachedState.deviceService.path}`)),
+                map(() => true)
+            );
         }
-        return false;
+        return result;
     }
 
 

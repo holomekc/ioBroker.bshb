@@ -60,7 +60,7 @@ class Bshb extends utils.Adapter {
             this.config.identifier = bosch_smart_home_bridge_1.BshbUtils.generateIdentifier();
             this.updateConfig({
                 identifier: this.config.identifier,
-            });
+            }).then();
         }
         this.config.host = this.config.host ? this.config.host.trim() : '';
         const notPrefixedIdentifier = this.config.identifier ? this.config.identifier.trim() : '';
@@ -80,14 +80,27 @@ class Bshb extends utils.Adapter {
         this.log.debug('config systemPassword: ' + (this.config.systemPassword != undefined));
         this.log.debug('config pairingDelay: ' + this.config.pairingDelay);
         if (this.config.rateLimit) {
+            // When I started testing the rateLimit was a string. So we add the ability to parse it
+            if (typeof this.config.rateLimit === 'string') {
+                try {
+                    this.config.rateLimit = parseInt(this.config.rateLimit);
+                }
+                catch (e) {
+                    this.config.rateLimit = 1000;
+                }
+                this.updateConfig({
+                    rateLimit: this.config.rateLimit,
+                }).then();
+            }
             this.log.debug('config rateLimit: ' + this.config.rateLimit);
         }
         else {
+            this.log.info('rateLimit is NOT set');
             this.config.rateLimit = 1000;
             this.log.debug('config rateLimit not set using default: 1000');
             this.updateConfig({
                 rateLimit: this.config.rateLimit,
-            });
+            }).then();
         }
         if (!notPrefixedIdentifier) {
             throw utils_1.Utils.createError(this.log, 'Identifier not defined but it is a mandatory parameter.');
@@ -368,6 +381,7 @@ class Bshb extends utils.Adapter {
      */
     onUnload(callback) {
         try {
+            this.log.info('unloading...');
             this.alive.next(false);
             this.alive.complete();
             // we want to stop polling. So false
@@ -382,7 +396,8 @@ class Bshb extends utils.Adapter {
                 clearTimeout(this.startPollingTimeout);
                 this.startPollingTimeout = null;
             }
-            this.log.info('cleaned everything up...');
+            this.bshbController?.close();
+            this.log.info('unload complete');
             callback();
         }
         catch (e) {

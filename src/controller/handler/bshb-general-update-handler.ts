@@ -28,9 +28,9 @@ export class BshbGeneralUpdateHandler extends BshbHandler {
         );
     }
 
-    sendUpdateToBshc(id: string, state: ioBroker.State): boolean {
+    sendUpdateToBshc(id: string, state: ioBroker.State): Observable<boolean> {
         // not needed
-        return false;
+        return of(false);
     }
 
     name(): string {

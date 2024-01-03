@@ -24,17 +24,17 @@ class BshbClimateHandler extends bshb_handler_1.BshbHandler {
     sendUpdateToBshc(id, state) {
         const matchTextActivate = this.climateTextActivateRegex.exec(id);
         const matchSwitchActivate = this.climateSwitchActivateRegex.exec(id);
+        let result = (0, rxjs_1.of)(false);
         if (matchTextActivate) {
             this.bshb.log.debug(`Found climate trigger with deviceId=${matchTextActivate[1]}, value=${state.val}`);
-            this.mapValueFromStorage(id, state.val).pipe((0, rxjs_1.switchMap)(val => this.getBshcClient().activateClimateSchedules(matchTextActivate[1], val))).subscribe(this.handleBshcSendError(`deviceId=${matchTextActivate[1]}, value=${state.val}`));
-            return true;
+            result = this.mapValueFromStorage(id, state.val).pipe((0, rxjs_1.switchMap)(val => this.getBshcClient().activateClimateSchedules(matchTextActivate[1], val)), (0, rxjs_1.tap)(this.handleBshcSendError(`deviceId=${matchTextActivate[1]}, value=${state.val}`)), (0, rxjs_1.map)(() => true));
         }
         else if (matchSwitchActivate) {
             this.bshb.log.debug(`Found climate trigger with deviceId=${matchSwitchActivate[1]}, id=${matchSwitchActivate[2]}, value=${state.val}`);
-            this.getBshcClient().activateClimateSchedules(matchSwitchActivate[1], matchSwitchActivate[2])
-                .subscribe(this.handleBshcSendError(`deviceId=${matchSwitchActivate[1]}, id=${matchSwitchActivate[2]}, value=${state.val}`));
+            result = this.getBshcClient().activateClimateSchedules(matchSwitchActivate[1], matchSwitchActivate[2])
+                .pipe((0, rxjs_1.tap)(this.handleBshcSendError(`deviceId=${matchSwitchActivate[1]}, id=${matchSwitchActivate[2]}, value=${state.val}`)), (0, rxjs_1.map)(() => true));
         }
-        return false;
+        return result;
     }
     detectClimateSchedules() {
         return this.getBshcClient().getDevices().pipe((0, rxjs_1.switchMap)(devices => (0, rxjs_1.from)(devices.parsedResponse)), (0, rxjs_1.filter)(device => device.deviceServiceIds.includes('RoomClimateControl')), (0, rxjs_1.mergeMap)(device => this.getBshcClient().getDeviceServices(device.id, 'RoomClimateControl').pipe((0, rxjs_1.map)(d => d.parsedResponse), (0, rxjs_1.map)(data => {

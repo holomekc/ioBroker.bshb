@@ -19,6 +19,7 @@ const bshb_room_handler_1 = require("./controller/handler/bshb-room-handler");
 const bshb_device_status_update_handler_1 = require("./controller/handler/bshb-device-status-update-handler");
 const bshb_climate_handler_1 = require("./controller/handler/bshb-climate-handler");
 const bshb_user_defined_states_handler_1 = require("./controller/handler/bshb-user-defined-states-handler");
+const rate_limiter_1 = require("./rate-limiter");
 /**
  * This controller encapsulates bosch-smart-home-bridge and provides it to iobroker.bshb
  *
@@ -30,6 +31,7 @@ class BshbController {
     boschSmartHomeBridge;
     clientName = 'ioBroker.bshb';
     $rateLimit = new rxjs_1.Subject();
+    alive = new rxjs_1.Subject();
     handlers;
     /**
      * Create a new instance of {@link BshbController}
@@ -65,14 +67,17 @@ class BshbController {
             this.handlers.push(new bshb_device_handler_1.BshbDeviceHandler(this.bshb, this.boschSmartHomeBridge));
             this.handlers.push(new bshb_open_door_window_handler_1.BshbOpenDoorWindowHandler(this.bshb, this.boschSmartHomeBridge));
             this.handlers.push(new bshb_climate_handler_1.BshbClimateHandler(this.bshb, this.boschSmartHomeBridge));
-            this.$rateLimit.pipe((0, rxjs_1.concatMap)(data => {
-                if (this.bshb.config.rateLimit === 0) {
-                    return (0, rxjs_1.of)(data);
+            this.$rateLimit.pipe((0, rate_limiter_1.rateLimit)(this.bshb.config.rateLimit, this.bshb), (0, rxjs_1.concatMap)(data => {
+                const observables = [];
+                for (let i = 0; i < this.handlers.length; i++) {
+                    observables.push(this.handlers[i].sendUpdateToBshc(data.id, data.state).pipe((0, operators_1.tap)(handled => {
+                        if (handled) {
+                            this.bshb.log.silly(`Handler "${this.handlers[i].constructor.name}" send message to controller with state id=${data.id} and value=${data.state.val}`);
+                        }
+                    })));
                 }
-                return (0, rxjs_1.of)(data).pipe((0, operators_1.delay)(this.bshb.config.rateLimit));
-            })).subscribe(fnc => {
-                fnc();
-            });
+                return (0, rxjs_1.merge)(...observables);
+            }), (0, operators_1.takeUntil)(this.alive)).subscribe();
         }
         catch (e) {
             if (e instanceof Error) {
@@ -109,10 +114,12 @@ class BshbController {
                 this.boschSmartHomeBridge.pairIfNeeded(this.clientName, this.bshb.config.identifier, systemPassword, pairingDelay, -1).pipe((0, operators_1.takeUntil)(this.bshb.alive)).subscribe({
                     next: response => {
                         // Everything is ok. We can stop all.
+                        this.bshb.log.info('Ok with pairing');
                         subscriber.next(response);
                         subscriber.complete();
                         retry.complete();
-                    }, error: () => {
+                    }, error: err => {
+                        this.bshb.log.error(err);
                         // Something went wrong. Already logged by lib. We just wait and retry.
                         (0, rxjs_1.timer)(pairingDelay).pipe((0, operators_1.takeUntil)(this.bshb.alive)).subscribe(() => {
                             retry.next(true);
@@ -130,6 +137,7 @@ class BshbController {
      * @return observable with no content
      */
     startDetection() {
+        this.bshb.log.info('Start detection');
         return (0, rxjs_1.concat)(...this.handlers.map(value => value.handleDetection())).pipe((0, rxjs_1.last)(undefined, void 0));
     }
     /**
@@ -141,14 +149,7 @@ class BshbController {
      *        state itself
      */
     setState(id, state) {
-        this.$rateLimit.next(() => {
-            for (let i = 0; i < this.handlers.length; i++) {
-                let handled = this.handlers[i].sendUpdateToBshc(id, state);
-                if (handled) {
-                    this.bshb.log.silly(`Handler "${this.handlers[i].constructor.name}" send message to controller with state id=${id} and value=${state.val}`);
-                }
-            }
-        });
+        this.$rateLimit.next({ id: id, state: state });
     }
     /**
      * Changes from bshc controller which results in updates on ioBroker state
@@ -163,6 +164,10 @@ class BshbController {
                 this.bshb.log.silly(`Handler "${this.handlers[i].constructor.name}" handled update form controller with result entry: ${JSON.stringify(resultEntry)} `);
             }
         }
+    }
+    close() {
+        this.alive.next(true);
+        this.alive.complete();
     }
 }
 exports.BshbController = BshbController;

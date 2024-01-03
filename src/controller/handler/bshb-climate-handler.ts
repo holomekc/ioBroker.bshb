@@ -1,5 +1,5 @@
 import {BshbHandler} from './bshb-handler';
-import {filter, from, map, mergeMap, Observable, switchMap, tap} from 'rxjs';
+import {filter, from, map, mergeMap, Observable, of, switchMap, tap} from 'rxjs';
 import {BshbDefinition} from '../../bshb-definition';
 
 export class BshbClimateHandler extends BshbHandler {
@@ -24,25 +24,30 @@ export class BshbClimateHandler extends BshbHandler {
         return false;
     }
 
-    sendUpdateToBshc(id: string, state: ioBroker.State): boolean {
+    sendUpdateToBshc(id: string, state: ioBroker.State): Observable<boolean> {
         const matchTextActivate = this.climateTextActivateRegex.exec(id);
         const matchSwitchActivate = this.climateSwitchActivateRegex.exec(id);
+
+        let result = of(false);
 
         if (matchTextActivate) {
             this.bshb.log.debug(`Found climate trigger with deviceId=${matchTextActivate[1]}, value=${state.val}`);
 
-            this.mapValueFromStorage(id, state.val).pipe(
+            result = this.mapValueFromStorage(id, state.val).pipe(
                 switchMap(val => this.getBshcClient().activateClimateSchedules(matchTextActivate[1], val)),
-            ).subscribe(this.handleBshcSendError(`deviceId=${matchTextActivate[1]}, value=${state.val}`));
-
-            return true;
+                tap(this.handleBshcSendError(`deviceId=${matchTextActivate[1]}, value=${state.val}`)),
+                map(() => true)
+            );
         } else if (matchSwitchActivate) {
             this.bshb.log.debug(`Found climate trigger with deviceId=${matchSwitchActivate[1]}, id=${matchSwitchActivate[2]}, value=${state.val}`);
 
-            this.getBshcClient().activateClimateSchedules(matchSwitchActivate[1], matchSwitchActivate[2])
-                .subscribe(this.handleBshcSendError(`deviceId=${matchSwitchActivate[1]}, id=${matchSwitchActivate[2]}, value=${state.val}`));
+            result = this.getBshcClient().activateClimateSchedules(matchSwitchActivate[1], matchSwitchActivate[2])
+                .pipe(
+                    tap(this.handleBshcSendError(`deviceId=${matchSwitchActivate[1]}, id=${matchSwitchActivate[2]}, value=${state.val}`)),
+                    map(() => true)
+                );
         }
-        return false;
+        return result;
     }
 
     private detectClimateSchedules(): Observable<any> {

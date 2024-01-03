@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "bshb",
-    "version": "0.2.6",
+    "version": "0.2.7",
     "news": {
+      "0.2.7": {
+        "de": "Aktualisierung der Abhängigkeiten und Behebung der Ratenbegrenzung.",
+        "en": "Update dependencies and fix rate limiting.",
+        "ru": "Обновление зависимостей и исправление ограничения скорости.",
+        "pt": "Atualização das dependências e correção da limitação da taxa.",
+        "nl": "Afhankelijkheden bijwerken en snelheidsbeperking repareren.",
+        "fr": "Mise à jour des dépendances et correction de la limitation du taux.",
+        "it": "Aggiornamento delle dipendenze e correzione della limitazione della velocità.",
+        "es": "Actualización de las dependencias y corrección de la limitación de velocidad.",
+        "pl": "Zaktualizowano zależności i naprawiono ograniczenie szybkości.",
+        "uk": "Оновити залежності та виправити обмеження швидкості.",
+        "zh-cn": "更新依赖关系并修复速率限制。"
+      },
       "0.2.6": {
         "de": "Unterstützung für benutzerdefinierte Zustände.",
         "en": "Support for user defined states.",
@@ -119,19 +132,6 @@
         "pl": "Konfigurowalne opóźnienie między wywołaniami kontrolera.",
         "uk": "Затримка між викликами контролера налаштовується.",
         "zh-cn": "可配置控制器调用之间的延迟。"
-      },
-      "0.1.17": {
-        "de": "Yale Werte hinzugefügt. Zustände werden beim Start aktualisiert.",
-        "en": "Yale values added. States are updated at startup.",
-        "ru": "Добавлены значения Yale. Состояния обновляются при запуске.",
-        "pt": "Valores de Yale adicionados. Os Estados são actualizados no arranque.",
-        "nl": "Yale waarden toegevoegd. De staten worden bij het opstarten bijgewerkt.",
-        "fr": "Ajout des valeurs de Yale. Les états sont mis à jour au démarrage.",
-        "it": "Valori di Yale aggiunti. Gli stati sono aggiornati all'avvio.",
-        "es": "Valores de Yale añadidos. Los estados se actualizan al inicio.",
-        "pl": "Dodano wartości Yale. Stany są aktualizowane podczas uruchamiania.",
-        "uk": "Додані значення Єльського університету. Стани оновлюються під час запуску.",
-        "zh-cn": "Yale的价值得到了补充。状态在启动时被更新。"
       }
     },
     "titleLang": {

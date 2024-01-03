@@ -38,15 +38,18 @@ class BshbScenarioHandler extends bshb_handler_1.BshbHandler {
     }
     sendUpdateToBshc(id, state) {
         const match = this.scenarioRegex.exec(id);
+        let result = (0, rxjs_1.of)(false);
         if (match) {
             this.bshb.log.debug(`Found scenario trigger with id=${match[1]} and value=${state.val}`);
             if (state.val) {
-                this.getBshcClient().triggerScenario(match[1], { timeout: this.long_timeout })
-                    .subscribe(this.handleBshcSendError(`id=${match[1]}, value=${state.val}`));
+                result = this.getBshcClient().triggerScenario(match[1], { timeout: this.long_timeout })
+                    .pipe((0, rxjs_1.tap)(this.handleBshcSendError(`id=${match[1]}, value=${state.val}`)), (0, rxjs_1.map)(() => true));
             }
-            return true;
+            else {
+                result = (0, rxjs_1.of)(true);
+            }
         }
-        return false;
+        return result;
     }
     detectScenarios() {
         return this.setObjectNotExistsAsync('scenarios', {

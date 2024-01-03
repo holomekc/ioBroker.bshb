@@ -48,7 +48,7 @@ class BshbRoomHandler extends bshb_handler_1.BshbHandler {
         (0, rxjs_1.from)(Object.keys(extProperties)).pipe((0, rxjs_1.tap)(key => this.handleDefaultUpdate(roomId, `${roomId}.${key}`, extProperties, key)));
     }
     sendUpdateToBshc(id, state) {
-        return false;
+        return (0, rxjs_1.of)(false);
     }
     detectRooms() {
         return this.setObjectNotExistsAsync('rooms', {

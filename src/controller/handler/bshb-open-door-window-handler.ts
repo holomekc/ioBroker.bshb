@@ -30,9 +30,9 @@ export class BshbOpenDoorWindowHandler extends BshbHandler {
         return false;
     }
 
-    public sendUpdateToBshc(id: string, state: ioBroker.State): boolean {
+    public sendUpdateToBshc(id: string, state: ioBroker.State): Observable<boolean> {
         // not needed
-        return false;
+        return of(false);
     }
 
     private detectOpenDoorsAndWindows(): Observable<void> {

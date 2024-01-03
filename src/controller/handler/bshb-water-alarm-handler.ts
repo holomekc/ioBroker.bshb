@@ -45,19 +45,22 @@ export class BshbWaterAlarmHandler extends BshbHandler {
     }
 
 
-    sendUpdateToBshc(id: string, state: ioBroker.State): boolean {
+    sendUpdateToBshc(id: string, state: ioBroker.State): Observable<boolean> {
         const match = this.regex.exec(id);
 
+        let result = of(false);
+
         if (match) {
-            if(id === `${this.bshb.namespace}.waterAlarm.waterAlarmSystemState.mute`) {
-                this.getBshcClient().muteWaterAlarm({timeout: this.long_timeout})
+            if (id === `${this.bshb.namespace}.waterAlarm.waterAlarmSystemState.mute`) {
+                result = this.getBshcClient().muteWaterAlarm({timeout: this.long_timeout})
                     .pipe(
-                        tap(() => this.bshb.setState(id, {val: false, ack: true}))
-                    )
-                    .subscribe(this.handleBshcSendError('mute'));
+                        tap(() => this.bshb.setState(id, {val: false, ack: true})),
+                        tap(this.handleBshcSendError('mute')),
+                        map(() => true)
+                    );
             } else {
 
-                zip(
+                result = zip(
                     from(this.bshb.getStateAsync('waterAlarm.waterAlarmSystemState.visualActuatorsAvailable')),
                     from(this.bshb.getStateAsync('waterAlarm.waterAlarmSystemState.videoActuatorsAvailable'))
                 ).pipe(
@@ -67,12 +70,13 @@ export class BshbWaterAlarmHandler extends BshbHandler {
                             videoActuatorsAvailable: result[1] ? result[1].val : false,
                         };
                         return this.getBshcClient().updateWaterAlarm(data, {timeout: this.long_timeout});
-                    })
-                ).subscribe(this.handleBshcSendError(`value=${state.val}`));
+                    }),
+                    tap(this.handleBshcSendError(`value=${state.val}`)),
+                    map(() => true)
+                );
             }
-            return true
         }
-        return false;
+        return result;
     }
 
     private createMuteAction(): Observable<any> {

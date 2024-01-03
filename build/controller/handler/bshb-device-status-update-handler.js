@@ -11,7 +11,7 @@ class BshbDeviceStatusUpdateHandler extends bshb_handler_1.BshbHandler {
     }
     sendUpdateToBshc(id, state) {
         // Only read. So no sending.
-        return false;
+        return (0, rxjs_1.of)(false);
     }
     handleBshcUpdate(resultEntry) {
         if (resultEntry['@type'] === 'message' && resultEntry.sourceType === 'DEVICE' && resultEntry.sourceId) {

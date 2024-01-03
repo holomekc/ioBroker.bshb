@@ -27,7 +27,7 @@ class BshbMessagesHandler extends bshb_handler_1.BshbHandler {
         }));
     }
     sendUpdateToBshc(id, state) {
-        return false;
+        return (0, rxjs_1.of)(false);
     }
     detectMessages() {
         return this.setObjectNotExistsAsync('messages', {

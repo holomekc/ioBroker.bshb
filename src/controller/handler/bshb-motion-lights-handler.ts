@@ -41,20 +41,24 @@ export class BshbMotionLightsHandler extends BshbHandler {
     }
 
 
-    sendUpdateToBshc(id: string, state: ioBroker.State): boolean {
+    sendUpdateToBshc(id: string, state: ioBroker.State): Observable<boolean> {
         const match = this.regex.exec(id);
+
+        let result = of(false);
 
         if (match) {
             const cachedState = this.cachedStates.get(id);
             const data: any = {};
 
-            this.mapValueFromStorage(id, state.val).pipe(
+            result = this.mapValueFromStorage(id, state.val).pipe(
                 map(mappedValue => data[cachedState.key] = mappedValue),
                 switchMap(() => this.getBshcClient().updateMotionLights(cachedState.id, data, {timeout: this.long_timeout}))
-            ).subscribe(this.handleBshcSendError(`id=${match[1]}, value=${state.val}`));
-            return true
+            ).pipe(
+                tap(this.handleBshcSendError(`id=${match[1]}, value=${state.val}`)),
+                map(() => true)
+            );
         }
-        return false;
+        return result;
     }
 
     private detectMotionLights(): Observable<void> {

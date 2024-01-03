@@ -40,7 +40,8 @@ export abstract class BshbHandler {
                 return from(this.bshb.addChannelToEnumAsync(enumObj.type, enumObj.name, enumObj.deviceId, enumObj.deviceServiceId));
             }
         })).subscribe({
-            next: () => {},
+            next: () => {
+            },
             error: err => this.bshb.log.warn(Utils.handleError('Could not add enum', err))
         });
     }
@@ -67,7 +68,7 @@ export abstract class BshbHandler {
      * @param state
      *        state itself
      */
-    abstract sendUpdateToBshc(id: string, state: ioBroker.State): boolean;
+    abstract sendUpdateToBshc(id: string, state: ioBroker.State): Observable<boolean>;
 
     /**
      * Get bshb client
@@ -161,8 +162,8 @@ export abstract class BshbHandler {
             switchMap(obj => {
                 if (!obj) {
                     return from(this.bshb.setObjectAsync(id, object)).pipe(
-                        tap(o => (o as any )._bshbCreated = true),
-                        map(o => o as unknown as { id: string, _bshbCreated: boolean } )
+                        tap(o => (o as any)._bshbCreated = true),
+                        map(o => o as unknown as { id: string, _bshbCreated: boolean })
                     );
                 } else {
                     (obj as any)._bshbCreated = false;

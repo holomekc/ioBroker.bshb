@@ -27,7 +27,7 @@ class BshbOpenDoorWindowHandler extends bshb_handler_1.BshbHandler {
     }
     sendUpdateToBshc(id, state) {
         // not needed
-        return false;
+        return (0, rxjs_1.of)(false);
     }
     detectOpenDoorsAndWindows() {
         return this.getBshcClient().getOpenWindows({ timeout: this.long_timeout }).pipe((0, rxjs_1.tap)(() => this.setObjectNotExistsAsync('openDoorsAndWindows', {

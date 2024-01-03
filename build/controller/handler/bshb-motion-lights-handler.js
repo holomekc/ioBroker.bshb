@@ -37,13 +37,13 @@ class BshbMotionLightsHandler extends bshb_handler_1.BshbHandler {
     }
     sendUpdateToBshc(id, state) {
         const match = this.regex.exec(id);
+        let result = (0, rxjs_1.of)(false);
         if (match) {
             const cachedState = this.cachedStates.get(id);
             const data = {};
-            this.mapValueFromStorage(id, state.val).pipe((0, rxjs_1.map)(mappedValue => data[cachedState.key] = mappedValue), (0, rxjs_1.switchMap)(() => this.getBshcClient().updateMotionLights(cachedState.id, data, { timeout: this.long_timeout }))).subscribe(this.handleBshcSendError(`id=${match[1]}, value=${state.val}`));
-            return true;
+            result = this.mapValueFromStorage(id, state.val).pipe((0, rxjs_1.map)(mappedValue => data[cachedState.key] = mappedValue), (0, rxjs_1.switchMap)(() => this.getBshcClient().updateMotionLights(cachedState.id, data, { timeout: this.long_timeout }))).pipe((0, rxjs_1.tap)(this.handleBshcSendError(`id=${match[1]}, value=${state.val}`)), (0, rxjs_1.map)(() => true));
         }
-        return false;
+        return result;
     }
     detectMotionLights() {
         return this.setObjectNotExistsAsync('motionlight', {

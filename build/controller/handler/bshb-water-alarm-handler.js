@@ -38,24 +38,23 @@ class BshbWaterAlarmHandler extends bshb_handler_1.BshbHandler {
     }
     sendUpdateToBshc(id, state) {
         const match = this.regex.exec(id);
+        let result = (0, rxjs_1.of)(false);
         if (match) {
             if (id === `${this.bshb.namespace}.waterAlarm.waterAlarmSystemState.mute`) {
-                this.getBshcClient().muteWaterAlarm({ timeout: this.long_timeout })
-                    .pipe((0, rxjs_1.tap)(() => this.bshb.setState(id, { val: false, ack: true })))
-                    .subscribe(this.handleBshcSendError('mute'));
+                result = this.getBshcClient().muteWaterAlarm({ timeout: this.long_timeout })
+                    .pipe((0, rxjs_1.tap)(() => this.bshb.setState(id, { val: false, ack: true })), (0, rxjs_1.tap)(this.handleBshcSendError('mute')), (0, rxjs_1.map)(() => true));
             }
             else {
-                (0, rxjs_1.zip)((0, rxjs_1.from)(this.bshb.getStateAsync('waterAlarm.waterAlarmSystemState.visualActuatorsAvailable')), (0, rxjs_1.from)(this.bshb.getStateAsync('waterAlarm.waterAlarmSystemState.videoActuatorsAvailable'))).pipe((0, rxjs_1.switchMap)(result => {
+                result = (0, rxjs_1.zip)((0, rxjs_1.from)(this.bshb.getStateAsync('waterAlarm.waterAlarmSystemState.visualActuatorsAvailable')), (0, rxjs_1.from)(this.bshb.getStateAsync('waterAlarm.waterAlarmSystemState.videoActuatorsAvailable'))).pipe((0, rxjs_1.switchMap)(result => {
                     const data = {
                         visualActuatorsAvailable: result[0] ? result[0].val : false,
                         videoActuatorsAvailable: result[1] ? result[1].val : false,
                     };
                     return this.getBshcClient().updateWaterAlarm(data, { timeout: this.long_timeout });
-                })).subscribe(this.handleBshcSendError(`value=${state.val}`));
+                }), (0, rxjs_1.tap)(this.handleBshcSendError(`value=${state.val}`)), (0, rxjs_1.map)(() => true));
             }
-            return true;
         }
-        return false;
+        return result;
     }
     createMuteAction() {
         const id = 'waterAlarm.waterAlarmSystemState.mute';

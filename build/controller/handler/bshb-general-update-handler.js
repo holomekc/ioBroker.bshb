@@ -27,7 +27,7 @@ class BshbGeneralUpdateHandler extends bshb_handler_1.BshbHandler {
     }
     sendUpdateToBshc(id, state) {
         // not needed
-        return false;
+        return (0, rxjs_1.of)(false);
     }
     name() {
         return 'generalUpdateHandler';

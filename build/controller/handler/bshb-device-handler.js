@@ -72,6 +72,7 @@ class BshbDeviceHandler extends bshb_handler_1.BshbHandler {
     }
     sendUpdateToBshc(id, state) {
         let cachedState = this.cachedStates.get(id);
+        let result = (0, rxjs_1.of)(false);
         if (cachedState && utils_1.Utils.isLevelActive(this.bshb.log.level, log_level_1.LogLevel.debug)) {
             this.bshb.log.debug(`Send update to BSHC for id: ${id}. Cached state: ${JSON.stringify(cachedState)}`);
         }
@@ -79,17 +80,15 @@ class BshbDeviceHandler extends bshb_handler_1.BshbHandler {
             const data = {
                 '@type': cachedState.deviceService.state['@type'],
             };
-            this.mapValueFromStorage(id, state.val).subscribe(value => {
+            result = this.mapValueFromStorage(id, state.val).pipe((0, operators_1.switchMap)(value => {
                 data[cachedState.stateKey] = value;
                 if (utils_1.Utils.isLevelActive(this.bshb.log.level, log_level_1.LogLevel.debug)) {
                     this.bshb.log.debug('Data which will be send: ' + JSON.stringify(data));
                 }
-                this.getBshcClient().putState(cachedState.deviceService.path, data, { timeout: this.long_timeout })
-                    .subscribe(this.handleBshcSendError(`path=${cachedState.deviceService.path}`));
-            });
-            return true;
+                return this.getBshcClient().putState(cachedState.deviceService.path, data, { timeout: this.long_timeout });
+            }), (0, operators_1.tap)(this.handleBshcSendError(`path=${cachedState.deviceService.path}`)), (0, rxjs_1.map)(() => true));
         }
-        return false;
+        return result;
     }
     restoreCache() {
         let start = (0, rxjs_1.of)('').pipe((0, operators_1.tap)(() => this.bshb.log.info('Restoring cache started...')));

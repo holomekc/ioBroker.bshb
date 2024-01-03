@@ -1,6 +1,7 @@
 import {BshbHandler} from './bshb-handler';
-import {concat, EMPTY, from, last, map, mergeMap, Observable, switchMap, tap} from 'rxjs';
+import {concat, EMPTY, from, last, map, mergeMap, Observable, of, switchMap, tap} from 'rxjs';
 import {BshbDefinition} from '../../bshb-definition';
+import {BshbResponse} from 'bosch-smart-home-bridge/dist/bshb-response';
 
 export class BshbIntrusionDetectionHandler extends BshbHandler {
     private readonly folderName: string = 'intrusionDetectionControl';
@@ -49,8 +50,10 @@ export class BshbIntrusionDetectionHandler extends BshbHandler {
         );
     }
 
-    sendUpdateToBshc(id: string, state: ioBroker.State): boolean {
+    sendUpdateToBshc(id: string, state: ioBroker.State): Observable<boolean> {
         const match = this.intrusionDetectionControlRegex.exec(id);
+
+        let result = of(false);
 
         if (match) {
             this.bshb.log.debug(`Found intrusionDetectionControl trigger with id=${match[1]}, value=${state.val}`);
@@ -58,7 +61,7 @@ export class BshbIntrusionDetectionHandler extends BshbHandler {
             if (state.val) {
                 const control = match[1];
 
-                let command;
+                let command: Observable<BshbResponse<any>>;
                 switch (control) {
                     case 'fullProtection':
                         command = this.getBshcClient().armIntrusionDetectionSystem(0, {timeout: this.long_timeout});
@@ -76,17 +79,18 @@ export class BshbIntrusionDetectionHandler extends BshbHandler {
                         command = this.getBshcClient().muteIntrusionDetectionSystem({timeout: this.long_timeout});
                         break;
                     default:
-                        return false;
+                        return of(false);
                 }
 
-                command.pipe(
-                    tap(() => this.bshb.setState(id, {val: false, ack: true}))
-                ).subscribe(this.handleBshcSendError(`id=${match[1]}, value=${state.val}`));
+                result = command.pipe(
+                    tap(() => this.bshb.setState(id, {val: false, ack: true})),
+                    tap(this.handleBshcSendError(`id=${match[1]}, value=${state.val}`)),
+                    map(() => true)
+                );
             }
-            return true;
         }
 
-        return false;
+        return result;
     }
 
     private flattenData(type: string, data: any) {
