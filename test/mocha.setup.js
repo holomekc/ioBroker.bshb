@@ -14,10 +14,11 @@ process.on("unhandledRejection", (e) => {
 
 // enable the should interface with sinon
 // and load chai-as-promised and sinon-chai by default
-const sinonChai = require("sinon-chai");
-const chaiAsPromised = require("chai-as-promised");
-const { should, use } = require("chai");
+// const sinonChai = require("sinon-chai");
+// const chaiAsPromised = require("chai-as-promised");
+const { should } = require("chai");
 
 should();
-use(sinonChai);
-use(chaiAsPromised);
+// use from chai. But these deps are very, very outdated and not maintained anymore.
+// use(sinonChai);
+// use(chaiAsPromised);
