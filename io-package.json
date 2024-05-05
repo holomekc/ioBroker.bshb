@@ -166,7 +166,6 @@
     "keywords": [
       "Bosch"
     ],
-    "license": "MIT",
     "platform": "Javascript/Node.js",
     "main": "build/main.js",
     "icon": "bshb-logo.jpg",
