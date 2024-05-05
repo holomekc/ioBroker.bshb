@@ -70,7 +70,12 @@ class BshbController {
             this.$rateLimit.pipe((0, rate_limiter_1.rateLimit)(this.bshb.config.rateLimit, this.bshb), (0, rxjs_1.concatMap)(data => {
                 const observables = [];
                 for (let i = 0; i < this.handlers.length; i++) {
-                    observables.push(this.handlers[i].sendUpdateToBshc(data.id, data.state).pipe((0, operators_1.tap)(handled => {
+                    observables.push(this.handlers[i].sendUpdateToBshc(data.id, data.state).pipe(
+                    // Protect controller
+                    (0, operators_1.catchError)(err => {
+                        this.bshb.log.silly(`Handler "${this.handlers[i].constructor.name}" failed with ${err}. This might happen when the controller answers with an error.`);
+                        return (0, rxjs_1.of)(true);
+                    }), (0, operators_1.tap)(handled => {
                         if (handled) {
                             this.bshb.log.silly(`Handler "${this.handlers[i].constructor.name}" send message to controller with state id=${data.id} and value=${data.state.val}`);
                         }

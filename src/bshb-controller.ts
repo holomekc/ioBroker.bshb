@@ -1,7 +1,7 @@
 import {BoschSmartHomeBridge, BoschSmartHomeBridgeBuilder} from 'bosch-smart-home-bridge';
 import {Bshb} from './main';
 import {BshbLogger} from './bshb-logger';
-import {BehaviorSubject, concat, concatMap, last, merge, Observable, Subject, timer} from 'rxjs';
+import {BehaviorSubject, concat, concatMap, last, merge, Observable, of, Subject, timer} from 'rxjs';
 import {catchError, delay, takeUntil, tap} from 'rxjs/operators';
 import {Utils} from './utils';
 import {BshbHandler} from './controller/handler/bshb-handler';
@@ -75,7 +75,13 @@ export class BshbController {
                 const observables: Observable<boolean>[] = [];
 
                 for (let i = 0; i < this.handlers.length; i++) {
-                    observables.push(this.handlers[i].sendUpdateToBshc(data.id, data.state).pipe(tap(handled => {
+                    observables.push(this.handlers[i].sendUpdateToBshc(data.id, data.state).pipe(
+                        // Protect controller
+                        catchError(err => {
+                            this.bshb.log.silly(`Handler "${this.handlers[i].constructor.name}" failed with ${err}. This might happen when the controller answers with an error.`);
+                            return of(true);
+                        }),
+                        tap(handled => {
                         if (handled) {
                             this.bshb.log.silly(`Handler "${this.handlers[i].constructor.name}" send message to controller with state id=${data.id} and value=${data.state.val}`);
                         }
