@@ -20,6 +20,7 @@ const bshb_device_status_update_handler_1 = require("./controller/handler/bshb-d
 const bshb_climate_handler_1 = require("./controller/handler/bshb-climate-handler");
 const bshb_user_defined_states_handler_1 = require("./controller/handler/bshb-user-defined-states-handler");
 const rate_limiter_1 = require("./rate-limiter");
+const bshb_automation_handler_1 = require("./controller/handler/bshb-automation-handler");
 /**
  * This controller encapsulates bosch-smart-home-bridge and provides it to iobroker.bshb
  *
@@ -56,6 +57,7 @@ class BshbController {
             this.handlers = [];
             this.handlers.push(new bshb_general_update_handler_1.BshbGeneralUpdateHandler(this.bshb, this.boschSmartHomeBridge));
             this.handlers.push(new bshb_scenario_handler_1.BshbScenarioHandler(this.bshb, this.boschSmartHomeBridge));
+            this.handlers.push(new bshb_automation_handler_1.BshbAutomationHandler(this.bshb, this.boschSmartHomeBridge));
             this.handlers.push(new bshb_user_defined_states_handler_1.BshbUserDefinedStatesHandler(this.bshb, this.boschSmartHomeBridge));
             this.handlers.push(new bshb_device_status_update_handler_1.BshbDeviceStatusUpdateHandler(this.bshb, this.boschSmartHomeBridge));
             this.handlers.push(new bshb_messages_handler_1.BshbMessagesHandler(this.bshb, this.boschSmartHomeBridge));

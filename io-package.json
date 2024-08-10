@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "bshb",
-    "version": "0.2.8",
+    "version": "0.3.0",
     "news": {
+      "0.3.0": {
+        "de": "Unterstützung für Automationen.",
+        "en": "Support for automations.",
+        "ru": "Поддержка автоматики.",
+        "pt": "Suporte para automatizações.",
+        "nl": "Ondersteuning voor automatiseringen.",
+        "fr": "Prise en charge des automatismes.",
+        "it": "Supporto per le automazioni.",
+        "es": "Soporte para automatizaciones.",
+        "pl": "Wsparcie dla automatyzacji.",
+        "uk": "Підтримка автоматизації.",
+        "zh-cn": "支持自动化。"
+      },
       "0.2.8": {
         "de": "Aktualisierung der Abhängigkeiten und Stabilisierungsmaßnahmen.",
         "en": "Updating dependencies and stabilization measures.",
@@ -81,19 +94,6 @@
         "uk": "Оновлення інтерфейсу контролера, кліматичного розкладу та інші покращення.",
         "zh-cn": "更新控制器界面，气候时间表和其他改进。"
       },
-      "0.2.2": {
-        "de": "Unterstützung für Räume.",
-        "en": "Support for rooms.",
-        "ru": "Поддержка помещений.",
-        "pt": "Apoio aos quartos.",
-        "nl": "Steun voor kamers.",
-        "fr": "Soutien pour les salles.",
-        "it": "Supporto per le stanze.",
-        "es": "Soporte para salas.",
-        "pl": "Wsparcie dla pomieszczeń.",
-        "uk": "Підтримка номерів.",
-        "zh-cn": "对房间的支持。"
-      },
       "0.2.1": {
         "de": "Unterstützung für weitere Dienste.",
         "en": "Support for additional services.",
@@ -119,19 +119,6 @@
         "pl": "Rozwiązano problemy z funkcją OpenDoorsAndWindows.",
         "uk": "Виправлено проблеми з openDoorsAndWindows.",
         "zh-cn": "修正了openDoorsAndWindows的问题。"
-      },
-      "0.1.19": {
-        "de": "Probleme beim initialen Setup behoben.",
-        "en": "Problems with initial setup fixed.",
-        "ru": "Исправлены проблемы с начальной настройкой.",
-        "pt": "Problemas com a configuração inicial resolvidos.",
-        "nl": "Problemen met de eerste installatie opgelost.",
-        "fr": "Correction de problèmes lors de l'installation initiale.",
-        "it": "Problemi con la configurazione iniziale risolti.",
-        "es": "Se han solucionado los problemas de la configuración inicial.",
-        "pl": "Naprawiono problemy z początkową konfiguracją.",
-        "uk": "Виправлено проблеми з початковим налаштуванням.",
-        "zh-cn": "初始设置的问题得到解决。"
       }
     },
     "titleLang": {
@@ -184,7 +171,7 @@
     "dataSource": "push",
     "dependencies": [
       {
-        "js-controller": ">=3.3.22"
+        "js-controller": ">=5.0.19"
       }
     ],
     "globalDependencies": [
