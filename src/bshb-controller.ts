@@ -19,6 +19,7 @@ import {BshbDeviceStatusUpdateHandler} from './controller/handler/bshb-device-st
 import {BshbClimateHandler} from './controller/handler/bshb-climate-handler';
 import {BshbUserDefinedStatesHandler} from './controller/handler/bshb-user-defined-states-handler';
 import {rateLimit} from './rate-limiter';
+import {BshbAutomationHandler} from './controller/handler/bshb-automation-handler';
 
 /**
  * This controller encapsulates bosch-smart-home-bridge and provides it to iobroker.bshb
@@ -59,6 +60,7 @@ export class BshbController {
             this.handlers = [];
             this.handlers.push(new BshbGeneralUpdateHandler(this.bshb, this.boschSmartHomeBridge));
             this.handlers.push(new BshbScenarioHandler(this.bshb, this.boschSmartHomeBridge));
+            this.handlers.push(new BshbAutomationHandler(this.bshb, this.boschSmartHomeBridge));
             this.handlers.push(new BshbUserDefinedStatesHandler(this.bshb, this.boschSmartHomeBridge));
             this.handlers.push(new BshbDeviceStatusUpdateHandler(this.bshb, this.boschSmartHomeBridge));
             this.handlers.push(new BshbMessagesHandler(this.bshb, this.boschSmartHomeBridge));
@@ -82,10 +84,10 @@ export class BshbController {
                             return of(true);
                         }),
                         tap(handled => {
-                        if (handled) {
-                            this.bshb.log.silly(`Handler "${this.handlers[i].constructor.name}" send message to controller with state id=${data.id} and value=${data.state.val}`);
-                        }
-                    })));
+                            if (handled) {
+                                this.bshb.log.silly(`Handler "${this.handlers[i].constructor.name}" send message to controller with state id=${data.id} and value=${data.state.val}`);
+                            }
+                        })));
                 }
                 return merge(...observables);
             }), takeUntil(this.alive)).subscribe();

@@ -88,6 +88,45 @@ mock.get('/smarthome/scenarios', (req, res) => {
     ]);
 });
 
+mock.get('/smarthome/automation/rules', (req, res) => {
+    res.json([
+        {
+            '@type': 'automationRule',
+            'id': '69ac04ef-bd77-41ea-968b-a99c690ddbc7',
+            'name': 'demo',
+            'enabled': false,
+            'automationTriggers': [
+                {
+                    'type': 'WallThermostatHumidityThresholdTrigger',
+                    'configuration': '{"comparisonMode":"GREATER_THAN","deviceId":"hdm:ZigBee:0000000000000000","threshold":100}'
+                },
+                {
+                    'type': 'RoomClimateControlMeasuredTemperatureTrigger',
+                    'configuration': '{"threshold":16.5,"comparisonMode":"GREATER_THAN","deviceId":"roomClimateControl_hz_2"}'
+                }
+            ],
+            'automationConditions': [
+                {
+                    'type': 'ShutterContactCondition',
+                    'configuration': '{"conditionState":"OPEN","shutterContactId":"hdm:HomeMaticIP:0000000000000000000000000"}'
+                },
+                {
+                    'type': 'AstroTimeCondition',
+                    'configuration': '{"astroTimeConditionType":"DAYTIME","startOffsetInMinutes":0}'
+                }
+            ],
+            'automationActions': [
+                {
+                    'type': 'CustomPushNotificationAction',
+                    'delayInSeconds': 0,
+                    'configuration': '{"message":"Hello custom notifications"}'
+                }
+            ],
+            'conditionLogicalOp': 'AND'
+        }
+    ]);
+});
+
 mock.get('/smarthome/messages', (req, res) => {
     res.json([
         {

@@ -47,11 +47,11 @@ export class BshbDefinition {
      *
      * @param value value to determine type for
      */
-    public static determineType(value: any): 'number' | 'string' | 'boolean' | 'array' | 'object' | 'mixed' | 'file' {
+    public static determineType(value: any): 'number' | 'string' | 'boolean' | 'array' | 'object' | 'mixed' {
         if (Array.isArray(value)) {
             return 'array';
         }
-        return (typeof value) as 'number' | 'string' | 'boolean' | 'array' | 'object' | 'mixed' | 'file';
+        return (typeof value) as 'number' | 'string' | 'boolean' | 'array' | 'object' | 'mixed';
     }
 
 
