@@ -38,7 +38,7 @@
     "chai": "4.5.0",
     "eslint": "9.9.0",
     "express": "4.19.2",
-    "globals": "^15.9.0",
+    "globals": "^15.11.0",
     "mocha": "10.7.3",
     "nyc": "17.0.0",
     "proxyquire": "2.1.3",
