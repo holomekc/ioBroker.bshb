@@ -205,20 +205,12 @@ class Bshb extends utils.Adapter {
         }
     }
     storeCertificate(obj, certificateKeys, clientCert) {
-        return new rxjs_1.Observable(subscriber => {
-            // store information
-            obj.native.certificates[certificateKeys.cert] = clientCert.certificate;
-            obj.native.certificates[certificateKeys.key] = clientCert.privateKey;
-            this.setForeignObject('system.certificates', obj, (err, obj) => {
-                if (err || !obj) {
-                    subscriber.error(utils_1.Utils.createError(this.log, 'Could not store client certificate in system.certificates due to an error:' + err));
-                    subscriber.complete();
-                }
-                this.log.info('Client certificate stored in system.certificates.');
-                subscriber.next();
-                subscriber.complete();
-            });
-        });
+        // store information
+        obj.native.certificates[certificateKeys.cert] = clientCert.certificate;
+        obj.native.certificates[certificateKeys.key] = clientCert.privateKey;
+        return (0, rxjs_1.from)(this.setForeignObject('system.certificates', obj)).pipe((0, operators_1.catchError)(err => {
+            throw utils_1.Utils.createError(this.log, 'Could not store client certificate in system.certificates due to an error:' + err);
+        }), (0, operators_1.tap)(() => this.log.info('Client certificate stored in system.certificates.')), (0, rxjs_1.map)(() => undefined));
     }
     migration() {
         // migration:
@@ -285,7 +277,7 @@ class Bshb extends utils.Adapter {
                 name: 'Information',
             },
             native: {},
-        }, (err, obj) => {
+        }, (_err, obj) => {
             if (obj) {
                 // channel created we create all other stuff now.
                 this.setObjectNotExists('info.connection', {
@@ -299,7 +291,7 @@ class Bshb extends utils.Adapter {
                         def: false,
                     },
                     native: {},
-                }, (err, obj) => {
+                }, (_err, obj) => {
                     if (obj) {
                         // we start with disconnected
                         this.setState('info.connection', { val: false, ack: true });
@@ -309,7 +301,7 @@ class Bshb extends utils.Adapter {
         });
     }
     updateInfoConnectionState(connected) {
-        this.getState('info.connection', (err, state) => {
+        this.getState('info.connection', (_err, state) => {
             if (state) {
                 if (state.val === connected) {
                     return;
@@ -436,7 +428,7 @@ class Bshb extends utils.Adapter {
     }
 }
 exports.Bshb = Bshb;
-if (module.parent) {
+if (require.main !== module) {
     // Export the constructor in compact mode
     module.exports = (options) => new Bshb(options);
 }

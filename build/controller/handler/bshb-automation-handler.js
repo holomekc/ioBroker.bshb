@@ -34,7 +34,7 @@ class BshbAutomationHandler extends bshb_handler_1.BshbHandler {
             this.bshb.log.debug(`Found automation with id=${automationId}, key=${key} and value=${state.val}`);
             if (key === 'trigger') {
                 result = this.getBshcClient().triggerAutomation(automationId, { timeout: this.long_timeout })
-                    .pipe((0, operators_1.delay)(1000), (0, rxjs_1.switchMap)(() => (0, rxjs_1.from)(this.bshb.setStateAsync(id, {
+                    .pipe((0, operators_1.delay)(1000), (0, rxjs_1.switchMap)(() => (0, rxjs_1.from)(this.bshb.setState(id, {
                     val: false,
                     ack: true
                 }))), (0, rxjs_1.tap)(this.handleBshcSendError(`id=${automationId}, value=${state.val}, key=${key}, automationId=${automationId}`)), (0, rxjs_1.map)(() => true));
@@ -78,7 +78,7 @@ class BshbAutomationHandler extends bshb_handler_1.BshbHandler {
             this.bshb.log.debug(`Found automation ${automation.id}, ${automation.name}`);
             const id = 'automations.' + automation.id;
             // we overwrite object here on purpose because we reflect 1-1 the data from controller here.
-            return (0, rxjs_1.from)(this.bshb.setObjectAsync(id, {
+            return (0, rxjs_1.from)(this.bshb.setObject(id, {
                 type: 'folder',
                 common: {
                     name: automation.name,
@@ -91,7 +91,7 @@ class BshbAutomationHandler extends bshb_handler_1.BshbHandler {
                     id: automation.id,
                     name: automation.name
                 },
-            })).pipe((0, rxjs_1.switchMap)(() => (0, rxjs_1.from)(this.bshb.setObjectAsync(`${id}.enabled`, {
+            })).pipe((0, rxjs_1.switchMap)(() => (0, rxjs_1.from)(this.bshb.setObject(`${id}.enabled`, {
                 type: 'state',
                 common: {
                     name: 'enabled',
@@ -104,7 +104,7 @@ class BshbAutomationHandler extends bshb_handler_1.BshbHandler {
                     id: `${id}.enabled`,
                     name: 'enabled'
                 },
-            }))), (0, rxjs_1.tap)(() => this.bshb.setState(`${id}.enabled`, { val: automation.enabled, ack: true })), (0, rxjs_1.switchMap)(() => (0, rxjs_1.from)(this.bshb.setObjectAsync(`${id}.name`, {
+            }))), (0, rxjs_1.tap)(() => this.bshb.setState(`${id}.enabled`, { val: automation.enabled, ack: true })), (0, rxjs_1.switchMap)(() => (0, rxjs_1.from)(this.bshb.setObject(`${id}.name`, {
                 type: 'state',
                 common: {
                     name: 'name',
@@ -117,7 +117,7 @@ class BshbAutomationHandler extends bshb_handler_1.BshbHandler {
                     id: `${id}.name`,
                     name: 'name'
                 },
-            }))), (0, rxjs_1.tap)(() => this.bshb.setState(`${id}.name`, { val: automation.name, ack: true })), (0, rxjs_1.switchMap)(() => (0, rxjs_1.from)(this.bshb.setObjectAsync(`${id}.trigger`, {
+            }))), (0, rxjs_1.tap)(() => this.bshb.setState(`${id}.name`, { val: automation.name, ack: true })), (0, rxjs_1.switchMap)(() => (0, rxjs_1.from)(this.bshb.setObject(`${id}.trigger`, {
                 type: 'state',
                 common: {
                     name: 'trigger',
@@ -130,7 +130,7 @@ class BshbAutomationHandler extends bshb_handler_1.BshbHandler {
                     id: `${id}.trigger`,
                     name: 'trigger'
                 },
-            }))), (0, rxjs_1.tap)(() => this.bshb.setState(`${id}.trigger`, { val: false, ack: true })), (0, rxjs_1.switchMap)(() => (0, rxjs_1.from)(this.bshb.setObjectAsync(`${id}.automationConditions`, {
+            }))), (0, rxjs_1.tap)(() => this.bshb.setState(`${id}.trigger`, { val: false, ack: true })), (0, rxjs_1.switchMap)(() => (0, rxjs_1.from)(this.bshb.setObject(`${id}.automationConditions`, {
                 type: 'state',
                 common: {
                     name: 'automationConditions',
@@ -146,7 +146,7 @@ class BshbAutomationHandler extends bshb_handler_1.BshbHandler {
             }))), (0, rxjs_1.tap)(() => this.bshb.setState(`${id}.automationConditions`, {
                 val: this.mapValueToStorage(automation.automationConditions),
                 ack: true
-            })), (0, rxjs_1.switchMap)(() => (0, rxjs_1.from)(this.bshb.setObjectAsync(`${id}.automationTriggers`, {
+            })), (0, rxjs_1.switchMap)(() => (0, rxjs_1.from)(this.bshb.setObject(`${id}.automationTriggers`, {
                 type: 'state',
                 common: {
                     name: 'automationTriggers',
@@ -162,7 +162,7 @@ class BshbAutomationHandler extends bshb_handler_1.BshbHandler {
             }))), (0, rxjs_1.tap)(() => this.bshb.setState(`${id}.automationTriggers`, {
                 val: this.mapValueToStorage(automation.automationTriggers),
                 ack: true
-            })), (0, rxjs_1.switchMap)(() => (0, rxjs_1.from)(this.bshb.setObjectAsync(`${id}.automationActions`, {
+            })), (0, rxjs_1.switchMap)(() => (0, rxjs_1.from)(this.bshb.setObject(`${id}.automationActions`, {
                 type: 'state',
                 common: {
                     name: 'automationActions',
@@ -178,7 +178,7 @@ class BshbAutomationHandler extends bshb_handler_1.BshbHandler {
             }))), (0, rxjs_1.tap)(() => this.bshb.setState(`${id}.automationActions`, {
                 val: this.mapValueToStorage(automation.automationActions),
                 ack: true
-            })), (0, rxjs_1.switchMap)(() => (0, rxjs_1.from)(this.bshb.setObjectAsync(`${id}.conditionLogicalOp`, {
+            })), (0, rxjs_1.switchMap)(() => (0, rxjs_1.from)(this.bshb.setObject(`${id}.conditionLogicalOp`, {
                 type: 'state',
                 common: {
                     name: 'conditionLogicalOp',
@@ -208,7 +208,7 @@ class BshbAutomationHandler extends bshb_handler_1.BshbHandler {
                 }
             }
             if (!found) {
-                return (0, rxjs_1.from)(this.bshb.deleteStateAsync('automations', '', object.native.id)).pipe((0, rxjs_1.tap)(() => this.bshb.log.info(`automation with id=${object.native.id} removed because it does not exist anymore.`)), (0, operators_1.catchError)(err => {
+                return (0, rxjs_1.from)(this.bshb.delObjectAsync(`automations.${object.native.id}`)).pipe((0, rxjs_1.tap)(() => this.bshb.log.info(`automation with id=${object.native.id} removed because it does not exist anymore.`)), (0, operators_1.catchError)(err => {
                     this.bshb.log.error(`Could not delete automation with id=${object.native.id} because: ` + err);
                     return (0, rxjs_1.of)(undefined);
                 }));

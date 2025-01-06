@@ -86,7 +86,7 @@ class BshbHandler {
         return new rxjs_1.Observable(subscriber => {
             if (typeof value === 'string') {
                 // in case we see a string we check object.common.type for array or object.
-                this.bshb.getObject(id, (error, object) => {
+                this.bshb.getObject(id, (_error, object) => {
                     if (object && object.common && (object.common.type === 'array' || object.common.type === 'object' || object.common.type === 'json')) {
                         try {
                             subscriber.next(JSON.parse(value));
@@ -125,7 +125,7 @@ class BshbHandler {
     setObjectNotExistsAsync(id, object, options) {
         return (0, rxjs_1.from)(this.bshb.getObjectAsync(id, options)).pipe((0, rxjs_1.switchMap)(obj => {
             if (!obj) {
-                return (0, rxjs_1.from)(this.bshb.setObjectAsync(id, object)).pipe((0, operators_1.tap)(o => o._bshbCreated = true), (0, rxjs_1.map)(o => o));
+                return (0, rxjs_1.from)(this.bshb.setObject(id, object)).pipe((0, operators_1.tap)(o => o._bshbCreated = true), (0, rxjs_1.map)(o => o));
             }
             else {
                 obj._bshbCreated = false;

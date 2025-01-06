@@ -1,7 +1,7 @@
 import * as utils from '@iobroker/adapter-core';
 import {BshbController} from './bshb-controller';
-import {BehaviorSubject, EMPTY, Observable, Subject, Subscriber} from 'rxjs';
-import {catchError, switchMap, takeUntil} from 'rxjs/operators';
+import {BehaviorSubject, EMPTY, from, map, Observable, Subject, Subscriber} from 'rxjs';
+import {catchError, switchMap, takeUntil, tap} from 'rxjs/operators';
 import {Migration} from './migration';
 import {Utils} from './utils';
 import {ClientCert} from './client-cert';
@@ -212,22 +212,19 @@ export class Bshb extends utils.Adapter {
 
     private storeCertificate(obj: ioBroker.Object,
                              certificateKeys: { cert: string; key: string }, clientCert: ClientCert): Observable<void> {
-        return new Observable<void>(subscriber => {
-            // store information
-            obj.native.certificates[certificateKeys.cert] = clientCert.certificate;
-            obj.native.certificates[certificateKeys.key] = clientCert.privateKey;
 
-            this.setForeignObject('system.certificates', obj as any, (err: string | null, obj: { id: string }) => {
-                if (err || !obj) {
-                    subscriber.error(Utils.createError(this.log,
-                        'Could not store client certificate in system.certificates due to an error:' + err));
-                    subscriber.complete();
-                }
-                this.log.info('Client certificate stored in system.certificates.');
-                subscriber.next();
-                subscriber.complete();
-            });
-        });
+        // store information
+        obj.native.certificates[certificateKeys.cert] = clientCert.certificate;
+        obj.native.certificates[certificateKeys.key] = clientCert.privateKey;
+
+        return from(this.setForeignObject('system.certificates', obj as any)).pipe(
+            catchError(err => {
+                throw Utils.createError(this.log,
+                    'Could not store client certificate in system.certificates due to an error:' + err);
+            }),
+            tap(() => this.log.info('Client certificate stored in system.certificates.')),
+            map(() => undefined)
+        );
     }
 
     private migration() {
@@ -307,7 +304,7 @@ export class Bshb extends utils.Adapter {
                 name: 'Information',
             },
             native: {},
-        }, (err, obj) => {
+        }, (_err, obj) => {
             if (obj) {
                 // channel created we create all other stuff now.
                 this.setObjectNotExists('info.connection', {
@@ -321,7 +318,7 @@ export class Bshb extends utils.Adapter {
                         def: false,
                     },
                     native: {},
-                }, (err, obj) => {
+                }, (_err, obj) => {
                     if (obj) {
                         // we start with disconnected
                         this.setState('info.connection', {val: false, ack: true});
@@ -332,7 +329,7 @@ export class Bshb extends utils.Adapter {
     }
 
     private updateInfoConnectionState(connected: boolean) {
-        this.getState('info.connection', (err, state) => {
+        this.getState('info.connection', (_err, state) => {
             if (state) {
                 if (state.val === connected) {
                     return;
@@ -463,7 +460,7 @@ export class Bshb extends utils.Adapter {
     }
 }
 
-if (module.parent) {
+if (require.main !== module) {
     // Export the constructor in compact mode
     module.exports = (options: Partial<utils.AdapterOptions> | undefined) => new Bshb(options);
 } else {
