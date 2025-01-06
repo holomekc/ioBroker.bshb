@@ -6,16 +6,22 @@
       "type": "text",
       "label": "host",
       "newLine": false,
+      "xs": 12,
       "sm": 12,
-      "md": 6
+      "md": 6,
+      "lg": 4,
+      "xl": 4
     },
     "identifier": {
       "type": "text",
       "label": "identifier",
       "newLine": false,
       "help": "identifier-detail",
+      "xs": 12,
       "sm": 12,
-      "md": 6
+      "md": 6,
+      "lg": 4,
+      "xl": 4
     },
     "systemPassword": {
       "type": "password",
@@ -23,8 +29,11 @@
       "newLine": true,
       "help": "systemPassword-detail",
       "visible": true,
+      "xs": 12,
       "sm": 12,
-      "md": 6
+      "md": 6,
+      "lg": 4,
+      "xl": 4
     },
     "pairingDelay": {
       "type": "number",
@@ -32,24 +41,33 @@
       "newLine": false,
       "help": "pairingDelay-detail",
       "min": 1000,
+      "xs": 12,
       "sm": 12,
-      "md": 6
+      "md": 6,
+      "lg": 4,
+      "xl": 4
     },
     "rateLimit": {
       "type": "number",
       "label": "rateLimit",
       "newLine": true,
       "min": 0,
+      "xs": 12,
       "sm": 12,
-      "md": 6
+      "md": 6,
+      "lg": 4,
+      "xl": 4
     },
     "skipServerCertificateCheck": {
       "type": "checkbox",
       "label": "skipServerCertificateCheck",
       "help": "skipServerCertificateCheck-detail",
       "newLine": true,
+      "xs": 12,
       "sm": 12,
-      "md": 6
+      "md": 6,
+      "lg": 4,
+      "xl": 4
     }
   }
 }

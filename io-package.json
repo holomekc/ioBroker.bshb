@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "bshb",
-    "version": "0.3.0",
+    "version": "0.4.0",
     "news": {
+      "0.4.0": {
+        "de": "Kleinere Fehlerbehebungen\nUnterstützung für Backups\nWenn Sie die Backup-Funktion nutzen wollen, stellen Sie sicher, dass das Systempasswort in der Adapterkonfiguration gesetzt ist. Außerdem müssen Sie in der Bosch-App die Client-Berechtigungen auf „Bedienen und Verwalten“ setzen. „Mehr“ ➤ „Mobile Geräte“ ➤ „OSS ioBroker.bshb“",
+        "en": "Minor bug fixes\nSupport for backups\nIf you want to use the backup feature make sure that the systempassword is set in the adapter config. Furthermore, in the Bosch app set the client permissions to „Operate and manage\". „More“ ➤ „Mobile Devices“ ➤ „OSS ioBroker.bshb“",
+        "ru": "Исправление мелких ошибок\nПоддержка резервного копирования\nЕсли вы хотите использовать функцию резервного копирования, убедитесь, что в конфигурации адаптера задан системный пароль. Кроме того, в приложении Bosch установите для разрешений клиента значение „Эксплуатация и управление“. „Еще“ ➤ „Мобильные устройства“ ➤ „OSS ioBroker.bshb“",
+        "pt": "Pequenas correcções de erros\nSuporte para cópias de segurança\nSe pretender utilizar a funcionalidade de cópia de segurança, certifique-se de que a palavra-passe do sistema está definida na configuração do adaptador. Além disso, na aplicação Bosch, defina as permissões do cliente para „Operar e gerir“. „Mais“ ➤ „Dispositivos móveis“ ➤ „OSS ioBroker.bshb“",
+        "nl": "Kleine bugfixes\nOndersteuning voor back-ups\nAls je de back-upfunctie wilt gebruiken, zorg er dan voor dat het systeemwachtwoord is ingesteld in de adapterconfiguratie. Stel bovendien in de Bosch app de clientrechten in op „Bedienen en beheren“. „Meer“ ➤ „Mobiele apparaten“ ➤ „OSS ioBroker.bshb“.",
+        "fr": "Corrections de bogues mineurs\nPrise en charge des sauvegardes\nSi vous souhaitez utiliser la fonction de sauvegarde, assurez-vous que le mot de passe du système est défini dans la configuration de l'adaptateur. En outre, dans l'application Bosch, définissez les autorisations du client sur „Exploiter et gérer“. „Plus“ ➤ „Appareils mobiles“ » ➤ „OSS ioBroker.bshb“",
+        "it": "Correzioni di bug minori\nSupporto per i backup\nSe si desidera utilizzare la funzione di backup, assicurarsi che la password di sistema sia impostata nella configurazione dell'adattatore. Inoltre, nell'app Bosch impostare le autorizzazioni del client su „Operare e gestire“. „Altro“ ➤ „Dispositivi mobili“ ➤ „OSS ioBroker.bshb“",
+        "es": "Corrección de errores menores\nSoporte para copias de seguridad\nSi desea utilizar la función de copia de seguridad, asegúrese de que la contraseña del sistema está establecida en la configuración del adaptador. Además, en la app de Bosch establece los permisos del cliente en „Operar y administrar“. „Más“ ➤ „Dispositivos móviles“ ➤ „OSS ioBroker.bshb“",
+        "pl": "Drobne poprawki błędów\nWsparcie dla kopii zapasowych\nJeśli chcesz korzystać z funkcji tworzenia kopii zapasowych, upewnij się, że hasło systemowe jest ustawione w konfiguracji adaptera. Ponadto w aplikacji Bosch należy ustawić uprawnienia klienta na „Obsługa i zarządzanie“. „Więcej“ ➤ „Urządzenia mobilne“ ➤ „OSS ioBroker.bshb“",
+        "uk": "Дрібні виправлення помилок\nПідтримка резервних копій\nЯкщо ви хочете використовувати функцію резервного копіювання, переконайтеся, що в конфігурації адаптера встановлено системний пароль. Крім того, у застосунку Bosch встановіть дозволи клієнта на „Експлуатація та керування“. „Більше“ ➤ „Мобільні пристрої“ ➤ „OSS ioBroker.bshb“",
+        "zh-cn": "小错误修复\n支持备份\n如果要使用备份功能，请确保在适配器配置中设置了系统密码。此外，在博世应用程序中将客户端权限设置为 „操作和管理“。„更多“ ➤ „移动设备“ ➤ „OSS ioBroker.bshb“"
+      },
       "0.3.0": {
         "de": "Unterstützung für Automationen.",
         "en": "Support for automations.",
@@ -80,45 +93,6 @@
         "pl": "Aktualizacja adaptera do najnowszych wymagań.",
         "uk": "Оновлення адаптера до останніх вимог.",
         "zh-cn": "更新适配器，使其符合最新要求。"
-      },
-      "0.2.3": {
-        "de": "Aktualisierung der Controller-Schnittstelle, Klimaplan und andere Verbesserungen.",
-        "en": "Updating the controller interface, climate schedule and other improvements.",
-        "ru": "Обновление интерфейса контроллера, климатического расписания и другие улучшения.",
-        "pt": "Actualização da interface do controlador, calendário climático e outras melhorias.",
-        "nl": "Updaten van de controller interface, klimaat schema en andere verbeteringen.",
-        "fr": "Mise à jour de l'interface du contrôleur, du calendrier climatique et autres améliorations.",
-        "it": "Aggiornamento dell'interfaccia del controllore, del calendario climatico e altri miglioramenti.",
-        "es": "Actualización de la interfaz del controlador, calendario climático y otras mejoras.",
-        "pl": "Aktualizacja interfejsu sterownika, harmonogramu klimatycznego i inne usprawnienia.",
-        "uk": "Оновлення інтерфейсу контролера, кліматичного розкладу та інші покращення.",
-        "zh-cn": "更新控制器界面，气候时间表和其他改进。"
-      },
-      "0.2.1": {
-        "de": "Unterstützung für weitere Dienste.",
-        "en": "Support for additional services.",
-        "ru": "Поддержка дополнительных услуг.",
-        "pt": "Apoio para serviços adicionais.",
-        "nl": "Steun voor aanvullende diensten.",
-        "fr": "Soutien aux services supplémentaires.",
-        "it": "Supporto per servizi aggiuntivi.",
-        "es": "Apoyo a los servicios adicionales.",
-        "pl": "Wsparcie dla usług dodatkowych.",
-        "uk": "Підтримка додаткових сервісів.",
-        "zh-cn": "支持额外的服务。"
-      },
-      "0.1.20": {
-        "de": "Probleme beim initialen Setup behoben.",
-        "en": "Fixed problems with openDoorsAndWindows.",
-        "ru": "Исправлены проблемы с openDoorsAndWindows.",
-        "pt": "Problemas corrigidos com portas e janelas abertas.",
-        "nl": "Probleme mit openDoorsAndWindows wurden behoben.",
-        "fr": "Les problèmes avec openDoorsAndWindows ont été résolus.",
-        "it": "I problemi con openDoorsAndWindows sono stati risolti.",
-        "es": "Se han resuelto los problemas con openDoorsAndWindows.",
-        "pl": "Rozwiązano problemy z funkcją OpenDoorsAndWindows.",
-        "uk": "Виправлено проблеми з openDoorsAndWindows.",
-        "zh-cn": "修正了openDoorsAndWindows的问题。"
       }
     },
     "titleLang": {
@@ -154,7 +128,6 @@
       "Bosch"
     ],
     "platform": "Javascript/Node.js",
-    "main": "build/main.js",
     "icon": "bshb-logo.jpg",
     "enabled": false,
     "extIcon": "https://raw.githubusercontent.com/holomekc/ioBroker.bshb/master/admin/bshb-logo.jpg",

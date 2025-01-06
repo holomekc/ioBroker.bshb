@@ -229,12 +229,12 @@ mock.get('/smarthome/devices', (req, res) => {
     ]);
 });
 
-mock.get('/smarthome/devices/hdm:ZigBee:xxx', (req, res) => {
+mock.get('/smarthome/devices/hdm', (req, res) => {
     res.json(
         {
             '@type': 'device',
             'rootDeviceId': '00-00-00-00-00-00',
-            'id': 'hdm:ZigBee:xxx',
+            'id': 'hdm',
             'deviceServiceIds': [
                 'CommunicationQuality',
                 'BatteryLevel',
@@ -372,7 +372,7 @@ mock.get('/smarthome/motionlights', (req, res) => {
     res.json([
         {
             '@type': 'motionlight',
-            'id': 'hdm:ZigBee:xxx',
+            'id': 'hdm',
             'enabled': false,
             'brightness': 90,
             'darknessThresholdLux': 30,
@@ -381,7 +381,7 @@ mock.get('/smarthome/motionlights', (req, res) => {
             'lightIds': [
                 'hdm:PhilipsHueBridge:HueLight_test'
             ],
-            'motionDetectorId': 'hdm:ZigBee:xxx'
+            'motionDetectorId': 'hdm'
         }
     ]);
 });
@@ -594,12 +594,34 @@ mock.get('/smarthome/userdefinedstates', (req, res) => {
     ]);
 });
 
+mock.get('/smarthome/system/backup/status', (req, res) => {
+    res.json([
+        {
+            "@type": "BackupStatus",
+            "state": "NONE",
+            "statuscode": 200,
+            "isDeleted": false
+        }
+    ]);
+});
+
+mock.get('/smarthome/system/restore/status', (req, res) => {
+    res.json([
+        {
+            "@type": "RestoreStatus",
+            "state": "NONE",
+            "statuscode": 200,
+            "isDeleted": false
+        }
+    ]);
+});
+
 httpsServer.listen(8444, () => {
 });
 
 // Run integration tests - See https://github.com/ioBroker/testing for a detailed explanation and further options
 tests.integration(path.join(__dirname, '..'), {
-    allowedExitCodes: [ 0 ],
+    allowedExitCodes: [0],
     waitBeforeStartupSuccess: 2000,
     defineAdditionalTests({suite}) {
         suite('Test sendTod()', getHarness => {

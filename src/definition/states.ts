@@ -266,4 +266,23 @@ export const STATES: { [TypeName: string]: { [KeyName: string]: { [Key: string]:
             UNKNOWN: 'UNKNOWN',
         },
     },
+    BackupStatus: {
+        state: {
+            NONE: 'NONE',
+            IN_PROGRESS: 'IN_PROGRESS',
+            READY: 'READY',
+        }
+    },
+    RestoreStatus: {
+        state: {
+            NONE: 'NONE',
+            BACKUP_UPLOADED: 'BACKUP_UPLOADED',
+            RESTORE_AUTHORIZED: 'RESTORE_AUTHORIZED',
+            VALIDATING: 'VALIDATING',
+            RESTORING: 'RESTORING',
+            RESTORED: 'RESTORED',
+            RESTORED_OTHER_SHC: 'RESTORED_OTHER_SHC',
+            ERROR: 'ERROR',
+        }
+    }
 };

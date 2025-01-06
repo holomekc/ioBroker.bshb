@@ -193,7 +193,7 @@ class BshbDeviceHandler extends bshb_handler_1.BshbHandler {
                 native: { device: device },
             }).pipe((0, operators_1.tap)(obj => {
                 if (obj && obj._bshbCreated) {
-                    this.addRoom(device.id, undefined, undefined, device.roomId);
+                    this.addRoom(device.id, '', undefined, device.roomId);
                 }
             }), (0, operators_1.switchMap)(() => this.setObjectNotExistsAsync(deviceStatusId, {
                 type: 'state',
@@ -277,7 +277,7 @@ class BshbDeviceHandler extends bshb_handler_1.BshbHandler {
         }).pipe((0, operators_1.tap)(obj => {
             if (obj && obj._bshbCreated) {
                 this.addRoom(device.id, deviceService.id, undefined, device.roomId);
-                this.addFunction(device.id, deviceService.id, undefined);
+                this.addFunction(device.id, deviceService.id);
             }
         }), 
         // add fault holder
