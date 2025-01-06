@@ -41,7 +41,7 @@ export class BshbAutomationHandler extends BshbHandler {
                 result = this.getBshcClient().triggerAutomation(automationId, {timeout: this.long_timeout})
                     .pipe(
                         delay(1000),
-                        switchMap(() => from(this.bshb.setStateAsync(id, {
+                        switchMap(() => from(this.bshb.setState(id, {
                             val: false,
                             ack: true
                         }))),
@@ -102,7 +102,7 @@ export class BshbAutomationHandler extends BshbHandler {
                 const id = 'automations.' + automation.id;
 
                 // we overwrite object here on purpose because we reflect 1-1 the data from controller here.
-                return from(this.bshb.setObjectAsync(id, {
+                return from(this.bshb.setObject(id, {
                     type: 'folder',
                     common: {
                         name: automation.name,
@@ -116,7 +116,7 @@ export class BshbAutomationHandler extends BshbHandler {
                         name: automation.name
                     },
                 })).pipe(
-                    switchMap(() => from(this.bshb.setObjectAsync(`${id}.enabled`, {
+                    switchMap(() => from(this.bshb.setObject(`${id}.enabled`, {
                             type: 'state',
                             common: {
                                 name: 'enabled',
@@ -132,7 +132,7 @@ export class BshbAutomationHandler extends BshbHandler {
                         }))
                     ),
                     tap(() => this.bshb.setState(`${id}.enabled`, {val: automation.enabled, ack: true})),
-                    switchMap(() => from(this.bshb.setObjectAsync(`${id}.name`, {
+                    switchMap(() => from(this.bshb.setObject(`${id}.name`, {
                             type: 'state',
                             common: {
                                 name: 'name',
@@ -148,7 +148,7 @@ export class BshbAutomationHandler extends BshbHandler {
                         }))
                     ),
                     tap(() => this.bshb.setState(`${id}.name`, {val: automation.name, ack: true})),
-                    switchMap(() => from(this.bshb.setObjectAsync(`${id}.trigger`, {
+                    switchMap(() => from(this.bshb.setObject(`${id}.trigger`, {
                             type: 'state',
                             common: {
                                 name: 'trigger',
@@ -164,7 +164,7 @@ export class BshbAutomationHandler extends BshbHandler {
                         }))
                     ),
                     tap(() => this.bshb.setState(`${id}.trigger`, {val: false, ack: true})),
-                    switchMap(() => from(this.bshb.setObjectAsync(`${id}.automationConditions`, {
+                    switchMap(() => from(this.bshb.setObject(`${id}.automationConditions`, {
                             type: 'state',
                             common: {
                                 name: 'automationConditions',
@@ -183,7 +183,7 @@ export class BshbAutomationHandler extends BshbHandler {
                         val: this.mapValueToStorage(automation.automationConditions),
                         ack: true
                     })),
-                    switchMap(() => from(this.bshb.setObjectAsync(`${id}.automationTriggers`, {
+                    switchMap(() => from(this.bshb.setObject(`${id}.automationTriggers`, {
                             type: 'state',
                             common: {
                                 name: 'automationTriggers',
@@ -202,7 +202,7 @@ export class BshbAutomationHandler extends BshbHandler {
                         val: this.mapValueToStorage(automation.automationTriggers),
                         ack: true
                     })),
-                    switchMap(() => from(this.bshb.setObjectAsync(`${id}.automationActions`, {
+                    switchMap(() => from(this.bshb.setObject(`${id}.automationActions`, {
                             type: 'state',
                             common: {
                                 name: 'automationActions',
@@ -221,7 +221,7 @@ export class BshbAutomationHandler extends BshbHandler {
                         val: this.mapValueToStorage(automation.automationActions),
                         ack: true
                     })),
-                    switchMap(() => from(this.bshb.setObjectAsync(`${id}.conditionLogicalOp`, {
+                    switchMap(() => from(this.bshb.setObject(`${id}.conditionLogicalOp`, {
                             type: 'state',
                             common: {
                                 name: 'conditionLogicalOp',
@@ -260,7 +260,7 @@ export class BshbAutomationHandler extends BshbHandler {
                 }
 
                 if (!found) {
-                    return from(this.bshb.deleteStateAsync('automations', '', object.native.id)).pipe(
+                    return from(this.bshb.delObjectAsync(`automations.${object.native.id}`)).pipe(
                         tap(() => this.bshb.log.info(`automation with id=${object.native.id} removed because it does not exist anymore.`)),
                         catchError(err => {
                             this.bshb.log.error(`Could not delete automation with id=${object.native.id} because: ` + err);

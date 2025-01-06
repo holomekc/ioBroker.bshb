@@ -28,7 +28,7 @@ class BshbScenarioHandler extends bshb_handler_1.BshbHandler {
         else if (resultEntry['@type'] === 'scenarioTriggered') {
             // Shortly mark scenario as true and then after 1s switch back to false
             const id = `scenarios.${resultEntry['id']}`;
-            (0, rxjs_1.from)(this.bshb.setStateAsync(id, { val: true, ack: true })).pipe((0, operators_1.delay)(1000), (0, rxjs_1.switchMap)(() => (0, rxjs_1.from)(this.bshb.setStateAsync(id, {
+            (0, rxjs_1.from)(this.bshb.setState(id, { val: true, ack: true })).pipe((0, operators_1.delay)(1000), (0, rxjs_1.switchMap)(() => (0, rxjs_1.from)(this.bshb.setState(id, {
                 val: false,
                 ack: true
             })))).subscribe(this.handleBshcUpdateError(`id=${resultEntry['id']}`));
@@ -65,7 +65,7 @@ class BshbScenarioHandler extends bshb_handler_1.BshbHandler {
             this.bshb.log.debug(`Found scenario ${scenario.id}, ${scenario.name}`);
             const id = 'scenarios.' + scenario.id;
             // we overwrite object here on purpose because we reflect 1-1 the data from controller here.
-            return (0, rxjs_1.from)(this.bshb.setObjectAsync(id, {
+            return (0, rxjs_1.from)(this.bshb.setObject(id, {
                 type: 'state',
                 common: {
                     name: scenario.name,
@@ -92,7 +92,7 @@ class BshbScenarioHandler extends bshb_handler_1.BshbHandler {
                 }
             }
             if (!found) {
-                return (0, rxjs_1.from)(this.bshb.deleteStateAsync('scenarios', '', object.native.id)).pipe((0, rxjs_1.tap)(() => this.bshb.log.info(`scenario with id=${object.native.id} removed because it does not exist anymore.`)), (0, operators_1.catchError)(err => {
+                return (0, rxjs_1.from)(this.bshb.delObjectAsync(`scenarios.${object.native.id}`)).pipe((0, rxjs_1.tap)(() => this.bshb.log.info(`scenario with id=${object.native.id} removed because it does not exist anymore.`)), (0, operators_1.catchError)(err => {
                     this.bshb.log.error(`Could not delete scenario with id=${object.native.id} because: ` + err);
                     return (0, rxjs_1.of)(undefined);
                 }));

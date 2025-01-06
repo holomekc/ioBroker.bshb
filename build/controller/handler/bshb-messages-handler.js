@@ -26,7 +26,7 @@ class BshbMessagesHandler extends bshb_handler_1.BshbHandler {
             finalize: () => this.bshb.log.info('Detecting messages finished'),
         }));
     }
-    sendUpdateToBshc(id, state) {
+    sendUpdateToBshc(_id, _state) {
         return (0, rxjs_1.of)(false);
     }
     detectMessages() {

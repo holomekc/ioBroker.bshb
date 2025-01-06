@@ -6,7 +6,6 @@ const rxjs_1 = require("rxjs");
 const operators_1 = require("rxjs/operators");
 const bshb_definition_1 = require("../../bshb-definition");
 class BshbRoomHandler extends bshb_handler_1.BshbHandler {
-    regex = /bshb\.\d+\.rooms\.(.*)/;
     cachedStates = new Map();
     handleDetection() {
         return this.detectRooms().pipe((0, rxjs_1.tap)({
@@ -47,7 +46,7 @@ class BshbRoomHandler extends bshb_handler_1.BshbHandler {
     handleExtPropertiesUpdate(roomId, extProperties) {
         (0, rxjs_1.from)(Object.keys(extProperties)).pipe((0, rxjs_1.tap)(key => this.handleDefaultUpdate(roomId, `${roomId}.${key}`, extProperties, key)));
     }
-    sendUpdateToBshc(id, state) {
+    sendUpdateToBshc(_id, _state) {
         return (0, rxjs_1.of)(false);
     }
     detectRooms() {

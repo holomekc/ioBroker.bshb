@@ -25,7 +25,7 @@ class BshbOpenDoorWindowHandler extends bshb_handler_1.BshbHandler {
         }
         return false;
     }
-    sendUpdateToBshc(id, state) {
+    sendUpdateToBshc(_id, _state) {
         // not needed
         return (0, rxjs_1.of)(false);
     }

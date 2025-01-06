@@ -5,7 +5,6 @@ import {BshbDefinition} from '../../bshb-definition';
 
 export class BshbRoomHandler extends BshbHandler {
 
-    private regex = /bshb\.\d+\.rooms\.(.*)/;
     private cachedStates = new Map<string, any>();
 
     handleDetection(): Observable<void> {
@@ -56,7 +55,7 @@ export class BshbRoomHandler extends BshbHandler {
         );
     }
 
-    sendUpdateToBshc(id: string, state: ioBroker.State): Observable<boolean> {
+    sendUpdateToBshc(_id: string, _state: ioBroker.State): Observable<boolean> {
         return of(false);
     }
 

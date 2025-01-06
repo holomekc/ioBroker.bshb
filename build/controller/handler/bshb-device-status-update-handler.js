@@ -9,7 +9,7 @@ class BshbDeviceStatusUpdateHandler extends bshb_handler_1.BshbHandler {
         // No detection needed here. This is part of the device handler. Initial values also handled there.
         return (0, rxjs_1.of)(undefined);
     }
-    sendUpdateToBshc(id, state) {
+    sendUpdateToBshc(_id, _state) {
         // Only read. So no sending.
         return (0, rxjs_1.of)(false);
     }

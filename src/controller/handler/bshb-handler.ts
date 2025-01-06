@@ -120,7 +120,7 @@ export abstract class BshbHandler {
         return new Observable<any>(subscriber => {
             if (typeof value === 'string') {
                 // in case we see a string we check object.common.type for array or object.
-                this.bshb.getObject(id, (error, object) => {
+                this.bshb.getObject(id, (_error, object) => {
                     if (object && object.common && (object.common.type === 'array' || object.common.type === 'object' || object.common.type === 'json')) {
                         try {
                             subscriber.next(JSON.parse(value));
@@ -161,7 +161,7 @@ export abstract class BshbHandler {
         return from(this.bshb.getObjectAsync(id, options)).pipe(
             switchMap(obj => {
                 if (!obj) {
-                    return from(this.bshb.setObjectAsync(id, object)).pipe(
+                    return from(this.bshb.setObject(id, object)).pipe(
                         tap(o => (o as any)._bshbCreated = true),
                         map(o => o as unknown as { id: string, _bshbCreated: boolean })
                     );

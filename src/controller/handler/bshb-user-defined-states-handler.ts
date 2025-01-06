@@ -23,7 +23,7 @@ export class BshbUserDefinedStatesHandler extends BshbHandler {
             this.bshb.log.debug(`Received updated for user defined state id=${resultEntry['id']} and value=${resultEntry['state']}`);
 
             const id = `userDefinedStates.${resultEntry['id']}`;
-            from(this.bshb.setStateAsync(id, {val: resultEntry['state'], ack: true}))
+            from(this.bshb.setState(id, {val: resultEntry['state'], ack: true}))
                 .subscribe(this.handleBshcUpdateError(`id=${resultEntry['id']}`));
             return true;
         }
@@ -70,7 +70,7 @@ export class BshbUserDefinedStatesHandler extends BshbHandler {
                 const id = 'userDefinedStates.' + userDefinedState.id;
 
                 // we overwrite object here on purpose because we reflect 1-1 the data from controller here.
-                return from(this.bshb.setObjectAsync(id, {
+                return from(this.bshb.setObject(id, {
                     type: 'state',
                     common: {
                         name: userDefinedState.name,
@@ -103,7 +103,7 @@ export class BshbUserDefinedStatesHandler extends BshbHandler {
                 }
 
                 if (!found) {
-                    return from(this.bshb.deleteStateAsync('userDefinedStates', '', object.native.id)).pipe(
+                    return from(this.bshb.delObjectAsync(`userDefinedStates.${object.native.id}`)).pipe(
                         tap(() => this.bshb.log.info(
                             `User defined state with id=${object.native.id} removed because it does not exist anymore.`
                         )),

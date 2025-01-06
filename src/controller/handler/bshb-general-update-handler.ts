@@ -4,7 +4,7 @@ import {from, Observable, of, switchMap} from 'rxjs';
 export class BshbGeneralUpdateHandler extends BshbHandler {
 
     handleBshcUpdate(resultEntry: any): boolean {
-        from(this.bshb.setStateAsync('updates', {val: this.mapValueToStorage(resultEntry), ack: true}))
+        from(this.bshb.setState('updates', {val: this.mapValueToStorage(resultEntry), ack: true}))
             .subscribe(this.handleBshcUpdateError(`id=${resultEntry.id}`));
         // We do not mark all updates as handled.
         return false;
@@ -28,7 +28,7 @@ export class BshbGeneralUpdateHandler extends BshbHandler {
         );
     }
 
-    sendUpdateToBshc(id: string, state: ioBroker.State): Observable<boolean> {
+    sendUpdateToBshc(_id: string, _state: ioBroker.State): Observable<boolean> {
         // not needed
         return of(false);
     }

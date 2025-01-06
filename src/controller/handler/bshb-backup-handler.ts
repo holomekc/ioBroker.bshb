@@ -130,7 +130,7 @@ export class BshbBackupHandler extends BshbHandler {
                         backupDir,
                         this.createFileName(binaryResponse.fileName)
                     );
-                    this.bshb.log.debug(`[Backup] Data downloaded. Creating file: ${filePath}.`)
+                    this.bshb.log.info(`[Backup] Data downloaded and file created: ${filePath}.`);
                     return from(fs.writeFile(filePath, binaryResponse.data));
                 })
             );

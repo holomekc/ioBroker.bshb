@@ -131,7 +131,7 @@ class BshbBackupHandler extends bshb_handler_1.BshbHandler {
         return (0, rxjs_1.from)(this.ensureDirectoryExists(backupDir))
             .pipe((0, rxjs_1.switchMap)(() => {
             const filePath = path_1.default.join(backupDir, this.createFileName(binaryResponse.fileName));
-            this.bshb.log.debug(`[Backup] Data downloaded. Creating file: ${filePath}.`);
+            this.bshb.log.info(`[Backup] Data downloaded and file created: ${filePath}.`);
             return (0, rxjs_1.from)(fs_1.promises.writeFile(filePath, binaryResponse.data));
         }));
     }

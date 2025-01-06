@@ -43,7 +43,7 @@ export class BshbDefinition {
     }
 
     /**
-     * Get type of a value from bsh
+     * Get the type of the specified value from bsh
      *
      * @param value value to determine type for
      */

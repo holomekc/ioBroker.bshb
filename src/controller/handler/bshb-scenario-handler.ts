@@ -29,9 +29,9 @@ export class BshbScenarioHandler extends BshbHandler {
         } else if (resultEntry['@type'] === 'scenarioTriggered') {
             // Shortly mark scenario as true and then after 1s switch back to false
             const id = `scenarios.${resultEntry['id']}`;
-            from(this.bshb.setStateAsync(id, {val: true, ack: true})).pipe(
+            from(this.bshb.setState(id, {val: true, ack: true})).pipe(
                 delay(1000),
-                switchMap(() => from(this.bshb.setStateAsync(id, {
+                switchMap(() => from(this.bshb.setState(id, {
                     val: false,
                     ack: true
                 })))
@@ -84,7 +84,7 @@ export class BshbScenarioHandler extends BshbHandler {
                 const id = 'scenarios.' + scenario.id;
 
                 // we overwrite object here on purpose because we reflect 1-1 the data from controller here.
-                return from(this.bshb.setObjectAsync(id, {
+                return from(this.bshb.setObject(id, {
                     type: 'state',
                     common: {
                         name: scenario.name,
@@ -117,7 +117,7 @@ export class BshbScenarioHandler extends BshbHandler {
                 }
 
                 if (!found) {
-                    return from(this.bshb.deleteStateAsync('scenarios', '', object.native.id)).pipe(
+                    return from(this.bshb.delObjectAsync(`scenarios.${object.native.id}`)).pipe(
                         tap(() => this.bshb.log.info(`scenario with id=${object.native.id} removed because it does not exist anymore.`)),
                         catchError(err => {
                             this.bshb.log.error(`Could not delete scenario with id=${object.native.id} because: ` + err);
