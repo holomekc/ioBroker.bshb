@@ -20,6 +20,7 @@ import {BshbClimateHandler} from './controller/handler/bshb-climate-handler';
 import {BshbUserDefinedStatesHandler} from './controller/handler/bshb-user-defined-states-handler';
 import {rateLimit} from './rate-limiter';
 import {BshbAutomationHandler} from './controller/handler/bshb-automation-handler';
+import {BshbBackupHandler} from "./controller/handler/bshb-backup-handler";
 
 /**
  * This controller encapsulates bosch-smart-home-bridge and provides it to iobroker.bshb
@@ -72,6 +73,7 @@ export class BshbController {
             this.handlers.push(new BshbDeviceHandler(this.bshb, this.boschSmartHomeBridge));
             this.handlers.push(new BshbOpenDoorWindowHandler(this.bshb, this.boschSmartHomeBridge));
             this.handlers.push(new BshbClimateHandler(this.bshb, this.boschSmartHomeBridge));
+            this.handlers.push(new BshbBackupHandler(this.bshb, this.boschSmartHomeBridge));
 
             this.$rateLimit.pipe(rateLimit(this.bshb.config.rateLimit, this.bshb), concatMap(data => {
                 const observables: Observable<boolean>[] = [];

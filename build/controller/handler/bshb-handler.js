@@ -48,7 +48,7 @@ class BshbHandler {
     getBshcClient() {
         return this.boschSmartHomeBridge.getBshcClient();
     }
-    addRoomEnum(name, deviceId, deviceServiceId, itemId = undefined) {
+    addRoomEnum(name, deviceId, deviceServiceId, itemId) {
         if (name) {
             name = name.trim();
             if (name && name.length > 0) {
@@ -56,7 +56,7 @@ class BshbHandler {
             }
         }
     }
-    addFunctionEnum(name, deviceId, deviceServiceId, itemId = undefined) {
+    addFunctionEnum(name, deviceId, deviceServiceId, itemId) {
         if (name) {
             name = name.trim();
             if (name && name.length > 0) {

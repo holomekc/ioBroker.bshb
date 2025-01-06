@@ -143,7 +143,7 @@ export class BshbDeviceHandler extends BshbHandler {
             filter(this.isDefined),
             switchMap(roomState => this.mapValueFromStorage('info.cache.rooms', roomState.val)),
             tap(roomState => {
-                for (const [ key, value ] of Object.entries(roomState)) {
+                for (const [key, value] of Object.entries(roomState)) {
                     this.bshb.log.debug('Restore cache room: ' + key);
                     this.cachedRooms.set(key, value);
                 }
@@ -260,7 +260,7 @@ export class BshbDeviceHandler extends BshbHandler {
                 }).pipe(
                     tap(obj => {
                         if (obj && obj._bshbCreated) {
-                            this.addRoom(device.id, undefined as unknown as string, undefined as unknown as string, device.roomId);
+                            this.addRoom(device.id, '', undefined, device.roomId);
                         }
                     }),
                     switchMap(() => this.setObjectNotExistsAsync(deviceStatusId, {
@@ -362,8 +362,8 @@ export class BshbDeviceHandler extends BshbHandler {
         }).pipe(
             tap(obj => {
                 if (obj && obj._bshbCreated) {
-                    this.addRoom(device.id, deviceService.id, undefined as unknown as string, device.roomId);
-                    this.addFunction(device.id, deviceService.id, undefined as unknown as string);
+                    this.addRoom(device.id, deviceService.id, undefined, device.roomId);
+                    this.addFunction(device.id, deviceService.id);
                 }
             }),
             // add fault holder
@@ -433,7 +433,7 @@ export class BshbDeviceHandler extends BshbHandler {
         );
     }
 
-    private addRoom(deviceId: string, deviceServiceId: string, itemId: string, roomId: string): void {
+    private addRoom(deviceId: string, deviceServiceId: string, itemId?: string, roomId?: string): void {
         if (roomId) {
             const room = this.getRoomById(roomId);
 
@@ -443,7 +443,7 @@ export class BshbDeviceHandler extends BshbHandler {
         }
     }
 
-    private addFunction(deviceId: string, deviceServiceId: string, itemId: string): void {
+    private addFunction(deviceId: string, deviceServiceId: string, itemId?: string): void {
         let name = BshbDefinition.determineFunction(deviceServiceId);
         this.addFunctionEnum(name, deviceId, deviceServiceId, itemId);
     }

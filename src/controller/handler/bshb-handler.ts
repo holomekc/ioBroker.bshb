@@ -77,7 +77,7 @@ export abstract class BshbHandler {
         return this.boschSmartHomeBridge.getBshcClient();
     }
 
-    public addRoomEnum(name: string, deviceId: string, deviceServiceId: string, itemId: string | undefined = undefined) {
+    public addRoomEnum(name: string, deviceId: string, deviceServiceId: string, itemId?: string) {
         if (name) {
             name = name.trim();
 
@@ -87,7 +87,7 @@ export abstract class BshbHandler {
         }
     }
 
-    public addFunctionEnum(name: string, deviceId: string, deviceServiceId: string, itemId: string | undefined = undefined) {
+    public addFunctionEnum(name: string, deviceId: string, deviceServiceId: string, itemId?: string) {
         if (name) {
             name = name.trim();
 
@@ -97,7 +97,7 @@ export abstract class BshbHandler {
         }
     }
 
-    public addEnum(type: string, name: string, deviceId: string, deviceServiceId: string, itemId: string | undefined) {
+    public addEnum(type: string, name: string, deviceId: string, deviceServiceId: string, itemId?: string) {
         this.enumChain.next({
             type: type,
             name: name,

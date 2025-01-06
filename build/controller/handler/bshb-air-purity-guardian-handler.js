@@ -76,8 +76,8 @@ class BshbAirPurityGuardianHandler extends bshb_handler_1.BshbHandler {
             const obj = objAndRoom[0];
             const room = objAndRoom[1];
             if (obj && room && obj._bshbCreated) {
-                this.addRoomEnum(room.name, 'airPurityGuardian', airPurityGuardian.id, undefined);
-                this.addFunctionEnum(bshb_definition_1.BshbDefinition.determineFunction('airPurityGuardian'), 'airPurityGuardian', airPurityGuardian.id, undefined);
+                this.addRoomEnum(room.name, 'airPurityGuardian', airPurityGuardian.id);
+                this.addFunctionEnum(bshb_definition_1.BshbDefinition.determineFunction('airPurityGuardian'), 'airPurityGuardian', airPurityGuardian.id);
             }
         }), (0, rxjs_1.mergeMap)(() => (0, rxjs_1.from)(Object.keys(airPurityGuardian))), (0, rxjs_1.mergeMap)(key => this.importState(key, airPurityGuardian)));
     }
