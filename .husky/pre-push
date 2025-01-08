@@ -1,0 +1,10 @@
+#!/bin/bash
+tags="/tags/"
+while read -rd $'0' arg
+do
+  if [ "${arg/$tags}" != "$arg" ]
+  then
+    echo "Pushing tags is not allowed! We handle tags in GitHub Actions."
+    exit 1
+  fi
+done

@@ -20,14 +20,10 @@ jobs:
 
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node-version: [ 22.x ]
-
     steps:
       - uses: ioBroker/testing-action-check@v1
         with:
-          node-version: ${{ matrix.node-version }}
+          node-version: 22.x
           # Uncomment the following line if your adapter cannot be installed using 'npm ci'
           # install-command: 'npm install'
           type-checking: true

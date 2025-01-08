@@ -263,4 +263,4 @@ use of the adapter. You find a link at the top.
 
 The MIT License (MIT)
 
-Copyright (c) 2024 Christopher Holomek <holomekc.github@gmail.com>
+Copyright (c) 2025 Christopher Holomek <holomekc.github@gmail.com>
