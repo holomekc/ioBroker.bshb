@@ -29,17 +29,18 @@ class BshbHandler {
     constructor(bshb, boschSmartHomeBridge) {
         this.bshb = bshb;
         this.boschSmartHomeBridge = boschSmartHomeBridge;
-        this.enumChain.pipe((0, rxjs_1.concatMap)(enumObj => {
+        this.enumChain
+            .pipe((0, rxjs_1.concatMap)((enumObj) => {
             if (enumObj.itemId) {
                 return (0, rxjs_1.from)(this.bshb.addStateToEnumAsync(enumObj.type, enumObj.name, enumObj.deviceId, enumObj.deviceServiceId, enumObj.itemId));
             }
             else {
                 return (0, rxjs_1.from)(this.bshb.addChannelToEnumAsync(enumObj.type, enumObj.name, enumObj.deviceId, enumObj.deviceServiceId));
             }
-        })).subscribe({
-            next: () => {
-            },
-            error: err => this.bshb.log.warn(utils_1.Utils.handleError('Could not add enum', err))
+        }))
+            .subscribe({
+            next: () => { },
+            error: (err) => this.bshb.log.warn(utils_1.Utils.handleError("Could not add enum", err)),
         });
     }
     /**
@@ -52,7 +53,7 @@ class BshbHandler {
         if (name) {
             name = name.trim();
             if (name && name.length > 0) {
-                this.addEnum('rooms', name, deviceId, deviceServiceId, itemId);
+                this.addEnum("rooms", name, deviceId, deviceServiceId, itemId);
             }
         }
     }
@@ -60,7 +61,7 @@ class BshbHandler {
         if (name) {
             name = name.trim();
             if (name && name.length > 0) {
-                this.addEnum('functions', name, deviceId, deviceServiceId, itemId);
+                this.addEnum("functions", name, deviceId, deviceServiceId, itemId);
             }
         }
     }
@@ -70,11 +71,11 @@ class BshbHandler {
             name: name,
             deviceId: deviceId,
             deviceServiceId: deviceServiceId,
-            itemId: itemId
+            itemId: itemId,
         });
     }
     mapValueToStorage(value) {
-        if (typeof value === 'object') {
+        if (typeof value === "object") {
             return JSON.stringify(value);
         }
         else if (Array.isArray(value)) {
@@ -83,11 +84,15 @@ class BshbHandler {
         return value;
     }
     mapValueFromStorage(id, value) {
-        return new rxjs_1.Observable(subscriber => {
-            if (typeof value === 'string') {
+        return new rxjs_1.Observable((subscriber) => {
+            if (typeof value === "string") {
                 // in case we see a string we check object.common.type for array or object.
                 this.bshb.getObject(id, (_error, object) => {
-                    if (object && object.common && (object.common.type === 'array' || object.common.type === 'object' || object.common.type === 'json')) {
+                    if (object &&
+                        object.common &&
+                        (object.common.type === "array" ||
+                            object.common.type === "object" ||
+                            object.common.type === "json")) {
                         try {
                             subscriber.next(JSON.parse(value));
                             subscriber.complete();
@@ -123,9 +128,9 @@ class BshbHandler {
      * @param options optional options
      */
     setObjectNotExistsAsync(id, object, options) {
-        return (0, rxjs_1.from)(this.bshb.getObjectAsync(id, options)).pipe((0, rxjs_1.switchMap)(obj => {
+        return (0, rxjs_1.from)(this.bshb.getObjectAsync(id, options)).pipe((0, rxjs_1.switchMap)((obj) => {
             if (!obj) {
-                return (0, rxjs_1.from)(this.bshb.setObject(id, object)).pipe((0, operators_1.tap)(o => o._bshbCreated = true), (0, rxjs_1.map)(o => o));
+                return (0, rxjs_1.from)(this.bshb.setObject(id, object)).pipe((0, operators_1.tap)((o) => (o._bshbCreated = true)), (0, rxjs_1.map)((o) => o));
             }
             else {
                 obj._bshbCreated = false;
@@ -135,10 +140,13 @@ class BshbHandler {
     }
     setInitialStateValueIfNotSet(id, state, value) {
         if (state) {
-            return this.mapValueFromStorage(id, state.val).pipe((0, operators_1.tap)(value => {
+            return this.mapValueFromStorage(id, state.val).pipe((0, operators_1.tap)((value) => {
                 if (value !== value) {
                     // only set again if a change is detected.
-                    this.bshb.setState(id, { val: this.mapValueToStorage(value), ack: true });
+                    this.bshb.setState(id, {
+                        val: this.mapValueToStorage(value),
+                        ack: true,
+                    });
                 }
             }), (0, rxjs_1.switchMap)(() => (0, rxjs_1.of)(undefined)));
         }
@@ -152,13 +160,13 @@ class BshbHandler {
     handleBshcUpdateError(...params) {
         return {
             next: () => this.bshb.log.debug(`Handled update for "${this.name()}" successfully.`),
-            error: err => this.logWarn(`Could not handle update for "${this.name()}" with ${params}.`, err)
+            error: (err) => this.logWarn(`Could not handle update for "${this.name()}" with ${params}.`, err),
         };
     }
     handleBshcSendError(...params) {
         return {
             next: () => this.bshb.log.debug(`Send message for "${this.name()}" successfully.`),
-            error: err => this.logWarn(`Could not send update for "${this.name()}" with ${params}.`, err)
+            error: (err) => this.logWarn(`Could not send update for "${this.name()}" with ${params}.`, err),
         };
     }
     logWarn(message, cause) {

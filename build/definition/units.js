@@ -3,51 +3,51 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.UNITS = void 0;
 exports.UNITS = {
     temperatureLevelState: {
-        temperature: '°C',
+        temperature: "°C",
     },
     climateControlState: {
-        setpointTemperature: '°C',
-        setpointTemperatureForLevelEco: '°C',
-        setpointTemperatureForLevelComfort: '°C',
+        setpointTemperature: "°C",
+        setpointTemperatureForLevelEco: "°C",
+        setpointTemperatureForLevelComfort: "°C",
     },
     colorTemperatureState: {
-        colorTemperature: 'K',
+        colorTemperature: "K",
     },
     multiLevelSwitchState: {
-        level: '%',
+        level: "%",
     },
     temperatureOffsetState: {
-        offset: '°C',
+        offset: "°C",
     },
     valveTappetState: {
-        position: '%',
+        position: "%",
     },
     airQualityLevelState: {
-        temperature: '°C',
-        humidity: '%',
-        purity: 'ppm',
+        temperature: "°C",
+        humidity: "%",
+        purity: "ppm",
     },
     intrusionDetectionControlState: {
-        armActivationDelayTime: 's',
-        alarmActivationDelayTime: 's',
-        remainingTimeUntilArmed: 'ms',
+        armActivationDelayTime: "s",
+        alarmActivationDelayTime: "s",
+        remainingTimeUntilArmed: "ms",
     },
     ventilationDelayState: {
-        delay: 's',
+        delay: "s",
     },
     powerMeterState: {
-        powerConsumption: 'W',
-        energyConsumption: 'Wh',
+        powerConsumption: "W",
+        energyConsumption: "Wh",
     },
     powerSwitchState: {
-        automaticPowerOffTime: 's',
+        automaticPowerOffTime: "s",
     },
     roomExtProperties: {
-        humidity: '%',
+        humidity: "%",
     },
     // instruction detection api data
     armingState: {
-        remainingTimeUntilArmed: 'ms',
+        remainingTimeUntilArmed: "ms",
     },
 };
 //# sourceMappingURL=units.js.map

@@ -13,6 +13,9 @@ concurrency:
   group: ${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  FORCE_COLOR: 1
+
 jobs:
   # Performs quick checks before the expensive test runs
   check-and-lint:
@@ -20,16 +23,13 @@ jobs:
 
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node-version: [ 22.x ]
-
     steps:
-      - uses: ioBroker/testing-action-check@v1
+      - uses: ioBroker/testing-action-check@master
         with:
-          node-version: ${{ matrix.node-version }}
-          # Uncomment the following line if your adapter cannot be installed using 'npm ci'
-          # install-command: 'npm install'
+          node-version: 22.x
+          install-command: 'corepack enable && yarn install'
+          lint-command: 'yarn run lint'
+          test-command: 'yarn run test:package'
           type-checking: true
           lint: true
 
@@ -50,6 +50,8 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           os: ${{ matrix.os }}
-          # Uncomment the following line if your adapter cannot be installed using 'npm ci'
-          # install-command: 'npm install'
+          install-command: 'corepack enable && yarn install'
+          unit-test-command: 'yarn run test:unit'
+          integration-test-command: 'yarn run test:integration'
+          build-command: 'yarn run build'
           build: true

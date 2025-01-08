@@ -55,8 +55,8 @@ class Migration {
         if (!fs.existsSync(path)) {
             throw utils_1.Utils.createError(bshb.log, `Could not find client certificate for identifier: ${bshb.config.identifier}.`);
         }
-        const result = fs.readFileSync(path, 'utf-8');
-        bshb.log.info('Client certificate loaded successfully');
+        const result = fs.readFileSync(path, "utf-8");
+        bshb.log.info("Client certificate loaded successfully");
         return result;
     }
     /**
@@ -71,8 +71,8 @@ class Migration {
         if (!fs.existsSync(path)) {
             throw utils_1.Utils.createError(bshb.log, `Could not find client certificate for identifier: ${bshb.config.identifier}.`);
         }
-        const result = fs.readFileSync(path, 'utf-8');
-        bshb.log.info('Client private key loaded successfully');
+        const result = fs.readFileSync(path, "utf-8");
+        bshb.log.info("Client private key loaded successfully");
         return result;
     }
 }

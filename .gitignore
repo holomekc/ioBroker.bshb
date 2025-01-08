@@ -56,3 +56,6 @@ admin/i18n/*/flat.txt
 
 # npm
 .npmrc
+
+# yarn
+.yarn
