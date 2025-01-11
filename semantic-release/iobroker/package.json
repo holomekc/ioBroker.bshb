@@ -1,0 +1,15 @@
+{
+  "name": "semantic-release-iobroker",
+  "version": "1.0.0",
+  "description": "iobroker",
+  "type": "module",
+  "main": "./index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "conventional-commits-parser": "^6.0.0"
+  }
+}

@@ -5,25 +5,25 @@
  * @since 01.12.2019
  */
 export class ClientCert {
-    private readonly _certificate: string;
-    private readonly _privateKey: string;
+  private readonly _certificate: string;
+  private readonly _privateKey: string;
 
-    constructor(certificate: string, privateKey: string) {
-        this._certificate = certificate;
-        this._privateKey = privateKey;
-    }
+  constructor(certificate: string, privateKey: string) {
+    this._certificate = certificate;
+    this._privateKey = privateKey;
+  }
 
-    /**
-     * Get certificate of client certificate
-     */
-    get certificate(): string {
-        return this._certificate;
-    }
+  /**
+   * Get certificate of client certificate
+   */
+  get certificate(): string {
+    return this._certificate;
+  }
 
-    /**
-     * Get private key of client certificate
-     */
-    get privateKey(): string {
-        return this._privateKey;
-    }
+  /**
+   * Get private key of client certificate
+   */
+  get privateKey(): string {
+    return this._privateKey;
+  }
 }

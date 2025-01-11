@@ -1,0 +1,33 @@
+changelog:
+  exclude:
+    labels:
+      - ignore-for-release
+  categories:
+    - title: 🚨 Security Updates
+      labels:
+        - security
+    - title: 🛠 Breaking Changes
+      labels:
+        - breaking
+    - title: 📦 Dependency updates
+      labels:
+        - dependencies
+    - title: 🐛 Bug fixes
+      labels:
+        - bug
+    - title: 🎉 New Features
+      labels:
+        - enhancement
+    - title: 🧪 Test Updates
+      labels:
+        - test
+    - title: 📖 Documentation
+      labels:
+        - documentation
+    - title: 🚧 Build Tools
+      labels:
+        - ci
+        - build
+    - title: ℹ️ Other Changes
+      labels:
+        - '*'

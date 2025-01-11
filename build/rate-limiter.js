@@ -6,17 +6,19 @@ const operators_1 = require("rxjs/operators");
 const rateLimit = (interval, bshb) => {
     let last = -1;
     return (0, rxjs_1.pipe)((0, rxjs_1.mergeMap)((v) => {
-        let result = (0, rxjs_1.of)(v).pipe((0, operators_1.tap)(() => last = Date.now()));
+        let result = (0, rxjs_1.of)(v).pipe((0, operators_1.tap)(() => (last = Date.now())));
         if (interval === 0) {
-            bshb.log.silly('rateLimit disabled.');
+            bshb.log.silly("rateLimit disabled.");
             // Disabled
         }
         else {
             const now = Date.now();
-            if (last !== -1 && (now - last) < interval) {
+            if (last !== -1 && now - last < interval) {
                 const newDelay = interval - (now - last);
                 bshb.log.silly(`delay request due to rate limit for ${newDelay} ms.`);
-                result = (0, rxjs_1.of)(v).pipe((0, operators_1.delay)(newDelay)).pipe((0, operators_1.tap)(() => last = Date.now()));
+                result = (0, rxjs_1.of)(v)
+                    .pipe((0, operators_1.delay)(newDelay))
+                    .pipe((0, operators_1.tap)(() => (last = Date.now())));
             }
         }
         return result;

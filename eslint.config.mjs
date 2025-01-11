@@ -1,36 +1,64 @@
-import typescriptEslint from '@typescript-eslint/eslint-plugin';
-import globals from 'globals';
-import tsParser from '@typescript-eslint/parser';
+import unusedImports from 'eslint-plugin-unused-imports';
+import preferArrow from 'eslint-plugin-prefer-arrow';
+import path from 'node:path';
+import {fileURLToPath} from 'node:url';
+import js from '@eslint/js';
+import {FlatCompat} from '@eslint/eslintrc';
 
-export default [ {
-    ignores: [ 'build/**/*', 'test/**/*' ],
-    plugins: {
-        '@typescript-eslint': typescriptEslint,
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+const compat = new FlatCompat({
+    baseDirectory: __dirname,
+    recommendedConfig: js.configs.recommended,
+    allConfig: js.configs.all,
+});
+
+export default [
+    {
+        ignores: ['**/*.{js,jsx,mjs,cjs,d.ts}'],
     },
-
-    languageOptions: {
-        globals: {
-            ...globals.node,
-            ...globals.commonjs,
-            Atomics: 'readonly',
-            SharedArrayBuffer: 'readonly',
+    {
+        plugins: {
+            'unused-imports': unusedImports,
+            'prefer-arrow': preferArrow,
         },
 
-        parser: tsParser,
-        ecmaVersion: 2018,
-        sourceType: 'module',
-    },
+        rules: {
+            'no-unused-vars': [
+                'warn',
+                {
+                    vars: 'all',
+                    varsIgnorePattern: '^_.*',
+                    args: 'after-used',
+                    argsIgnorePattern: '^_.*',
+                },
+            ],
 
-    rules: {
-        quotes: [ 'warn', 'single' ],
-        'array-bracket-spacing': [ 'warn', 'always' ],
-        'space-before-blocks': [ 'warn', 'always' ],
-        'arrow-body-style': [ 'warn', 'as-needed' ],
-        'arrow-parens': [ 'warn', 'as-needed' ],
+            'unused-imports/no-unused-imports': 'error',
+            'unused-imports/no-unused-vars': 'off',
 
-        'arrow-spacing': [ 'warn', {
-            before: true,
-            after: true,
-        } ],
+            'prefer-arrow/prefer-arrow-functions': [
+                'warn',
+                {
+                    disallowPrototype: true,
+                    singleReturnOnly: false,
+                    classPropertiesAllowed: false,
+                },
+            ],
+        },
     },
-} ];
+    ...compat
+        .extends('eslint:recommended', 'plugin:@typescript-eslint/recommended', 'plugin:prettier/recommended')
+        .map(config => ({
+            ...config,
+            files: ['**/*.ts'],
+        })),
+    {
+        files: ['**/*.ts'],
+        rules: {
+            '@typescript-eslint/no-explicit-any': 'off',
+            '@typescript-eslint/no-unused-vars': 'off',
+            '@typescript-eslint/no-unused-expressions': 'off',
+        },
+    },
+];

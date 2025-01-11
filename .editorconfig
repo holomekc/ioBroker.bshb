@@ -1,0 +1,19 @@
+# EditorConfig is awesome: https://EditorConfig.org
+
+# top-most EditorConfig file
+root = true
+
+# Unix-style newlines with a newline ending every file
+[*]
+end_of_line = lf
+insert_final_newline = true
+charset = utf-8
+indent_style = space
+
+# Indent 2 spaces in yaml files
+[*.{yml,yaml}]
+indent_size = 2
+
+# Indent 2 spaces in javascript/typescript files
+[*.{js,ts}]
+indent_size = 2
