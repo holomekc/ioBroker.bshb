@@ -51,6 +51,7 @@ jobs:
   # Release the final package to NPM
   release:
     needs: [ adapter-tests ]
+    if: contains(github.event.head_commit.message, '[skip ci]') == false
 
     runs-on: ubuntu-latest
     strategy:

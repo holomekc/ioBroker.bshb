@@ -4,12 +4,12 @@ tagFormat: ${version}
 plugins:
   # https://github.com/semantic-release/semantic-release/blob/master/docs/extending/plugins-list.md
   - '@semantic-release/commit-analyzer'
-  - '@semantic-release/exec'
-  - '@semantic-release/github'
-  - '@semantic-release/changelog'
-  - '@semantic-release/release-notes-generator'
+  - './semantic-release/changelog'
   - '@semantic-release/git'
-dryRun: true
+  #- '@semantic-release/exec'
+  #- '@semantic-release/github'
+
+dryRun: false
 ci: false
 
 analyzeCommits:
@@ -22,28 +22,28 @@ analyzeCommits:
         scope: 'deps'
         release: 'patch'
 
-verifyRelease:
-  - path: '@semantic-release/exec'
-    verifyReleaseCmd: |
-      #!/bin/bash
-      echo "version=${nextRelease.version}" >> "$GITHUB_OUTPUT" || echo "Most likely no ci env. Skipping export of ${nextRelease.version}"
+#verifyRelease:
+#  - path: '@semantic-release/exec'
+#    verifyReleaseCmd: |
+#      #!/bin/bash
+#      echo "version=${nextRelease.version}" >> "$GITHUB_OUTPUT" || echo "Most likely no ci env. Skipping export of ${nextRelease.version}"
 
 prepare:
   - path: '@semantic-release/changelog'
-    changelogFile: README.md
-    changelogTitle: ## Changelog
+    skip: true
 success:
-  - path: '@semantic-release/exec'
-    successCmd: |
-      #!/bin/bash
-      ./release-tags.sh "${nextRelease.version}"
+  enabled: false
+#  - path: '@semantic-release/exec'
+#    successCmd: |
+#      #!/bin/bash
+#      ./release-tags.sh "${nextRelease.version}"
 
-  - path: '@semantic-release/github'
-    successComment: |
-      :tada: This <%= issue.pull_request ? 'pull request' : 'issue' %> is included in version <%= '[' + nextRelease.version + '](https://github.com/holomekc/bosch-smart-home-bridge/releases/tag/' + nextRelease.version + ')' %>
+#  - path: '@semantic-release/github'
+#    successComment: |
+#      :tada: This <%= issue.pull_request ? 'pull request' : 'issue' %> is included in version <%= '[' + nextRelease.version + '](https://github.com/holomekc/bosch-smart-home-bridge/releases/tag/' + nextRelease.version + ')' %>
 
 fail:
-  - path: '@semantic-release/github'
-    labels: false
-    assignees:
-      - '@holomekc'
+#  - path: '@semantic-release/github'
+#    labels: false
+#    assignees:
+#      - '@holomekc'
