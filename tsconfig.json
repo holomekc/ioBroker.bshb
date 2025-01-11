@@ -1,39 +1,38 @@
 // Root tsconfig to set the settings and power editor support for all TS files
 {
-	"extends": "@tsconfig/node22/tsconfig.json",
-	"compilerOptions": {
-		"lib": ["es2022"],
-		"target": "es2022",
-
-		// do not compile anything, this file is just to configure type checking
-		// the compilation is configured in tsconfig.build.json
-		"noEmit": true,
-
-		// check JS files, but do not compile them => tsconfig.build.json
-		"allowJs": true,
-		"checkJs": true,
-
-		"skipLibCheck": true, // Don't report errors in 3rd party definitions
-		"noEmitOnError": true,
-		"outDir": "./build/",
-		"removeComments": false,
-		"esModuleInterop": true,
-		// this is necessary for the automatic typing of the adapter config
-		"resolveJsonModule": true,
-
-		"sourceMap": true,
-		"inlineSourceMap": false,
-		"typeRoots": [
-			"node_modules/@types"
-		]
-	},
-	"include": [
-		"src/**/*.ts",
-		"admin/**/*.ts",
-		"admin/**/*.tsx"
-	],
-	"exclude": [
-		"build/**",
-		"node_modules/**"
-	]
+  "extends": "@tsconfig/node22/tsconfig.json",
+  "compilerOptions": {
+    "lib": [
+      "es2022"
+    ],
+    "target": "es2022",
+    // do not compile anything, this file is just to configure type checking
+    // the compilation is configured in tsconfig.build.json
+    "noEmit": true,
+    // check JS files, but do not compile them => tsconfig.build.json
+    "allowJs": true,
+    "checkJs": true,
+    "skipLibCheck": true,
+    // Don't report errors in 3rd party definitions
+    "noEmitOnError": true,
+    "outDir": "./build/",
+    "removeComments": false,
+    "esModuleInterop": true,
+    // this is necessary for the automatic typing of the adapter config
+    "resolveJsonModule": true,
+    "sourceMap": true,
+    "inlineSourceMap": false,
+    "typeRoots": [
+      "node_modules/@types"
+    ]
+  },
+  "include": [
+    "src/**/*.ts",
+    "admin/**/*.ts",
+    "admin/**/*.tsx"
+  ],
+  "exclude": [
+    "build/**",
+    "node_modules/**"
+  ]
 }

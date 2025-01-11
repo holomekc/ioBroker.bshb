@@ -733,7 +733,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@iobroker/adapter-core@npm:^3.2.3":
+"@iobroker/adapter-core@npm:3.2.3":
   version: 3.2.3
   resolution: "@iobroker/adapter-core@npm:3.2.3"
   peerDependencies:
@@ -774,6 +774,13 @@ __metadata:
     sinon: "npm:^19.0.2"
     sinon-chai: "npm:^3.7.0"
   checksum: 10c0/4e2797eb149bf056a65b3c55217f197d0ddde0b8a9749278e36157fa290ea373855d9024a4c98f1f7f3759f9e9a6b0da7aebd015832e1203bbf37afd0f25c959
+  languageName: node
+  linkType: hard
+
+"@iobroker/types@npm:^6.0.0":
+  version: 6.0.11
+  resolution: "@iobroker/types@npm:6.0.11"
+  checksum: 10c0/b8053899494cde5a2831265655f2484d187cd99aca19f410824253eb09e67674fb9bdcdc64be4d6299f7cde6af573de0a003591b3c30dd81884003086d58d0c2
   languageName: node
   linkType: hard
 
@@ -5010,9 +5017,10 @@ __metadata:
     "@commitlint/config-conventional": "npm:^19.6.0"
     "@eslint/eslintrc": "npm:3.2.0"
     "@eslint/js": "npm:9.17.0"
-    "@iobroker/adapter-core": "npm:^3.2.3"
+    "@iobroker/adapter-core": "npm:3.2.3"
     "@iobroker/adapter-dev": "npm:^1.3.0"
     "@iobroker/testing": "npm:^5.0.0"
+    "@iobroker/types": "npm:^6.0.0"
     "@semantic-release/changelog": "npm:^6.0.3"
     "@semantic-release/exec": "npm:6.0.3"
     "@semantic-release/git": "npm:^10.0.1"
@@ -5037,6 +5045,7 @@ __metadata:
     globals: "npm:15.14.0"
     husky: "npm:9.1.7"
     mocha: "npm:11.0.1"
+    pinst: "npm:3.0.0"
     prettier: "npm:3.4.2"
     prettier-eslint: "npm:16.3.0"
     proxyquire: "npm:2.1.3"
@@ -7263,6 +7272,15 @@ __metadata:
   version: 3.0.0
   resolution: "pify@npm:3.0.0"
   checksum: 10c0/fead19ed9d801f1b1fcd0638a1ac53eabbb0945bf615f2f8806a8b646565a04a1b0e7ef115c951d225f042cca388fdc1cd3add46d10d1ed6951c20bd2998af10
+  languageName: node
+  linkType: hard
+
+"pinst@npm:3.0.0":
+  version: 3.0.0
+  resolution: "pinst@npm:3.0.0"
+  bin:
+    pinst: bin.js
+  checksum: 10c0/abb1ed62ea2acb2207a7a860715bdb26ecbde74ede8fad5f6200194f3e22db25e2b7a49af05e5cc7fc05384709c651e0000323f0077d7239060c4b68c8acd428
   languageName: node
   linkType: hard
 

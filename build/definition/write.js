@@ -3,22 +3,22 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.WRITE = void 0;
 exports.WRITE = {
     intrusionDetectionControlState: {
-        remainingTimeUntilArmed: false
+        remainingTimeUntilArmed: false,
     },
     // Yale
     doorSensor: {
-        doorState: false
+        doorState: false,
     },
     lockActuator: {
-        canUnlatch: false
+        canUnlatch: false,
     },
     waterAlarmSystemState: {
         available: false,
         state: false,
-        deleted: false
+        deleted: false,
     },
     roomExtProperties: {
-        humidity: false
-    }
+        humidity: false,
+    },
 };
 //# sourceMappingURL=write.js.map

@@ -6,9 +6,9 @@
  * @since 01.12.2019
  */
 export enum LogLevel {
-    silly,
-    debug,
-    info,
-    warn,
-    error
+  silly,
+  debug,
+  info,
+  warn,
+  error,
 }

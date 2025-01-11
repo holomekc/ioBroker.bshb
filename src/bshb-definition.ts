@@ -4,116 +4,123 @@
  * @author Christopher Holomek
  * @since 27.09.2019
  */
-import {ROLES} from './definition/roles';
-import {FUNCTIONS} from './definition/function';
-import {UNITS} from './definition/units';
-import {STATES} from './definition/states';
-import {WRITE} from './definition/write';
+import { ROLES } from "./definition/roles";
+import { FUNCTIONS } from "./definition/function";
+import { UNITS } from "./definition/units";
+import { STATES } from "./definition/states";
+import { WRITE } from "./definition/write";
 
 export class BshbDefinition {
+  public static determineFunction(value: string): string {
+    const func = FUNCTIONS[value];
+    if (func !== null && typeof func !== "undefined") {
+      return func;
+    }
+    return undefined as unknown as string;
+  }
 
-    public static determineFunction(value: string): string {
-        const func = FUNCTIONS[value];
-        if (func !== null && typeof func !== 'undefined') {
-            return func;
-        }
-        return undefined as unknown as string;
+  /**
+   * Check if value can be written by type and key. Default is true.
+   *
+   * @param type
+   *        '@type' of bsh
+   * @param key
+   *        key of a device state
+   */
+  public static determineWrite(type: string, key: string): boolean {
+    const writeType = WRITE[type];
+
+    if (writeType !== null && typeof writeType !== "undefined") {
+      const write = writeType[key];
+
+      if (write !== null && typeof write !== "undefined") {
+        return write;
+      }
     }
 
-    /**
-     * Check if value can be written by type and key. Default is true.
-     *
-     * @param type
-     *        '@type' of bsh
-     * @param key
-     *        key of a device state
-     */
-    public static determineWrite(type: string, key: string): boolean {
-        const writeType = WRITE[type];
+    return true;
+  }
 
-        if (writeType !== null && typeof writeType !== 'undefined') {
-            const write = writeType[key];
+  /**
+   * Get the type of the specified value from bsh
+   *
+   * @param value value to determine type for
+   */
+  public static determineType(
+    value: any,
+  ): "number" | "string" | "boolean" | "array" | "object" | "mixed" {
+    if (Array.isArray(value)) {
+      return "array";
+    }
+    return typeof value as
+      | "number"
+      | "string"
+      | "boolean"
+      | "array"
+      | "object"
+      | "mixed";
+  }
 
-            if (write !== null && typeof write !== 'undefined') {
-                return write;
-            }
-        }
-
-        return true;
+  /**
+   * Get role of bsh device state
+   * @param type
+   *        '@type' of bsh
+   * @param key
+   *        key of a device state
+   *@param value
+   *       value of a device state
+   */
+  public static determineRole(type: string, key: string, value: any): string {
+    // faults are always a list. Does not matter which service.
+    if (key === "faults") {
+      return "list";
     }
 
-    /**
-     * Get the type of the specified value from bsh
-     *
-     * @param value value to determine type for
-     */
-    public static determineType(value: any): 'number' | 'string' | 'boolean' | 'array' | 'object' | 'mixed' {
-        if (Array.isArray(value)) {
-            return 'array';
-        }
-        return (typeof value) as 'number' | 'string' | 'boolean' | 'array' | 'object' | 'mixed';
+    const roleType = ROLES[type];
+
+    if (roleType !== null && typeof roleType !== "undefined") {
+      const role = roleType[key];
+
+      if (role !== null && typeof role !== "undefined") {
+        return role;
+      }
     }
 
-
-    /**
-     * Get role of bsh device state
-     * @param type
-     *        '@type' of bsh
-     * @param key
-     *        key of a device state
-     *@param value
-     *       value of a device state
-     */
-    public static determineRole(type: string, key: string, value: any): string {
-        // faults are always a list. Does not matter which service.
-        if (key === 'faults') {
-            return 'list';
-        }
-
-        const roleType = ROLES[type];
-
-        if (roleType !== null && typeof roleType !== 'undefined') {
-            const role = roleType[key];
-
-            if (role !== null && typeof role !== 'undefined') {
-                return role;
-            }
-        }
-
-        if (Array.isArray(value)) {
-            return 'list';
-        }
-
-        return 'state';
+    if (Array.isArray(value)) {
+      return "list";
     }
 
-    public static determineUnit(type: string, key: string): string | undefined {
-        const unitType = UNITS[type];
+    return "state";
+  }
 
-        if (unitType !== null && typeof unitType !== 'undefined') {
-            const unit = unitType[key];
+  public static determineUnit(type: string, key: string): string | undefined {
+    const unitType = UNITS[type];
 
-            if (unit !== null && typeof unit !== 'undefined') {
-                return unit;
-            }
-        }
+    if (unitType !== null && typeof unitType !== "undefined") {
+      const unit = unitType[key];
 
-        return undefined;
+      if (unit !== null && typeof unit !== "undefined") {
+        return unit;
+      }
     }
 
-    static determineStates(type: any, key: string): Record<string, string> | string | undefined {
-        const stateType = STATES[type];
+    return undefined;
+  }
 
-        if (stateType !== null && typeof stateType !== 'undefined') {
-            const state = stateType[key];
+  static determineStates(
+    type: any,
+    key: string,
+  ): Record<string, string> | string | undefined {
+    const stateType = STATES[type];
 
-            if (state !== null && typeof state !== 'undefined') {
-                return state;
-            }
-        }
+    if (stateType !== null && typeof stateType !== "undefined") {
+      const state = stateType[key];
 
-        return undefined;
+      if (state !== null && typeof state !== "undefined") {
+        return state;
+      }
     }
+
+    return undefined;
+  }
 }
-
-
