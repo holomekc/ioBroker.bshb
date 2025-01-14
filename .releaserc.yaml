@@ -23,6 +23,9 @@ analyzeCommits:
       - type: 'chore'
         scope: 'deps'
         release: 'patch'
+      - type: 'chore'
+        scope: 'release'
+        release: false
 
 verifyRelease:
   - path: '@semantic-release/exec'
@@ -41,10 +44,8 @@ prepare:
       - "package.json"
       - "yarn.lock"
       - "io-package.json"
-success:
-  enabled: false
 
-publish:
+success:
   - path: '@semantic-release/exec'
     successCmd: |
       #!/bin/bash
