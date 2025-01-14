@@ -24,7 +24,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: ioBroker/testing-action-check@master
+      - uses: ioBroker/testing-action-check@v1
         with:
           node-version: 22.x
           install-command: 'corepack enable && yarn install'
