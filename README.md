@@ -36,6 +36,10 @@ use of the adapter. You find a link at the top.
 
 ## Changelog
 
+## 0.4.1
+
+* Dependencies updated
+
 ### 0.4.0
 
 * (holomekc) Minor bug fixes
@@ -63,10 +67,6 @@ use of the adapter. You find a link at the top.
 ### 0.2.5
 
 * (holomekc) Support for user defined states
-
-### 0.2.4
-
-* (holomekc) Update the adapter to the latest requirements
 
 ### Older entries
 

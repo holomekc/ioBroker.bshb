@@ -1,3 +1,7 @@
+### 0.2.4
+
+* (holomekc) Update the adapter to the latest requirements
+
 ### 0.2.3
 
 * (holomekc) Update to api version 3.2

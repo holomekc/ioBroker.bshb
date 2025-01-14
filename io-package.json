@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "bshb",
-    "version": "0.4.0",
+    "version": "0.4.1",
     "news": {
+      "0.4.1": {
+        "en": "Dependencies updated",
+        "de": "Ausgaben aktualisiert",
+        "ru": "Обновленные данные о зависимостях",
+        "pt": "Dependências atualizadas",
+        "nl": "Afhankelijkheden bijgewerkt",
+        "fr": "Dépendances actualisées",
+        "it": "Dipendenze aggiornate",
+        "es": "Actualización de las dependencias",
+        "pl": "Aktualizacja zależności",
+        "uk": "Залежність оновлено",
+        "zh-cn": "更新的依赖关系"
+      },
       "0.4.0": {
         "de": "Kleinere Fehlerbehebungen\nUnterstützung für Backups\nWenn Sie die Backup-Funktion nutzen wollen, stellen Sie sicher, dass das Systempasswort in der Adapterkonfiguration gesetzt ist. Außerdem müssen Sie in der Bosch-App die Client-Berechtigungen auf „Bedienen und Verwalten“ setzen. „Mehr“ ➤ „Mobile Geräte“ ➤ „OSS ioBroker.bshb“\nUm Probleme zu vermeiden. Stoppen Sie den Adapter, löschen Sie alle zugehörigen Objekte und starten Sie den Adapter dann erneut",
         "en": "Minor bug fixes\nSupport for backups\nIf you want to use the backup feature make sure that the systempassword is set in the adapter config. Furthermore, in the Bosch app set the client permissions to „Operate and manage\". „More“ ➤ „Mobile Devices“ ➤ „OSS ioBroker.bshb“\nTo prevent issues. Stop the adapter, delete all related objects and then restart the adapter again",
@@ -80,19 +93,6 @@
         "pl": "Obsługa stanów zdefiniowanych przez użytkownika.",
         "uk": "Підтримка станів, визначених користувачем.",
         "zh-cn": "支持用户自定义状态。"
-      },
-      "0.2.4": {
-        "de": "Aktualisierung des Adapters auf die neuesten Anforderungen.",
-        "en": "Update the adapter to the latest requirements.",
-        "ru": "Обновление адаптера до последних требований.",
-        "pt": "Actualização do adaptador para os requisitos mais recentes.",
-        "nl": "Updaten van de adapter naar de laatste eisen.",
-        "fr": "Mise à jour de l'adaptateur pour répondre aux dernières exigences.",
-        "it": "Aggiornamento dell'adattatore ai requisiti più recenti.",
-        "es": "Actualizar el adaptador a los últimos requisitos.",
-        "pl": "Aktualizacja adaptera do najnowszych wymagań.",
-        "uk": "Оновлення адаптера до останніх вимог.",
-        "zh-cn": "更新适配器，使其符合最新要求。"
       }
     },
     "titleLang": {
