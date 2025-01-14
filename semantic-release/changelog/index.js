@@ -26,7 +26,7 @@ export async function prepare(pluginConfig, {commits, nextRelease, logger}) {
   });
 
   if (containsDeps) {
-    message += '* Update dependencies\n';
+    message += '* Dependencies updated\n';
   }
   message += '\n'
 
@@ -58,7 +58,7 @@ export async function prepare(pluginConfig, {commits, nextRelease, logger}) {
   logger.log(versionEntries);
 
   // Insert the new version at the beginning
-  const recentEntries = [message, ...versionEntries.slice(0, 6)].join('');
+  const recentEntries = [ message, ...versionEntries.slice(0, 6) ].join('');
 
   // Prepare the updated README.md
   const updatedReadme = `${beforeChangelog}\n\n${recentEntries}${afterOlderEntries}`;
