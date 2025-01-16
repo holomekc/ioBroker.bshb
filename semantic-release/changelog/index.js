@@ -12,7 +12,7 @@ export async function prepare(pluginConfig, {commits, nextRelease, logger}) {
     return;
   }
 
-  let message = `## ${nextRelease.version}\n\n`;
+  let message = `### ${nextRelease.version}\n\n`;
 
   const containsDeps = generateNotes(commits, logger, parsedCommit => {
     if (parsedCommit.message.body) {

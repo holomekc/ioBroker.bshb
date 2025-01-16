@@ -36,7 +36,7 @@ use of the adapter. You find a link at the top.
 
 ## Changelog
 
-## 0.4.1
+### 0.4.1
 
 * Dependencies updated
 
