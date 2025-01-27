@@ -759,19 +759,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@iobroker/testing@npm:^5.0.0":
-  version: 5.0.0
-  resolution: "@iobroker/testing@npm:5.0.0"
+"@iobroker/testing@npm:^5.0.3":
+  version: 5.0.3
+  resolution: "@iobroker/testing@npm:5.0.3"
   dependencies:
-    alcalzone-shared: "npm:~4.0.8"
+    alcalzone-shared: "npm:~5.0.0"
     chai: "npm:^4.5.0"
     chai-as-promised: "npm:^7.1.2"
-    debug: "npm:^4.3.7"
-    fs-extra: "npm:^11.2.0"
-    mocha: "npm:^10.7.3"
+    debug: "npm:^4.4.0"
+    fs-extra: "npm:^11.3.0"
+    mocha: "npm:^11.0.1"
     sinon: "npm:^19.0.2"
     sinon-chai: "npm:^3.7.0"
-  checksum: 10c0/4e2797eb149bf056a65b3c55217f197d0ddde0b8a9749278e36157fa290ea373855d9024a4c98f1f7f3759f9e9a6b0da7aebd015832e1203bbf37afd0f25c959
+  checksum: 10c0/516f13186926f29c466fdee3e10ffc143cc69634243b080eed0b034aa203597cb82d005c354e197568fc740ab347454b881bf5ab5682fe0604a02dbf3f59d2e3
   languageName: node
   linkType: hard
 
@@ -2167,12 +2167,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"alcalzone-shared@npm:~4.0.8":
-  version: 4.0.8
-  resolution: "alcalzone-shared@npm:4.0.8"
-  dependencies:
-    debug: "npm:^4.3.4"
-  checksum: 10c0/4a61a66890ec367e5cfd88f2201b1cd2b69c79c997540ea21f91d65688b30c0ba87db24285c9ad02c02c3803b253f56f18bbe389e5d12fcb992f2efd109ef6a5
+"alcalzone-shared@npm:~5.0.0":
+  version: 5.0.0
+  resolution: "alcalzone-shared@npm:5.0.0"
+  checksum: 10c0/17a9f644f0cb3e008fc8010a88ad8a8e26e597e60f4c8e4ddc511cf97a421307075fdc0e23e2819e4194457378f3dd844c4246575ad8182d7227b5cd02b51e7c
   languageName: node
   linkType: hard
 
@@ -3133,7 +3131,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"debug@npm:4, debug@npm:^4.0.0, debug@npm:^4.1.1, debug@npm:^4.3.1, debug@npm:^4.3.2, debug@npm:^4.3.4, debug@npm:^4.3.5, debug@npm:^4.3.6, debug@npm:^4.3.7":
+"debug@npm:4, debug@npm:^4.0.0, debug@npm:^4.1.1, debug@npm:^4.3.1, debug@npm:^4.3.2, debug@npm:^4.3.4, debug@npm:^4.3.5, debug@npm:^4.3.6, debug@npm:^4.4.0":
   version: 4.4.0
   resolution: "debug@npm:4.4.0"
   dependencies:
@@ -4276,6 +4274,17 @@ __metadata:
   languageName: node
   linkType: hard
 
+"fs-extra@npm:^11.3.0":
+  version: 11.3.0
+  resolution: "fs-extra@npm:11.3.0"
+  dependencies:
+    graceful-fs: "npm:^4.2.0"
+    jsonfile: "npm:^6.0.1"
+    universalify: "npm:^2.0.0"
+  checksum: 10c0/5f95e996186ff45463059feb115a22fb048bdaf7e487ecee8a8646c78ed8fdca63630e3077d4c16ce677051f5e60d3355a06f3cd61f3ca43f48cc58822a44d0a
+  languageName: node
+  linkType: hard
+
 "fs-minipass@npm:^2.0.0":
   version: 2.1.0
   resolution: "fs-minipass@npm:2.1.0"
@@ -4520,7 +4529,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"glob@npm:^8.0.0, glob@npm:^8.1.0":
+"glob@npm:^8.0.0":
   version: 8.1.0
   resolution: "glob@npm:8.1.0"
   dependencies:
@@ -5074,7 +5083,7 @@ __metadata:
     "@eslint/js": "npm:9.17.0"
     "@iobroker/adapter-core": "npm:^3.2.3"
     "@iobroker/adapter-dev": "npm:^1.3.0"
-    "@iobroker/testing": "npm:^5.0.0"
+    "@iobroker/testing": "npm:^5.0.3"
     "@iobroker/types": "npm:7.0.6"
     "@semantic-release/exec": "npm:6.0.3"
     "@semantic-release/git": "npm:^10.0.1"
@@ -6453,9 +6462,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"mocha@npm:^10.7.3":
-  version: 10.8.2
-  resolution: "mocha@npm:10.8.2"
+"mocha@npm:^11.0.1":
+  version: 11.1.0
+  resolution: "mocha@npm:11.1.0"
   dependencies:
     ansi-colors: "npm:^4.1.3"
     browser-stdout: "npm:^1.3.1"
@@ -6464,7 +6473,7 @@ __metadata:
     diff: "npm:^5.2.0"
     escape-string-regexp: "npm:^4.0.0"
     find-up: "npm:^5.0.0"
-    glob: "npm:^8.1.0"
+    glob: "npm:^10.4.5"
     he: "npm:^1.2.0"
     js-yaml: "npm:^4.1.0"
     log-symbols: "npm:^4.1.0"
@@ -6474,13 +6483,13 @@ __metadata:
     strip-json-comments: "npm:^3.1.1"
     supports-color: "npm:^8.1.1"
     workerpool: "npm:^6.5.1"
-    yargs: "npm:^16.2.0"
-    yargs-parser: "npm:^20.2.9"
+    yargs: "npm:^17.7.2"
+    yargs-parser: "npm:^21.1.1"
     yargs-unparser: "npm:^2.0.0"
   bin:
     _mocha: bin/_mocha
     mocha: bin/mocha.js
-  checksum: 10c0/1f786290a32a1c234f66afe2bfcc68aa50fe9c7356506bd39cca267efb0b4714a63a0cb333815578d63785ba2fba058bf576c2512db73997c0cae0d659a88beb
+  checksum: 10c0/46e063fb014bef8c7f290094325ee2666ef9f63a918573f5278781631d4b3d04e45abe35f776307ff19e837bc2b42e4f2a7c60c53b69517539890636cf8e49ec
   languageName: node
   linkType: hard
 
