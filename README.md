@@ -38,7 +38,7 @@ use of the adapter. You find a link at the top.
 
 ### 0.4.2
 
-* (holomekc) #493 undefined object issue
+* (holomekc) Fixed undefined object issue
 * Dependencies updated
 
 ### 0.4.1

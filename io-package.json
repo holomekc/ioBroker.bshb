@@ -4,17 +4,17 @@
     "version": "0.4.2",
     "news": {
       "0.4.2": {
-        "en": "#493 undefined object issue\nIt seems that the provided object can be undefined.\nThis is a little bit strange to be honest, as the\napi says the callback is non-null, but maybe I\ndo not understand it properly. We can safely\ndo the check. If _bshbCreated is not set the\nfurther checks will still pass.\nDependencies updated",
-        "de": "#493 undefiniertes objektproblem\nEs scheint, dass das bereitgestellte Objekt undefiniert werden kann.\nDas ist etwas seltsam, um ehrlich zu sein, als die\napi sagt, der Rückruf ist nicht-null, aber vielleicht bin ich\nnicht richtig verstehen. Wir können sicher\nden Scheck machen. Wenn _bshbCreated nicht eingestellt ist\nweitere kontrollen werden noch bestehen.\nAusgaben aktualisiert",
-        "ru": "#493 неопределенный вопрос объекта\nКажется, что предоставленный объект может быть неопределенным.\nЭто немного странно, если честно\nапи говорит, что обратный вызов не нуль, но, возможно, я\nне поймите это должным образом. Мы можем безопасно\nпроверь. Если _bshbCreated не установлен\nдальнейшие проверки все еще пройдут.\nОбновленные данные о зависимостях",
-        "pt": "#493 questão de objeto indefinido\nParece que o objeto fornecido pode ser indefinido.\nIsto é um pouco estranho para ser honesto, como o\na api diz que a chamada não é nula, mas talvez eu\nnão o entenda corretamente. Podemos em segurança\nfaz o cheque. Se _bshbCreated não estiver definido\noutras verificações ainda passarão.\nDependências atualizadas",
-        "nl": "#493 ongedefinieerd object probleem\nHet lijkt erop dat het geleverde object ongedefinieerd kan zijn.\nDit is een beetje vreemd om eerlijk te zijn, als de\napi zegt dat de terugroep non-null is, maar misschien ik\nik begrijp het niet goed. We kunnen veilig\ndoe de cheque. Als _bshbCreated niet is ingesteld\nverdere controles zullen nog steeds doorgaan.\nAfhankelijkheden bijgewerkt",
-        "fr": "#493 problème d'objet non défini\nIl semble que l'objet fourni puisse être indéfini.\nC'est un peu étrange d'être honnête\napi dit que le rappel n'est pas null, mais peut-être que je\nne pas le comprendre correctement. Nous pouvons en toute sécurité\nfaites le chèque. Si _bshbCreated n'est pas défini\nd'autres contrôles seront encore effectués.\nDépendances actualisées",
-        "it": "#493 problema oggetto non definito\nSembra che l'oggetto fornito possa essere non definito.\nE' un po' strano essere onesti\napi dice che il callback non è nullo, ma forse io\nnon capisco bene. Possiamo tranquillamente\nfai l'assegno. Se _bshbCreated non è impostato\naltri controlli passeranno ancora.\nDipendenze aggiornate",
-        "es": "#493 problema de objeto no definido\nParece que el objeto proporcionado puede ser indefinido.\nEsto es un poco extraño para ser honesto, como el\napi dice que el callback no es nulo, pero tal vez yo\nno lo entienden correctamente. Podemos asegurarnos\nhaz el cheque. Si _bshbCreado no es establecido\naún pasarán más cheques.\nActualización de las dependencias",
-        "pl": "# 493 nieokreślony numer obiektu\nWydaje się, że dostarczony obiekt może być niezdefiniowany.\nTo trochę dziwne być szczerym\napi mówi, że oddzwonienie nie jest nieważne, ale może ja\nnie rozumieją tego właściwie. Możemy bezpiecznie\nsprawdź. Jeśli _ bshbCreated nie jest ustawiony\ndalsze kontrole będą nadal mijać.\nAktualizacja zależności",
-        "uk": "#493 невизнаний предмет\nЗдається, що наданий об'єкт може бути не визначений.\nЦе трохи дивний, щоб бути чесним, як\napi коментує зворотній дзвінок не null, але можливо, я\nне розуміти його правильно. Ми можемо безпечно\nперевірити. Якщо _bshbCreated не встановлено\nдалі пройдуть перевірки.\nЗалежність оновлено",
-        "zh-cn": "# 493 未定义对象问题\n看来提供的对象可以未定义.\n老实说 这有点奇怪\napi说回话是没有的,但也许我\n不理解这一点。 我们可以安全\n检查一下 如果创建 _bshbCreated 不设置\n进一步检查还会通过.\n更新的依赖关系"
+        "en": "Fixed undefined object issue",
+        "de": "Problem mit undefinierten Objekten behoben",
+        "ru": "Исправлена проблема неопределенного объекта",
+        "pt": "Corrigido o problema de objectos indefinidos",
+        "nl": "Probleem met ongedefinieerd object opgelost",
+        "fr": "Correction d'un problème d'objet non défini",
+        "it": "Corretto il problema degli oggetti non definiti",
+        "es": "Solucionado un problema de objetos indefinidos",
+        "pl": "Naprawiono błąd niezdefiniowanego obiektu",
+        "uk": "Виправлено проблему невизначених об'єктів",
+        "zh-cn": "修正了未定义对象问题"
       },
       "0.4.1": {
         "en": "Dependencies updated",
