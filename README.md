@@ -36,6 +36,18 @@ use of the adapter. You find a link at the top.
 
 ## Changelog
 
+### 0.4.2
+
+* (holomekc) #493 undefined object issue
+
+  It seems that the provided object can be undefined.
+This is a little bit strange to be honest, as the
+api says the callback is non-null, but maybe I
+do not understand it properly. We can safely
+do the check. If _bshbCreated is not set the
+further checks will still pass.
+* Dependencies updated
+
 ### 0.4.1
 
 * Dependencies updated
@@ -61,10 +73,6 @@ use of the adapter. You find a link at the top.
 * (holomekc) Update dependencies and fix rate limiting
 
 ### 0.2.6
-
-* (holomekc) Support for user defined states
-
-### 0.2.5
 
 * (holomekc) Support for user defined states
 
