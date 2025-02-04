@@ -1,11 +1,8 @@
-import { mergeMap, MonoTypeOperatorFunction, of, pipe } from "rxjs";
-import { delay, tap } from "rxjs/operators";
-import { Bshb } from "./main";
+import { mergeMap, MonoTypeOperatorFunction, of, pipe } from 'rxjs';
+import { delay, tap } from 'rxjs/operators';
+import { Bshb } from './main';
 
-export const rateLimit = <T>(
-  interval: number,
-  bshb: Bshb,
-): MonoTypeOperatorFunction<T> => {
+export const rateLimit = <T>(interval: number, bshb: Bshb): MonoTypeOperatorFunction<T> => {
   let last = -1;
 
   return pipe(
@@ -13,7 +10,7 @@ export const rateLimit = <T>(
       let result = of(v).pipe(tap(() => (last = Date.now())));
 
       if (interval === 0) {
-        bshb.log.silly("rateLimit disabled.");
+        bshb.log.silly('rateLimit disabled.');
         // Disabled
       } else {
         const now = Date.now();
@@ -27,6 +24,6 @@ export const rateLimit = <T>(
         }
       }
       return result;
-    }),
+    })
   );
 };

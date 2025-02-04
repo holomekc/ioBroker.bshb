@@ -11,17 +11,17 @@ class BshbAirPurityGuardianHandler extends bshb_handler_1.BshbHandler {
     cachedStates = new Map();
     handleDetection() {
         return this.detectAirPurityGuardian().pipe((0, rxjs_1.tap)({
-            subscribe: () => this.bshb.log.info("Start detecting air purity guardian..."),
-            finalize: () => this.bshb.log.info("Detecting air purity guardian finished"),
+            subscribe: () => this.bshb.log.info('Start detecting air purity guardian...'),
+            finalize: () => this.bshb.log.info('Detecting air purity guardian finished'),
         }));
     }
     handleBshcUpdate(resultEntry) {
-        if (resultEntry["@type"] === "airPurityGuardian") {
+        if (resultEntry['@type'] === 'airPurityGuardian') {
             const idPrefix = `airPurityGuardian.${resultEntry.id}`;
-            Object.keys(resultEntry).forEach((key) => {
+            Object.keys(resultEntry).forEach(key => {
                 const id = `${idPrefix}.${key}`;
                 (0, rxjs_1.from)(this.bshb.getObjectAsync(id))
-                    .pipe((0, rxjs_1.switchMap)((obj) => {
+                    .pipe((0, rxjs_1.switchMap)(obj => {
                     if (obj) {
                         this.bshb.setState(id, {
                             val: this.mapValueToStorage(resultEntry[key]),
@@ -46,7 +46,7 @@ class BshbAirPurityGuardianHandler extends bshb_handler_1.BshbHandler {
             const cachedState = this.cachedStates.get(id);
             const data = {};
             return this.mapValueFromStorage(id, state.val)
-                .pipe((0, rxjs_1.map)((mappedValue) => (data[cachedState.key] = mappedValue)), (0, rxjs_1.switchMap)(() => this.getBshcClient().updateAirPurityGuardian(cachedState.id, data, {
+                .pipe((0, rxjs_1.map)(mappedValue => (data[cachedState.key] = mappedValue)), (0, rxjs_1.switchMap)(() => this.getBshcClient().updateAirPurityGuardian(cachedState.id, data, {
                 timeout: this.long_timeout,
             })))
                 .pipe((0, rxjs_1.tap)(this.handleBshcSendError(`id=${match[1]}, value=${state.val}`)), (0, rxjs_1.map)(() => true));
@@ -54,16 +54,16 @@ class BshbAirPurityGuardianHandler extends bshb_handler_1.BshbHandler {
         return result;
     }
     detectAirPurityGuardian() {
-        return this.setObjectNotExistsAsync("airPurityGuardian", {
-            type: "folder",
+        return this.setObjectNotExistsAsync('airPurityGuardian', {
+            type: 'folder',
             common: {
-                name: "airPurityGuardian",
+                name: 'airPurityGuardian',
                 read: true,
             },
             native: {},
         }).pipe((0, rxjs_1.switchMap)(() => this.getBshcClient().getAirPurityGuardian({
             timeout: this.long_timeout,
-        })), (0, rxjs_1.mergeMap)((response) => (0, rxjs_1.from)(response.parsedResponse)), (0, rxjs_1.mergeMap)((airPurityGuardian) => this.addAirPurityGuardian(airPurityGuardian)), (0, rxjs_1.switchMap)(() => (0, rxjs_1.of)(undefined)));
+        })), (0, rxjs_1.mergeMap)(response => (0, rxjs_1.from)(response.parsedResponse)), (0, rxjs_1.mergeMap)(airPurityGuardian => this.addAirPurityGuardian(airPurityGuardian)), (0, rxjs_1.switchMap)(() => (0, rxjs_1.of)(undefined)));
     }
     addAirPurityGuardian(airPurityGuardian) {
         const match = this.roomRegex.exec(airPurityGuardian.id);
@@ -71,28 +71,28 @@ class BshbAirPurityGuardianHandler extends bshb_handler_1.BshbHandler {
         if (match) {
             roomAndFunctions = this.getBshcClient()
                 .getRoom(match ? match[1] : match[1])
-                .pipe((0, rxjs_1.map)((response) => response.parsedResponse), (0, operators_1.catchError)(() => (0, rxjs_1.of)(undefined)));
+                .pipe((0, rxjs_1.map)(response => response.parsedResponse), (0, operators_1.catchError)(() => (0, rxjs_1.of)(undefined)));
         }
         else {
-            roomAndFunctions = (0, rxjs_1.throwError)(() => new Error("No room could be extracted from airPurityGuardian."));
+            roomAndFunctions = (0, rxjs_1.throwError)(() => new Error('No room could be extracted from airPurityGuardian.'));
         }
         return (0, rxjs_1.zip)(this.setObjectNotExistsAsync(`airPurityGuardian.${airPurityGuardian.id}`, {
-            type: "channel",
+            type: 'channel',
             common: {
                 name: airPurityGuardian.name,
             },
             native: {},
-        }), roomAndFunctions).pipe((0, rxjs_1.tap)((objAndRoom) => {
+        }), roomAndFunctions).pipe((0, rxjs_1.tap)(objAndRoom => {
             const obj = objAndRoom[0];
             const room = objAndRoom[1];
             if (obj && room && obj._bshbCreated) {
-                this.addRoomEnum(room.name, "airPurityGuardian", airPurityGuardian.id);
-                this.addFunctionEnum(bshb_definition_1.BshbDefinition.determineFunction("airPurityGuardian"), "airPurityGuardian", airPurityGuardian.id);
+                this.addRoomEnum(room.name, 'airPurityGuardian', airPurityGuardian.id);
+                this.addFunctionEnum(bshb_definition_1.BshbDefinition.determineFunction('airPurityGuardian'), 'airPurityGuardian', airPurityGuardian.id);
             }
-        }), (0, rxjs_1.mergeMap)(() => (0, rxjs_1.from)(Object.keys(airPurityGuardian))), (0, rxjs_1.mergeMap)((key) => this.importState(key, airPurityGuardian)));
+        }), (0, rxjs_1.mergeMap)(() => (0, rxjs_1.from)(Object.keys(airPurityGuardian))), (0, rxjs_1.mergeMap)(key => this.importState(key, airPurityGuardian)));
     }
     importState(key, airPurityGuardian) {
-        if (key === "@type" || key === "name" || key === "id") {
+        if (key === '@type' || key === 'name' || key === 'id') {
             return (0, rxjs_1.of)(undefined);
         }
         const id = `airPurityGuardian.${airPurityGuardian.id}.${key}`;
@@ -102,19 +102,19 @@ class BshbAirPurityGuardianHandler extends bshb_handler_1.BshbHandler {
             key: key,
         });
         return this.setObjectNotExistsAsync(id, {
-            type: "state",
+            type: 'state',
             common: {
                 name: key,
                 type: bshb_definition_1.BshbDefinition.determineType(value),
-                role: bshb_definition_1.BshbDefinition.determineRole("airPurityGuardian", key, value),
+                role: bshb_definition_1.BshbDefinition.determineRole('airPurityGuardian', key, value),
                 read: true,
                 write: true,
             },
             native: {},
-        }).pipe((0, rxjs_1.switchMap)(() => (0, rxjs_1.from)(this.bshb.getStateAsync(id))), (0, rxjs_1.switchMap)((state) => this.setInitialStateValueIfNotSet(id, state, value)));
+        }).pipe((0, rxjs_1.switchMap)(() => (0, rxjs_1.from)(this.bshb.getStateAsync(id))), (0, rxjs_1.switchMap)(state => this.setInitialStateValueIfNotSet(id, state, value)));
     }
     name() {
-        return "airPurityGuardianHander";
+        return 'airPurityGuardianHander';
     }
 }
 exports.BshbAirPurityGuardianHandler = BshbAirPurityGuardianHandler;

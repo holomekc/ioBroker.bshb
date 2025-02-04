@@ -1,17 +1,8 @@
-import { tap } from "rxjs/operators";
-import { Bshb } from "../../main";
-import { BoschSmartHomeBridge } from "bosch-smart-home-bridge";
-import {
-  concatMap,
-  from,
-  map,
-  Observable,
-  Observer,
-  of,
-  Subject,
-  switchMap,
-} from "rxjs";
-import { Utils } from "../../utils";
+import { tap } from 'rxjs/operators';
+import { Bshb } from '../../main';
+import { BoschSmartHomeBridge } from 'bosch-smart-home-bridge';
+import { concatMap, from, map, Observable, Observer, of, Subject, switchMap } from 'rxjs';
+import { Utils } from '../../utils';
 
 /**
  * Abstract handler which can be used to handle the following things:<br/>
@@ -43,11 +34,11 @@ export abstract class BshbHandler {
    */
   constructor(
     protected bshb: Bshb,
-    protected boschSmartHomeBridge: BoschSmartHomeBridge,
+    protected boschSmartHomeBridge: BoschSmartHomeBridge
   ) {
     this.enumChain
       .pipe(
-        concatMap((enumObj) => {
+        concatMap(enumObj => {
           if (enumObj.itemId) {
             return from(
               this.bshb.addStateToEnumAsync(
@@ -55,25 +46,19 @@ export abstract class BshbHandler {
                 enumObj.name,
                 enumObj.deviceId,
                 enumObj.deviceServiceId,
-                enumObj.itemId,
-              ),
+                enumObj.itemId
+              )
             );
           } else {
             return from(
-              this.bshb.addChannelToEnumAsync(
-                enumObj.type,
-                enumObj.name,
-                enumObj.deviceId,
-                enumObj.deviceServiceId,
-              ),
+              this.bshb.addChannelToEnumAsync(enumObj.type, enumObj.name, enumObj.deviceId, enumObj.deviceServiceId)
             );
           }
-        }),
+        })
       )
       .subscribe({
         next: () => {},
-        error: (err) =>
-          this.bshb.log.warn(Utils.handleError("Could not add enum", err)),
+        error: err => this.bshb.log.warn(Utils.handleError('Could not add enum', err)),
       });
   }
 
@@ -99,10 +84,7 @@ export abstract class BshbHandler {
    * @param state
    *        state itself
    */
-  abstract sendUpdateToBshc(
-    id: string,
-    state: ioBroker.State,
-  ): Observable<boolean>;
+  abstract sendUpdateToBshc(id: string, state: ioBroker.State): Observable<boolean>;
 
   /**
    * Get bshb client
@@ -111,43 +93,27 @@ export abstract class BshbHandler {
     return this.boschSmartHomeBridge.getBshcClient();
   }
 
-  public addRoomEnum(
-    name: string,
-    deviceId: string,
-    deviceServiceId: string,
-    itemId?: string,
-  ) {
+  public addRoomEnum(name: string, deviceId: string, deviceServiceId: string, itemId?: string) {
     if (name) {
       name = name.trim();
 
       if (name && name.length > 0) {
-        this.addEnum("rooms", name, deviceId, deviceServiceId, itemId);
+        this.addEnum('rooms', name, deviceId, deviceServiceId, itemId);
       }
     }
   }
 
-  public addFunctionEnum(
-    name: string,
-    deviceId: string,
-    deviceServiceId: string,
-    itemId?: string,
-  ) {
+  public addFunctionEnum(name: string, deviceId: string, deviceServiceId: string, itemId?: string) {
     if (name) {
       name = name.trim();
 
       if (name && name.length > 0) {
-        this.addEnum("functions", name, deviceId, deviceServiceId, itemId);
+        this.addEnum('functions', name, deviceId, deviceServiceId, itemId);
       }
     }
   }
 
-  public addEnum(
-    type: string,
-    name: string,
-    deviceId: string,
-    deviceServiceId: string,
-    itemId?: string,
-  ) {
+  public addEnum(type: string, name: string, deviceId: string, deviceServiceId: string, itemId?: string) {
     this.enumChain.next({
       type: type,
       name: name,
@@ -158,7 +124,7 @@ export abstract class BshbHandler {
   }
 
   public mapValueToStorage(value: any): any {
-    if (typeof value === "object") {
+    if (typeof value === 'object') {
       return JSON.stringify(value);
     } else if (Array.isArray(value)) {
       return JSON.stringify(value);
@@ -167,16 +133,14 @@ export abstract class BshbHandler {
   }
 
   public mapValueFromStorage(id: string, value: any): Observable<any> {
-    return new Observable<any>((subscriber) => {
-      if (typeof value === "string") {
+    return new Observable<any>(subscriber => {
+      if (typeof value === 'string') {
         // in case we see a string we check object.common.type for array or object.
         this.bshb.getObject(id, (_error, object) => {
           if (
             object &&
             object.common &&
-            (object.common.type === "array" ||
-              object.common.type === "object" ||
-              object.common.type === "json")
+            (object.common.type === 'array' || object.common.type === 'object' || object.common.type === 'json')
           ) {
             try {
               subscriber.next(JSON.parse(value));
@@ -185,11 +149,11 @@ export abstract class BshbHandler {
             } catch (e: unknown) {
               if (e instanceof Error) {
                 this.bshb.log.info(
-                  `Could not parse value "${value}" for id "${id}". Continue with actual value: ${e.message}`,
+                  `Could not parse value "${value}" for id "${id}". Continue with actual value: ${e.message}`
                 );
               } else {
                 this.bshb.log.info(
-                  `Could not parse value "${value}" for id "${id}". Continue with actual value: ${e as string}`,
+                  `Could not parse value "${value}" for id "${id}". Continue with actual value: ${e as string}`
                 );
               }
             }
@@ -217,31 +181,31 @@ export abstract class BshbHandler {
   public setObjectNotExistsAsync(
     id: string,
     object: ioBroker.SettableObject,
-    options?: unknown,
+    options?: unknown
   ): Observable<{ id: string; _bshbCreated: boolean }> {
     return from(this.bshb.getObjectAsync(id, options)).pipe(
-      switchMap((obj) => {
+      switchMap(obj => {
         if (!obj) {
           return from(this.bshb.setObject(id, object)).pipe(
-            tap((o) => ((o as any)._bshbCreated = true)),
-            map((o) => o as unknown as { id: string; _bshbCreated: boolean }),
+            tap(o => {
+              if (o) {
+                (o as any)._bshbCreated = true;
+              }
+            }),
+            map(o => o as unknown as { id: string; _bshbCreated: boolean })
           );
         } else {
           (obj as any)._bshbCreated = false;
           return of(obj as unknown as { id: string; _bshbCreated: boolean });
         }
-      }),
+      })
     );
   }
 
-  public setInitialStateValueIfNotSet(
-    id: string,
-    state: ioBroker.State | null | undefined,
-    value: any,
-  ) {
+  public setInitialStateValueIfNotSet(id: string, state: ioBroker.State | null | undefined, value: any) {
     if (state) {
       return this.mapValueFromStorage(id, state.val).pipe(
-        tap((value) => {
+        tap(value => {
           if (value !== value) {
             // only set again if a change is detected.
             this.bshb.setState(id, {
@@ -250,7 +214,7 @@ export abstract class BshbHandler {
             });
           }
         }),
-        switchMap(() => of(undefined)),
+        switchMap(() => of(undefined))
       );
     } else {
       // no previous state so we set it
@@ -262,27 +226,15 @@ export abstract class BshbHandler {
 
   public handleBshcUpdateError(...params: any[]): Partial<Observer<any>> {
     return {
-      next: () =>
-        this.bshb.log.debug(
-          `Handled update for "${this.name()}" successfully.`,
-        ),
-      error: (err) =>
-        this.logWarn(
-          `Could not handle update for "${this.name()}" with ${params}.`,
-          err,
-        ),
+      next: () => this.bshb.log.debug(`Handled update for "${this.name()}" successfully.`),
+      error: err => this.logWarn(`Could not handle update for "${this.name()}" with ${params}.`, err),
     };
   }
 
   public handleBshcSendError(...params: any[]): Partial<Observer<any>> {
     return {
-      next: () =>
-        this.bshb.log.debug(`Send message for "${this.name()}" successfully.`),
-      error: (err) =>
-        this.logWarn(
-          `Could not send update for "${this.name()}" with ${params}.`,
-          err,
-        ),
+      next: () => this.bshb.log.debug(`Send message for "${this.name()}" successfully.`),
+      error: err => this.logWarn(`Could not send update for "${this.name()}" with ${params}.`, err),
     };
   }
 

@@ -1,4 +1,4 @@
-import { LogLevel } from "./log-level";
+import { LogLevel } from './log-level';
 
 /**
  * This class contains helpful methods for the adapter
@@ -15,8 +15,8 @@ export class Utils {
    */
   public static getCertificateKeys(identifier: string) {
     return {
-      cert: "bshb_" + identifier + "_cert",
-      key: "bshb_" + identifier + "_key",
+      cert: 'bshb_' + identifier + '_cert',
+      key: 'bshb_' + identifier + '_key',
     };
   }
 
@@ -45,19 +45,19 @@ export class Utils {
     }
     let result = false;
     switch (level) {
-      case "silly":
+      case 'silly':
         result = toCheck >= LogLevel.silly;
         break;
-      case "debug":
+      case 'debug':
         result = toCheck >= LogLevel.debug;
         break;
-      case "info":
+      case 'info':
         result = toCheck >= LogLevel.info;
         break;
-      case "warn":
+      case 'warn':
         result = toCheck >= LogLevel.warn;
         break;
-      case "error":
+      case 'error':
         result = toCheck >= LogLevel.error;
         break;
     }
@@ -69,12 +69,12 @@ export class Utils {
   }
 
   public static errorToString(error: Error) {
-    let result = "";
+    let result = '';
     if (error) {
       result += error;
       const cause = error.cause;
       if (cause && cause instanceof Error) {
-        result += "\n  [cause] " + this.errorToString(cause);
+        result += '\n  [cause] ' + this.errorToString(cause);
       }
     }
     return result;

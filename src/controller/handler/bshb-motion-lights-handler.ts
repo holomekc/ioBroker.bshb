@@ -1,6 +1,6 @@
-import { BshbHandler } from "./bshb-handler";
-import { from, map, mergeMap, Observable, of, switchMap, tap } from "rxjs";
-import { BshbDefinition } from "../../bshb-definition";
+import { BshbHandler } from './bshb-handler';
+import { from, map, mergeMap, Observable, of, switchMap, tap } from 'rxjs';
+import { BshbDefinition } from '../../bshb-definition';
 
 export class BshbMotionLightsHandler extends BshbHandler {
   private regex = /bshb\.\d+\.motionlight\.(.*)/;
@@ -9,21 +9,21 @@ export class BshbMotionLightsHandler extends BshbHandler {
   handleDetection(): Observable<void> {
     return this.detectMotionLights().pipe(
       tap({
-        subscribe: () => this.bshb.log.info("Start detecting motion lights..."),
-        finalize: () => this.bshb.log.info("Detecting motion lights finished"),
-      }),
+        subscribe: () => this.bshb.log.info('Start detecting motion lights...'),
+        finalize: () => this.bshb.log.info('Detecting motion lights finished'),
+      })
     );
   }
 
   handleBshcUpdate(resultEntry: any): boolean {
-    if (resultEntry["@type"] === "motionlight") {
+    if (resultEntry['@type'] === 'motionlight') {
       const idPrefix = `motionlight.${resultEntry.id}`;
 
-      Object.keys(resultEntry).forEach((key) => {
+      Object.keys(resultEntry).forEach(key => {
         const id = `${idPrefix}.${key}`;
         from(this.bshb.getObjectAsync(id))
           .pipe(
-            switchMap((obj) => {
+            switchMap(obj => {
               if (obj) {
                 this.bshb.setState(id, {
                   val: this.mapValueToStorage(resultEntry[key]),
@@ -33,7 +33,7 @@ export class BshbMotionLightsHandler extends BshbHandler {
               } else {
                 return this.importState(key, resultEntry);
               }
-            }),
+            })
           )
           .subscribe(this.handleBshcUpdateError(`id=${resultEntry.id}`));
       });
@@ -53,36 +53,34 @@ export class BshbMotionLightsHandler extends BshbHandler {
 
       result = this.mapValueFromStorage(id, state.val)
         .pipe(
-          map((mappedValue) => (data[cachedState.key] = mappedValue)),
+          map(mappedValue => (data[cachedState.key] = mappedValue)),
           switchMap(() =>
             this.getBshcClient().updateMotionLights(cachedState.id, data, {
               timeout: this.long_timeout,
-            }),
-          ),
+            })
+          )
         )
         .pipe(
           tap(this.handleBshcSendError(`id=${match[1]}, value=${state.val}`)),
-          map(() => true),
+          map(() => true)
         );
     }
     return result;
   }
 
   private detectMotionLights(): Observable<void> {
-    return this.setObjectNotExistsAsync("motionlight", {
-      type: "folder",
+    return this.setObjectNotExistsAsync('motionlight', {
+      type: 'folder',
       common: {
-        name: "motionlight",
+        name: 'motionlight',
         read: true,
       },
       native: {},
     }).pipe(
-      switchMap(() =>
-        this.getBshcClient().getMotionLights({ timeout: this.long_timeout }),
-      ),
-      mergeMap((response) => from(response.parsedResponse)),
-      mergeMap((waterLight) => this.addMotionLight(waterLight)),
-      switchMap(() => of(undefined)),
+      switchMap(() => this.getBshcClient().getMotionLights({ timeout: this.long_timeout })),
+      mergeMap(response => from(response.parsedResponse)),
+      mergeMap(waterLight => this.addMotionLight(waterLight)),
+      switchMap(() => of(undefined))
     );
   }
 
@@ -90,23 +88,23 @@ export class BshbMotionLightsHandler extends BshbHandler {
     return this.getBshcClient()
       .getDevice(motionLight.id)
       .pipe(
-        map((response) => response.parsedResponse),
-        switchMap((device) =>
+        map(response => response.parsedResponse),
+        switchMap(device =>
           this.setObjectNotExistsAsync(`motionlight.${motionLight.id}`, {
-            type: "channel",
+            type: 'channel',
             common: {
               name: device ? device.name : motionLight.id,
             },
             native: {},
-          }),
+          })
         ),
         mergeMap(() => from(Object.keys(motionLight))),
-        mergeMap((key) => this.importState(key, motionLight)),
+        mergeMap(key => this.importState(key, motionLight))
       );
   }
 
   private importState(key: string, motionLight: any): Observable<any> {
-    if (key === "@type" || key === "id" || key === "motionDetectorId") {
+    if (key === '@type' || key === 'id' || key === 'motionDetectorId') {
       return of(undefined);
     }
 
@@ -117,22 +115,22 @@ export class BshbMotionLightsHandler extends BshbHandler {
       key: key,
     });
     return this.setObjectNotExistsAsync(id, {
-      type: "state",
+      type: 'state',
       common: {
         name: key,
         type: BshbDefinition.determineType(value),
-        role: BshbDefinition.determineRole("motionlight", key, value),
+        role: BshbDefinition.determineRole('motionlight', key, value),
         read: true,
         write: true,
       },
       native: {},
     }).pipe(
       switchMap(() => from(this.bshb.getStateAsync(id))),
-      switchMap((state) => this.setInitialStateValueIfNotSet(id, state, value)),
+      switchMap(state => this.setInitialStateValueIfNotSet(id, state, value))
     );
   }
 
   name(): string {
-    return "motionLightsHandler";
+    return 'motionLightsHandler';
   }
 }

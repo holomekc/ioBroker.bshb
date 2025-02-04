@@ -1,15 +1,6 @@
-import { BshbHandler } from "./bshb-handler";
-import {
-  from,
-  last,
-  map,
-  mergeMap,
-  Observable,
-  of,
-  switchMap,
-  tap,
-} from "rxjs";
-import { catchError, delay } from "rxjs/operators";
+import { BshbHandler } from './bshb-handler';
+import { from, last, map, mergeMap, Observable, of, switchMap, tap } from 'rxjs';
+import { catchError, delay } from 'rxjs/operators';
 
 /**
  * This handler is used to detect automations of bshc
@@ -23,24 +14,21 @@ export class BshbAutomationHandler extends BshbHandler {
   public handleDetection(): Observable<void> {
     return this.detectAutomations().pipe(
       tap({
-        subscribe: () => this.bshb.log.info("Start detecting automations..."),
-        finalize: () => this.bshb.log.info("Detecting automations finished"),
-      }),
+        subscribe: () => this.bshb.log.info('Start detecting automations...'),
+        finalize: () => this.bshb.log.info('Detecting automations finished'),
+      })
     );
   }
 
   public handleBshcUpdate(resultEntry: any): boolean {
-    if (resultEntry["@type"] === "automationRule") {
+    if (resultEntry['@type'] === 'automationRule') {
       this.detectAutomations().subscribe();
       return true;
     }
     return false;
   }
 
-  public sendUpdateToBshc(
-    id: string,
-    state: ioBroker.State,
-  ): Observable<boolean> {
+  public sendUpdateToBshc(id: string, state: ioBroker.State): Observable<boolean> {
     const match = this.automationRegex.exec(id);
 
     let result = of(false);
@@ -49,11 +37,9 @@ export class BshbAutomationHandler extends BshbHandler {
       const automationId = match[1];
       const key = match[2];
 
-      this.bshb.log.debug(
-        `Found automation with id=${automationId}, key=${key} and value=${state.val}`,
-      );
+      this.bshb.log.debug(`Found automation with id=${automationId}, key=${key} and value=${state.val}`);
 
-      if (key === "trigger") {
+      if (key === 'trigger') {
         result = this.getBshcClient()
           .triggerAutomation(automationId, { timeout: this.long_timeout })
           .pipe(
@@ -63,64 +49,37 @@ export class BshbAutomationHandler extends BshbHandler {
                 this.bshb.setState(id, {
                   val: false,
                   ack: true,
-                }),
-              ),
+                })
+              )
             ),
             tap(
               this.handleBshcSendError(
-                `id=${automationId}, value=${state.val}, key=${key}, automationId=${automationId}`,
-              ),
+                `id=${automationId}, value=${state.val}, key=${key}, automationId=${automationId}`
+              )
             ),
-            map(() => true),
+            map(() => true)
           );
       } else {
-        const idPrefix = "automations." + automationId;
+        const idPrefix = 'automations.' + automationId;
         const data: any = {};
-        data["@type"] = "automationRule";
+        data['@type'] = 'automationRule';
         data.id = automationId;
 
         result = from(
-          this.addAutomationValue(idPrefix, "enabled", data)
-            .then(() => this.addAutomationValue(idPrefix, "name", data))
-            .then(() =>
-              this.addAutomationValue(
-                idPrefix,
-                "automationConditions",
-                data,
-                (val) => JSON.parse(val),
-              ),
-            )
-            .then(() =>
-              this.addAutomationValue(
-                idPrefix,
-                "automationTriggers",
-                data,
-                (val) => JSON.parse(val),
-              ),
-            )
-            .then(() =>
-              this.addAutomationValue(
-                idPrefix,
-                "automationActions",
-                data,
-                (val) => JSON.parse(val),
-              ),
-            )
-            .then(() =>
-              this.addAutomationValue(idPrefix, "conditionLogicalOp", data),
-            ),
+          this.addAutomationValue(idPrefix, 'enabled', data)
+            .then(() => this.addAutomationValue(idPrefix, 'name', data))
+            .then(() => this.addAutomationValue(idPrefix, 'automationConditions', data, val => JSON.parse(val)))
+            .then(() => this.addAutomationValue(idPrefix, 'automationTriggers', data, val => JSON.parse(val)))
+            .then(() => this.addAutomationValue(idPrefix, 'automationActions', data, val => JSON.parse(val)))
+            .then(() => this.addAutomationValue(idPrefix, 'conditionLogicalOp', data))
         ).pipe(
           switchMap(() =>
             this.getBshcClient().setAutomation(automationId, data, {
               timeout: this.long_timeout,
-            }),
+            })
           ),
-          tap(
-            this.handleBshcSendError(
-              `id=${automationId}, value=${state.val}, data=${JSON.stringify(data)}`,
-            ),
-          ),
-          map(() => true),
+          tap(this.handleBshcSendError(`id=${automationId}, value=${state.val}, data=${JSON.stringify(data)}`)),
+          map(() => true)
         );
       }
     }
@@ -128,12 +87,7 @@ export class BshbAutomationHandler extends BshbHandler {
     return result;
   }
 
-  private async addAutomationValue(
-    idPrefix: string,
-    key: string,
-    data: any,
-    mapFnc?: (val: any) => any,
-  ) {
+  private async addAutomationValue(idPrefix: string, key: string, data: any, mapFnc?: (val: any) => any) {
     const state = await this.bshb.getStateAsync(`${idPrefix}.${key}`);
     if (mapFnc) {
       return (data[key] = mapFnc(state!.val));
@@ -143,41 +97,39 @@ export class BshbAutomationHandler extends BshbHandler {
   }
 
   private detectAutomations(): Observable<void> {
-    return this.setObjectNotExistsAsync("automations", {
-      type: "folder",
+    return this.setObjectNotExistsAsync('automations', {
+      type: 'folder',
       common: {
-        name: "automations",
+        name: 'automations',
         read: true,
       },
       native: {
-        id: "automations",
+        id: 'automations',
       },
     }).pipe(
       switchMap(() =>
         this.getBshcClient().getAutomations(undefined, {
           timeout: this.long_timeout,
-        }),
+        })
       ),
-      switchMap((response) =>
+      switchMap(response =>
         this.deleteMissingAutomations(response.parsedResponse).pipe(
           last(undefined, void 0),
-          switchMap(() => from(response.parsedResponse)),
-        ),
+          switchMap(() => from(response.parsedResponse))
+        )
       ),
-      mergeMap((automation) => {
-        this.bshb.log.debug(
-          `Found automation ${automation.id}, ${automation.name}`,
-        );
-        const id = "automations." + automation.id;
+      mergeMap(automation => {
+        this.bshb.log.debug(`Found automation ${automation.id}, ${automation.name}`);
+        const id = 'automations.' + automation.id;
 
         // we overwrite object here on purpose because we reflect 1-1 the data from controller here.
         return from(
           this.bshb.setObject(id, {
-            type: "folder",
+            type: 'folder',
             common: {
               name: automation.name,
-              type: "boolean",
-              role: "switch",
+              type: 'boolean',
+              role: 'switch',
               write: true,
               read: false,
             },
@@ -185,183 +137,181 @@ export class BshbAutomationHandler extends BshbHandler {
               id: automation.id,
               name: automation.name,
             },
-          }),
+          })
         ).pipe(
           switchMap(() =>
             from(
               this.bshb.setObject(`${id}.enabled`, {
-                type: "state",
+                type: 'state',
                 common: {
-                  name: "enabled",
-                  type: "boolean",
-                  role: "switch",
+                  name: 'enabled',
+                  type: 'boolean',
+                  role: 'switch',
                   write: true,
                   read: true,
                 },
                 native: {
                   id: `${id}.enabled`,
-                  name: "enabled",
+                  name: 'enabled',
                 },
-              }),
-            ),
+              })
+            )
           ),
           tap(() =>
             this.bshb.setState(`${id}.enabled`, {
               val: automation.enabled,
               ack: true,
-            }),
+            })
           ),
           switchMap(() =>
             from(
               this.bshb.setObject(`${id}.name`, {
-                type: "state",
+                type: 'state',
                 common: {
-                  name: "name",
-                  type: "string",
-                  role: "text",
+                  name: 'name',
+                  type: 'string',
+                  role: 'text',
                   write: true,
                   read: true,
                 },
                 native: {
                   id: `${id}.name`,
-                  name: "name",
+                  name: 'name',
                 },
-              }),
-            ),
+              })
+            )
           ),
           tap(() =>
             this.bshb.setState(`${id}.name`, {
               val: automation.name,
               ack: true,
-            }),
+            })
           ),
           switchMap(() =>
             from(
               this.bshb.setObject(`${id}.trigger`, {
-                type: "state",
+                type: 'state',
                 common: {
-                  name: "trigger",
-                  type: "boolean",
-                  role: "switch",
+                  name: 'trigger',
+                  type: 'boolean',
+                  role: 'switch',
                   write: true,
                   read: false,
                 },
                 native: {
                   id: `${id}.trigger`,
-                  name: "trigger",
+                  name: 'trigger',
                 },
-              }),
-            ),
+              })
+            )
           ),
-          tap(() =>
-            this.bshb.setState(`${id}.trigger`, { val: false, ack: true }),
-          ),
+          tap(() => this.bshb.setState(`${id}.trigger`, { val: false, ack: true })),
           switchMap(() =>
             from(
               this.bshb.setObject(`${id}.automationConditions`, {
-                type: "state",
+                type: 'state',
                 common: {
-                  name: "automationConditions",
-                  type: "array",
-                  role: "list",
+                  name: 'automationConditions',
+                  type: 'array',
+                  role: 'list',
                   write: true,
                   read: true,
                 },
                 native: {
                   id: `${id}.automationConditions`,
-                  name: "automationConditions",
+                  name: 'automationConditions',
                 },
-              }),
-            ),
+              })
+            )
           ),
           tap(() =>
             this.bshb.setState(`${id}.automationConditions`, {
               val: this.mapValueToStorage(automation.automationConditions),
               ack: true,
-            }),
+            })
           ),
           switchMap(() =>
             from(
               this.bshb.setObject(`${id}.automationTriggers`, {
-                type: "state",
+                type: 'state',
                 common: {
-                  name: "automationTriggers",
-                  type: "array",
-                  role: "list",
+                  name: 'automationTriggers',
+                  type: 'array',
+                  role: 'list',
                   write: true,
                   read: true,
                 },
                 native: {
                   id: `${id}.automationTriggers`,
-                  name: "automationTriggers",
+                  name: 'automationTriggers',
                 },
-              }),
-            ),
+              })
+            )
           ),
           tap(() =>
             this.bshb.setState(`${id}.automationTriggers`, {
               val: this.mapValueToStorage(automation.automationTriggers),
               ack: true,
-            }),
+            })
           ),
           switchMap(() =>
             from(
               this.bshb.setObject(`${id}.automationActions`, {
-                type: "state",
+                type: 'state',
                 common: {
-                  name: "automationActions",
-                  type: "array",
-                  role: "list",
+                  name: 'automationActions',
+                  type: 'array',
+                  role: 'list',
                   write: true,
                   read: true,
                 },
                 native: {
                   id: `${id}.automationActions`,
-                  name: "automationActions",
+                  name: 'automationActions',
                 },
-              }),
-            ),
+              })
+            )
           ),
           tap(() =>
             this.bshb.setState(`${id}.automationActions`, {
               val: this.mapValueToStorage(automation.automationActions),
               ack: true,
-            }),
+            })
           ),
           switchMap(() =>
             from(
               this.bshb.setObject(`${id}.conditionLogicalOp`, {
-                type: "state",
+                type: 'state',
                 common: {
-                  name: "conditionLogicalOp",
-                  type: "string",
-                  role: "text",
+                  name: 'conditionLogicalOp',
+                  type: 'string',
+                  role: 'text',
                   write: true,
                   read: true,
                 },
                 native: {
                   id: `${id}.conditionLogicalOp`,
-                  name: "conditionLogicalOp",
+                  name: 'conditionLogicalOp',
                 },
-              }),
-            ),
+              })
+            )
           ),
           tap(() =>
             this.bshb.setState(`${id}.conditionLogicalOp`, {
               val: automation.conditionLogicalOp,
               ack: true,
-            }),
-          ),
+            })
+          )
         );
       }),
-      switchMap(() => of(undefined)),
+      switchMap(() => of(undefined))
     );
   }
 
   private deleteMissingAutomations(automations: any[]): Observable<void> {
-    return from(this.bshb.getStatesOfAsync("automations", "")).pipe(
-      switchMap((objects) => from(objects)),
-      switchMap((object) => {
+    return from(this.bshb.getStatesOfAsync('automations', '')).pipe(
+      switchMap(objects => from(objects)),
+      switchMap(object => {
         let found = false;
         for (let i = 0; i < automations.length; i++) {
           if (object.native.id === automations[i].id) {
@@ -372,30 +322,23 @@ export class BshbAutomationHandler extends BshbHandler {
         }
 
         if (!found) {
-          return from(
-            this.bshb.delObjectAsync(`automations.${object.native.id}`),
-          ).pipe(
+          return from(this.bshb.delObjectAsync(`automations.${object.native.id}`)).pipe(
             tap(() =>
-              this.bshb.log.info(
-                `automation with id=${object.native.id} removed because it does not exist anymore.`,
-              ),
+              this.bshb.log.info(`automation with id=${object.native.id} removed because it does not exist anymore.`)
             ),
-            catchError((err) => {
-              this.bshb.log.error(
-                `Could not delete automation with id=${object.native.id} because: ` +
-                  err,
-              );
+            catchError(err => {
+              this.bshb.log.error(`Could not delete automation with id=${object.native.id} because: ` + err);
               return of(undefined);
-            }),
+            })
           );
         } else {
           return of(undefined);
         }
-      }),
+      })
     );
   }
 
   name(): string {
-    return "automationHandler";
+    return 'automationHandler';
   }
 }
