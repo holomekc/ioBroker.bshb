@@ -17,8 +17,8 @@ class Utils {
      */
     static getCertificateKeys(identifier) {
         return {
-            cert: "bshb_" + identifier + "_cert",
-            key: "bshb_" + identifier + "_key",
+            cert: 'bshb_' + identifier + '_cert',
+            key: 'bshb_' + identifier + '_key',
         };
     }
     /**
@@ -45,19 +45,19 @@ class Utils {
         }
         let result = false;
         switch (level) {
-            case "silly":
+            case 'silly':
                 result = toCheck >= log_level_1.LogLevel.silly;
                 break;
-            case "debug":
+            case 'debug':
                 result = toCheck >= log_level_1.LogLevel.debug;
                 break;
-            case "info":
+            case 'info':
                 result = toCheck >= log_level_1.LogLevel.info;
                 break;
-            case "warn":
+            case 'warn':
                 result = toCheck >= log_level_1.LogLevel.warn;
                 break;
-            case "error":
+            case 'error':
                 result = toCheck >= log_level_1.LogLevel.error;
                 break;
         }
@@ -67,12 +67,12 @@ class Utils {
         return Utils.errorToString(new Error(message, { cause: cause }));
     }
     static errorToString(error) {
-        let result = "";
+        let result = '';
         if (error) {
             result += error;
             const cause = error.cause;
             if (cause && cause instanceof Error) {
-                result += "\n  [cause] " + this.errorToString(cause);
+                result += '\n  [cause] ' + this.errorToString(cause);
             }
         }
         return result;

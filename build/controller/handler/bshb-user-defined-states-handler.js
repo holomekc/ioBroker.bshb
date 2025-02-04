@@ -14,15 +14,15 @@ class BshbUserDefinedStatesHandler extends bshb_handler_1.BshbHandler {
     userDefinedStateRegex = /bshb\.\d+\.userDefinedStates\.(.*)/;
     handleDetection() {
         return this.detectUserDefinedStates().pipe((0, rxjs_1.tap)({
-            subscribe: () => this.bshb.log.info("Start detecting user defined states..."),
-            finalize: () => this.bshb.log.info("Detecting user defined states finished"),
+            subscribe: () => this.bshb.log.info('Start detecting user defined states...'),
+            finalize: () => this.bshb.log.info('Detecting user defined states finished'),
         }));
     }
     handleBshcUpdate(resultEntry) {
-        if (resultEntry["@type"] === "userDefinedState") {
-            this.bshb.log.debug(`Received updated for user defined state id=${resultEntry["id"]} and value=${resultEntry["state"]}`);
-            const id = `userDefinedStates.${resultEntry["id"]}`;
-            (0, rxjs_1.from)(this.bshb.setState(id, { val: resultEntry["state"], ack: true })).subscribe(this.handleBshcUpdateError(`id=${resultEntry["id"]}`));
+        if (resultEntry['@type'] === 'userDefinedState') {
+            this.bshb.log.debug(`Received updated for user defined state id=${resultEntry['id']} and value=${resultEntry['state']}`);
+            const id = `userDefinedStates.${resultEntry['id']}`;
+            (0, rxjs_1.from)(this.bshb.setState(id, { val: resultEntry['state'], ack: true })).subscribe(this.handleBshcUpdateError(`id=${resultEntry['id']}`));
             return true;
         }
         return false;
@@ -41,27 +41,27 @@ class BshbUserDefinedStatesHandler extends bshb_handler_1.BshbHandler {
         return result;
     }
     detectUserDefinedStates() {
-        return this.setObjectNotExistsAsync("userDefinedStates", {
-            type: "folder",
+        return this.setObjectNotExistsAsync('userDefinedStates', {
+            type: 'folder',
             common: {
-                name: "userDefinedStates",
+                name: 'userDefinedStates',
                 read: true,
             },
             native: {
-                id: "userDefinedStates",
+                id: 'userDefinedStates',
             },
         }).pipe((0, rxjs_1.switchMap)(() => this.getBshcClient().getUserDefinedStates(undefined, {
             timeout: this.long_timeout,
-        })), (0, rxjs_1.switchMap)((response) => this.deleteMissingUserDefinedStates(response.parsedResponse).pipe((0, rxjs_1.last)(undefined, void 0), (0, rxjs_1.switchMap)(() => (0, rxjs_1.from)(response.parsedResponse)))), (0, rxjs_1.mergeMap)((userDefinedState) => {
+        })), (0, rxjs_1.switchMap)(response => this.deleteMissingUserDefinedStates(response.parsedResponse).pipe((0, rxjs_1.last)(undefined, void 0), (0, rxjs_1.switchMap)(() => (0, rxjs_1.from)(response.parsedResponse)))), (0, rxjs_1.mergeMap)(userDefinedState => {
             this.bshb.log.debug(`Found user defined state ${userDefinedState.id}, ${userDefinedState.name}`);
-            const id = "userDefinedStates." + userDefinedState.id;
+            const id = 'userDefinedStates.' + userDefinedState.id;
             // we overwrite object here on purpose because we reflect 1-1 the data from controller here.
             return (0, rxjs_1.from)(this.bshb.setObject(id, {
-                type: "state",
+                type: 'state',
                 common: {
                     name: userDefinedState.name,
-                    type: "boolean",
-                    role: "switch",
+                    type: 'boolean',
+                    role: 'switch',
                     write: true,
                     read: true,
                 },
@@ -73,7 +73,7 @@ class BshbUserDefinedStatesHandler extends bshb_handler_1.BshbHandler {
         }), (0, rxjs_1.switchMap)(() => (0, rxjs_1.of)(undefined)));
     }
     deleteMissingUserDefinedStates(userDefinedStates) {
-        return (0, rxjs_1.from)(this.bshb.getStatesOfAsync("userDefinedStates", "")).pipe((0, rxjs_1.switchMap)((objects) => (0, rxjs_1.from)(objects)), (0, rxjs_1.switchMap)((object) => {
+        return (0, rxjs_1.from)(this.bshb.getStatesOfAsync('userDefinedStates', '')).pipe((0, rxjs_1.switchMap)(objects => (0, rxjs_1.from)(objects)), (0, rxjs_1.switchMap)(object => {
             let found = false;
             for (let i = 0; i < userDefinedStates.length; i++) {
                 if (object.native.id === userDefinedStates[i].id) {
@@ -83,9 +83,8 @@ class BshbUserDefinedStatesHandler extends bshb_handler_1.BshbHandler {
                 }
             }
             if (!found) {
-                return (0, rxjs_1.from)(this.bshb.delObjectAsync(`userDefinedStates.${object.native.id}`)).pipe((0, rxjs_1.tap)(() => this.bshb.log.info(`User defined state with id=${object.native.id} removed because it does not exist anymore.`)), (0, operators_1.catchError)((err) => {
-                    this.bshb.log.error(`Could not delete user defined state with id=${object.native.id} because: ` +
-                        err);
+                return (0, rxjs_1.from)(this.bshb.delObjectAsync(`userDefinedStates.${object.native.id}`)).pipe((0, rxjs_1.tap)(() => this.bshb.log.info(`User defined state with id=${object.native.id} removed because it does not exist anymore.`)), (0, operators_1.catchError)(err => {
+                    this.bshb.log.error(`Could not delete user defined state with id=${object.native.id} because: ` + err);
                     return (0, rxjs_1.of)(undefined);
                 }));
             }
@@ -95,7 +94,7 @@ class BshbUserDefinedStatesHandler extends bshb_handler_1.BshbHandler {
         }));
     }
     name() {
-        return "userDefinedStatesHandler";
+        return 'userDefinedStatesHandler';
     }
 }
 exports.BshbUserDefinedStatesHandler = BshbUserDefinedStatesHandler;

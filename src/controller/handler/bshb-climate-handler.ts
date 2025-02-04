@@ -1,40 +1,24 @@
-import { BshbHandler } from "./bshb-handler";
-import {
-  filter,
-  from,
-  map,
-  mergeMap,
-  Observable,
-  of,
-  switchMap,
-  tap,
-} from "rxjs";
-import { BshbDefinition } from "../../bshb-definition";
+import { BshbHandler } from './bshb-handler';
+import { filter, from, map, mergeMap, Observable, of, switchMap, tap } from 'rxjs';
+import { BshbDefinition } from '../../bshb-definition';
 
 export class BshbClimateHandler extends BshbHandler {
-  private climateTextActivateRegex =
-    /bshb\.\d+\.(roomClimateControl_hz_\d+)\.ClimateSchedule\.activeScheduleId/;
-  private climateSwitchActivateRegex =
-    /bshb\.\d+\.(roomClimateControl_hz_\d+)\.ClimateSchedule\.(.*?)\.active/;
+  private climateTextActivateRegex = /bshb\.\d+\.(roomClimateControl_hz_\d+)\.ClimateSchedule\.activeScheduleId/;
+  private climateSwitchActivateRegex = /bshb\.\d+\.(roomClimateControl_hz_\d+)\.ClimateSchedule\.(.*?)\.active/;
 
   handleDetection(): Observable<void> {
     return this.detectClimateSchedules().pipe(
       tap({
-        subscribe: () =>
-          this.bshb.log.info("Start detecting climate schedules..."),
-        finalize: () =>
-          this.bshb.log.info("Detecting climate schedules finished"),
-      }),
+        subscribe: () => this.bshb.log.info('Start detecting climate schedules...'),
+        finalize: () => this.bshb.log.info('Detecting climate schedules finished'),
+      })
     );
   }
 
   handleBshcUpdate(resultEntry: any): boolean {
-    if (resultEntry.id === "RoomClimateControl") {
-      this.getAndProcessDeviceSchedule(
-        resultEntry.deviceId,
-        resultEntry.state?.roomControlMode,
-      ).subscribe(
-        this.handleBshcUpdateError(`deviceId=${resultEntry.deviceId}`),
+    if (resultEntry.id === 'RoomClimateControl') {
+      this.getAndProcessDeviceSchedule(resultEntry.deviceId, resultEntry.state?.roomControlMode).subscribe(
+        this.handleBshcUpdateError(`deviceId=${resultEntry.deviceId}`)
       );
 
       return true;
@@ -50,41 +34,27 @@ export class BshbClimateHandler extends BshbHandler {
     let result = of(false);
 
     if (matchTextActivate) {
-      this.bshb.log.debug(
-        `Found climate trigger with deviceId=${matchTextActivate[1]}, value=${state.val}`,
-      );
+      this.bshb.log.debug(`Found climate trigger with deviceId=${matchTextActivate[1]}, value=${state.val}`);
 
       result = this.mapValueFromStorage(id, state.val).pipe(
-        switchMap((val) =>
-          this.getBshcClient().activateClimateSchedules(
-            matchTextActivate[1],
-            val,
-          ),
-        ),
-        tap(
-          this.handleBshcSendError(
-            `deviceId=${matchTextActivate[1]}, value=${state.val}`,
-          ),
-        ),
-        map(() => true),
+        switchMap(val => this.getBshcClient().activateClimateSchedules(matchTextActivate[1], val)),
+        tap(this.handleBshcSendError(`deviceId=${matchTextActivate[1]}, value=${state.val}`)),
+        map(() => true)
       );
     } else if (matchSwitchActivate) {
       this.bshb.log.debug(
-        `Found climate trigger with deviceId=${matchSwitchActivate[1]}, id=${matchSwitchActivate[2]}, value=${state.val}`,
+        `Found climate trigger with deviceId=${matchSwitchActivate[1]}, id=${matchSwitchActivate[2]}, value=${state.val}`
       );
 
       result = this.getBshcClient()
-        .activateClimateSchedules(
-          matchSwitchActivate[1],
-          matchSwitchActivate[2],
-        )
+        .activateClimateSchedules(matchSwitchActivate[1], matchSwitchActivate[2])
         .pipe(
           tap(
             this.handleBshcSendError(
-              `deviceId=${matchSwitchActivate[1]}, id=${matchSwitchActivate[2]}, value=${state.val}`,
-            ),
+              `deviceId=${matchSwitchActivate[1]}, id=${matchSwitchActivate[2]}, value=${state.val}`
+            )
           ),
-          map(() => true),
+          map(() => true)
         );
     }
     return result;
@@ -94,16 +64,14 @@ export class BshbClimateHandler extends BshbHandler {
     return this.getBshcClient()
       .getDevices()
       .pipe(
-        switchMap((devices) => from(devices.parsedResponse)),
-        filter((device) =>
-          device.deviceServiceIds.includes("RoomClimateControl"),
-        ),
-        mergeMap((device) =>
+        switchMap(devices => from(devices.parsedResponse)),
+        filter(device => device.deviceServiceIds.includes('RoomClimateControl')),
+        mergeMap(device =>
           this.getBshcClient()
-            .getDeviceServices(device.id, "RoomClimateControl")
+            .getDeviceServices(device.id, 'RoomClimateControl')
             .pipe(
-              map((d) => d.parsedResponse),
-              map((data) => {
+              map(d => d.parsedResponse),
+              map(data => {
                 let rcc: any;
                 if (Array.isArray(data)) {
                   rcc = data[0];
@@ -112,41 +80,26 @@ export class BshbClimateHandler extends BshbHandler {
                 }
                 return rcc;
               }),
-              filter((rcc) => rcc !== null && typeof rcc !== "undefined"),
-              filter(
-                (rcc) =>
-                  rcc?.state?.roomControlMode === "HEATING" ||
-                  rcc?.state?.roomControlMode === "COOLING",
-              ),
-              mergeMap((rcc) =>
-                this.getAndProcessDeviceSchedule(
-                  device.id,
-                  rcc.state.roomControlMode,
-                ),
-              ),
-            ),
-        ),
+              filter(rcc => rcc !== null && typeof rcc !== 'undefined'),
+              filter(rcc => rcc?.state?.roomControlMode === 'HEATING' || rcc?.state?.roomControlMode === 'COOLING'),
+              mergeMap(rcc => this.getAndProcessDeviceSchedule(device.id, rcc.state.roomControlMode))
+            )
+        )
       );
   }
 
-  private getAndProcessDeviceSchedule(
-    deviceId: string,
-    roomControlModel: string,
-  ) {
+  private getAndProcessDeviceSchedule(deviceId: string, roomControlModel: string) {
     return this.getBshcClient()
       .getClimateSchedules(deviceId, roomControlModel)
       .pipe(
-        map((d) => d.parsedResponse),
-        switchMap((schedule) => this.processDeviceSchedule(deviceId, schedule)),
+        map(d => d.parsedResponse),
+        switchMap(schedule => this.processDeviceSchedule(deviceId, schedule))
       );
   }
 
-  private processDeviceSchedule(
-    deviceId: string,
-    schedule: any,
-  ): Observable<any> {
+  private processDeviceSchedule(deviceId: string, schedule: any): Observable<any> {
     return this.setObjectNotExistsAsync(deviceId, {
-      type: "device",
+      type: 'device',
       common: {
         name: schedule.name || schedule.id,
       },
@@ -154,21 +107,21 @@ export class BshbClimateHandler extends BshbHandler {
     }).pipe(
       switchMap(() =>
         this.setObjectNotExistsAsync(`${deviceId}.ClimateSchedule`, {
-          type: "channel",
+          type: 'channel',
           common: {
-            name: "ClimateSchedule",
+            name: 'ClimateSchedule',
           },
           native: {},
-        }),
+        })
       ),
       switchMap(() => {
         const id = `${deviceId}.ClimateSchedule.activeScheduleId`;
         return this.setObjectNotExistsAsync(id, {
-          type: "state",
+          type: 'state',
           common: {
-            name: "activeScheduleId",
-            type: "string",
-            role: "text",
+            name: 'activeScheduleId',
+            type: 'string',
+            role: 'text',
             read: true,
             write: true,
           },
@@ -178,14 +131,14 @@ export class BshbClimateHandler extends BshbHandler {
             this.bshb.setState(id, {
               val: this.mapValueToStorage(schedule.activeScheduleId),
               ack: true,
-            }),
-          ),
+            })
+          )
         );
       }),
       switchMap(() => from(schedule.scheduleData as any[])),
-      mergeMap((data) =>
+      mergeMap(data =>
         this.setObjectNotExistsAsync(`${deviceId}.ClimateSchedule.${data.id}`, {
-          type: "folder",
+          type: 'folder',
           common: {
             name: data.name || data.id,
           },
@@ -194,11 +147,11 @@ export class BshbClimateHandler extends BshbHandler {
           switchMap(() => {
             const id = `${deviceId}.ClimateSchedule.${data.id}.profiles`;
             return this.setObjectNotExistsAsync(id, {
-              type: "state",
+              type: 'state',
               common: {
-                name: "profiles",
-                type: "object",
-                role: "state",
+                name: 'profiles',
+                type: 'object',
+                role: 'state',
                 read: true,
                 write: false,
               },
@@ -208,72 +161,62 @@ export class BshbClimateHandler extends BshbHandler {
                 this.bshb.setState(id, {
                   val: this.mapValueToStorage(data.profiles),
                   ack: true,
-                }),
-              ),
+                })
+              )
             );
           }),
           switchMap(() => {
             const id = `${deviceId}.ClimateSchedule.${data.id}.ScheduleType`;
             return this.setObjectNotExistsAsync(id, {
-              type: "state",
+              type: 'state',
               common: {
-                name: "ScheduleType",
-                type: "string",
-                role: "text",
+                name: 'ScheduleType',
+                type: 'string',
+                role: 'text',
                 read: true,
                 write: false,
-                states: BshbDefinition.determineStates(
-                  "ClimateSchedule",
-                  "ScheduleType",
-                ),
+                states: BshbDefinition.determineStates('ClimateSchedule', 'ScheduleType'),
               },
               native: {},
             }).pipe(
               tap(() =>
                 this.bshb.setState(id, {
-                  val: this.mapValueToStorage(
-                    data.attributeExtensionMap?.ScheduleType,
-                  ),
+                  val: this.mapValueToStorage(data.attributeExtensionMap?.ScheduleType),
                   ack: true,
-                }),
-              ),
+                })
+              )
             );
           }),
           switchMap(() => {
             const id = `${deviceId}.ClimateSchedule.${data.id}.ClimateRoomControlMode`;
             return this.setObjectNotExistsAsync(id, {
-              type: "state",
+              type: 'state',
               common: {
-                name: "ClimateRoomControlMode",
-                type: "string",
-                role: "text",
+                name: 'ClimateRoomControlMode',
+                type: 'string',
+                role: 'text',
                 read: true,
                 write: false,
-                states: BshbDefinition.determineStates(
-                  "climateControlState",
-                  "roomControlMode",
-                ),
+                states: BshbDefinition.determineStates('climateControlState', 'roomControlMode'),
               },
               native: {},
             }).pipe(
               tap(() =>
                 this.bshb.setState(id, {
-                  val: this.mapValueToStorage(
-                    data.attributeExtensionMap?.ClimateRoomControlMode,
-                  ),
+                  val: this.mapValueToStorage(data.attributeExtensionMap?.ClimateRoomControlMode),
                   ack: true,
-                }),
-              ),
+                })
+              )
             );
           }),
           switchMap(() => {
             const id = `${deviceId}.ClimateSchedule.${data.id}.active`;
             return this.setObjectNotExistsAsync(id, {
-              type: "state",
+              type: 'state',
               common: {
-                name: "active",
-                type: "boolean",
-                role: "switch",
+                name: 'active',
+                type: 'boolean',
+                role: 'switch',
                 read: false,
                 write: true,
               },
@@ -281,20 +224,18 @@ export class BshbClimateHandler extends BshbHandler {
             }).pipe(
               tap(() =>
                 this.bshb.setState(id, {
-                  val: this.mapValueToStorage(
-                    data.id === schedule.activeScheduleId,
-                  ),
+                  val: this.mapValueToStorage(data.id === schedule.activeScheduleId),
                   ack: true,
-                }),
-              ),
+                })
+              )
             );
-          }),
-        ),
-      ),
+          })
+        )
+      )
     );
   }
 
   name(): string {
-    return "climateHandler";
+    return 'climateHandler';
   }
 }

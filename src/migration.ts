@@ -1,6 +1,6 @@
-import * as fs from "fs";
-import { Bshb } from "./main";
-import { Utils } from "./utils";
+import * as fs from 'fs';
+import { Bshb } from './main';
+import { Utils } from './utils';
 
 /**
  * This class is used to migrate from old configuration to new one. This will be obsolete at some point.
@@ -19,13 +19,10 @@ export class Migration {
   public static loadCertificate(bshb: Bshb, certsPath: string): string {
     const path = `${certsPath}/${bshb.config.identifier}.pem`;
     if (!fs.existsSync(path)) {
-      throw Utils.createError(
-        bshb.log,
-        `Could not find client certificate for identifier: ${bshb.config.identifier}.`,
-      );
+      throw Utils.createError(bshb.log, `Could not find client certificate for identifier: ${bshb.config.identifier}.`);
     }
-    const result = fs.readFileSync(path, "utf-8");
-    bshb.log.info("Client certificate loaded successfully");
+    const result = fs.readFileSync(path, 'utf-8');
+    bshb.log.info('Client certificate loaded successfully');
     return result;
   }
 
@@ -39,14 +36,11 @@ export class Migration {
   public static loadPrivateKey(bshb: Bshb, certsPath: string): string {
     const path = `${certsPath}/${bshb.config.identifier}-key.pem`;
     if (!fs.existsSync(path)) {
-      throw Utils.createError(
-        bshb.log,
-        `Could not find client certificate for identifier: ${bshb.config.identifier}.`,
-      );
+      throw Utils.createError(bshb.log, `Could not find client certificate for identifier: ${bshb.config.identifier}.`);
     }
 
-    const result = fs.readFileSync(path, "utf-8");
-    bshb.log.info("Client private key loaded successfully");
+    const result = fs.readFileSync(path, 'utf-8');
+    bshb.log.info('Client private key loaded successfully');
     return result;
   }
 }

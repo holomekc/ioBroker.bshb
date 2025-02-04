@@ -1,21 +1,10 @@
-import {
-  filter,
-  from,
-  map,
-  mergeMap,
-  Observable,
-  of,
-  Subject,
-  switchMap,
-  take,
-  tap,
-} from "rxjs";
-import { BshbHandler } from "./bshb-handler";
-import { BshbDefinition } from "../../bshb-definition";
-import * as utils from "@iobroker/adapter-core";
-import { promises as fs } from "fs";
-import path from "path";
-import { BinaryResponse, BshbResponse } from "bosch-smart-home-bridge";
+import { filter, from, map, mergeMap, Observable, of, Subject, switchMap, take, tap } from 'rxjs';
+import { BshbHandler } from './bshb-handler';
+import { BshbDefinition } from '../../bshb-definition';
+import * as utils from '@iobroker/adapter-core';
+import { promises as fs } from 'fs';
+import path from 'path';
+import { BinaryResponse, BshbResponse } from 'bosch-smart-home-bridge';
 
 export class BshbBackupHandler extends BshbHandler {
   private backupRegex = /bshb\.\d+\.backup\.(createBackup|deleteBackup)/;
@@ -23,33 +12,31 @@ export class BshbBackupHandler extends BshbHandler {
   private backupStatus$ = new Subject<string>();
 
   name(): string {
-    return "backupHandler";
+    return 'backupHandler';
   }
 
   handleDetection(): Observable<void> {
     return this.detectBackup().pipe(
       tap({
-        subscribe: () =>
-          this.bshb.log.info("Start detecting backup information..."),
-        finalize: () =>
-          this.bshb.log.info("Detecting backup information finished"),
-      }),
+        subscribe: () => this.bshb.log.info('Start detecting backup information...'),
+        finalize: () => this.bshb.log.info('Detecting backup information finished'),
+      })
     );
   }
 
   handleBshcUpdate(resultEntry: any): boolean {
     let prefix: string | undefined = undefined;
-    if (resultEntry["@type"] === "BackupStatus") {
-      this.bshb.log.debug("Updating backup status...");
-      prefix = "backup.backupStatus";
-    } else if (resultEntry["@type"] === "RestoreStatus") {
-      this.bshb.log.debug("Updating restore status...");
-      prefix = "backup.restoreStatus";
+    if (resultEntry['@type'] === 'BackupStatus') {
+      this.bshb.log.debug('Updating backup status...');
+      prefix = 'backup.backupStatus';
+    } else if (resultEntry['@type'] === 'RestoreStatus') {
+      this.bshb.log.debug('Updating restore status...');
+      prefix = 'backup.restoreStatus';
     }
 
     if (prefix) {
       for (const [key, value] of Object.entries(resultEntry)) {
-        if (key === "@type") {
+        if (key === '@type') {
           continue;
         }
 
@@ -58,18 +45,18 @@ export class BshbBackupHandler extends BshbHandler {
           this.bshb.setState(id, {
             val: value as any,
             ack: true,
-          }),
+          })
         )
           .pipe(
             tap(() => {
-              if (key === "state") {
+              if (key === 'state') {
                 // internal backup status propagation after ioBroker state update.
                 // Prevent a racing condition and make sure that a user is able to read the
                 // READY state as well. In general the process of downloading and storing the file
                 // should be super quick, so READY is most likely not visible for that long.
-                this.backupStatus$.next(value + "");
+                this.backupStatus$.next(value + '');
               }
-            }),
+            })
           )
           .subscribe(this.handleBshcUpdateError(`id=${id}`));
       }
@@ -85,31 +72,27 @@ export class BshbBackupHandler extends BshbHandler {
 
     if (match) {
       if (state.val) {
-        if (id.endsWith("createBackup")) {
+        if (id.endsWith('createBackup')) {
           result = this.createBackup().pipe(
             switchMap(() => this.waitForReadyState()),
             switchMap(() => this.getBackup()),
-            switchMap((response) => this.storeBackupFile(response)),
+            switchMap(response => this.storeBackupFile(response)),
             switchMap(() => this.deleteBackupFromController()),
             switchMap(() => {
-              this.bshb.log.debug(
-                "[Backup] Backup file stores. Delete file on controller.",
-              );
+              this.bshb.log.debug('[Backup] Backup file stores. Delete file on controller.');
               return from(this.bshb.setState(id, { val: false, ack: true }));
             }),
             tap(this.handleBshcUpdateError(`id=${id}`)),
-            map(() => true),
+            map(() => true)
           );
         } else {
-          this.bshb.log.debug("Delete backup from controller triggered");
+          this.bshb.log.debug('Delete backup from controller triggered');
           result = this.getBshcClient()
             .deleteBackup({ timeout: this.long_timeout })
             .pipe(
-              switchMap((_) =>
-                from(this.bshb.setState(id, { val: false, ack: true })),
-              ),
+              switchMap(_ => from(this.bshb.setState(id, { val: false, ack: true }))),
               tap(this.handleBshcUpdateError(`id=${id}`)),
-              map(() => true),
+              map(() => true)
             );
         }
       } else {
@@ -121,46 +104,34 @@ export class BshbBackupHandler extends BshbHandler {
   }
 
   private createBackup() {
-    this.bshb.log.debug("[Backup] Creating backup triggered");
-    return this.getBshcClient().createBackup(
-      this.bshb.config.systemPassword,
-      undefined,
-      { timeout: this.long_timeout },
-    );
+    this.bshb.log.debug('[Backup] Creating backup triggered');
+    return this.getBshcClient().createBackup(this.bshb.config.systemPassword, undefined, {
+      timeout: this.long_timeout,
+    });
   }
 
   private waitForReadyState() {
-    this.bshb.log.debug(
-      "[Backup] Backup creation triggered. Waiting for READY state",
-    );
+    this.bshb.log.debug('[Backup] Backup creation triggered. Waiting for READY state');
     return this.backupStatus$.pipe(
-      filter((status) => status === "READY"),
-      take(1),
+      filter(status => status === 'READY'),
+      take(1)
     );
   }
 
   private getBackup() {
-    this.bshb.log.debug("[Backup] READY state received. Downloading data.");
+    this.bshb.log.debug('[Backup] READY state received. Downloading data.');
     return this.getBshcClient().getBackup();
   }
 
   private storeBackupFile(response: BshbResponse<BinaryResponse>) {
     const binaryResponse = response.parsedResponse;
-    const backupDir = path.join(
-      utils.getAbsoluteInstanceDataDir(this.bshb),
-      "backups",
-    );
+    const backupDir = path.join(utils.getAbsoluteInstanceDataDir(this.bshb), 'backups');
     return from(this.ensureDirectoryExists(backupDir)).pipe(
       switchMap(() => {
-        const filePath = path.join(
-          backupDir,
-          this.createFileName(binaryResponse.fileName),
-        );
-        this.bshb.log.info(
-          `[Backup] Data downloaded and file created: ${filePath}.`,
-        );
+        const filePath = path.join(backupDir, this.createFileName(binaryResponse.fileName));
+        this.bshb.log.info(`[Backup] Data downloaded and file created: ${filePath}.`);
         return from(fs.writeFile(filePath, binaryResponse.data));
-      }),
+      })
     );
   }
 
@@ -175,87 +146,74 @@ export class BshbBackupHandler extends BshbHandler {
         this.getBshcClient()
           .getBackupStatus({ timeout: this.long_timeout })
           .pipe(
-            mergeMap((response) =>
-              from(Object.entries<[string, any]>(response.parsedResponse)),
-            ),
-            filter(([key, _]) => key !== "@type"),
-            mergeMap(([key, value]) =>
-              this.addState("backup.backupStatus", "BackupStatus", key, value),
-            ),
-          ),
+            mergeMap(response => from(Object.entries<[string, any]>(response.parsedResponse))),
+            filter(([key, _]) => key !== '@type'),
+            mergeMap(([key, value]) => this.addState('backup.backupStatus', 'BackupStatus', key, value))
+          )
       ),
       switchMap(() => this.createRestoreStatusFolder()),
       switchMap(() =>
         this.getBshcClient()
           .getRestoreStatus({ timeout: this.long_timeout })
           .pipe(
-            mergeMap((response) =>
-              from(Object.entries<[string, any]>(response.parsedResponse)),
-            ),
-            filter(([key, _]) => key !== "@type"),
-            mergeMap(([key, value]) =>
-              this.addState(
-                "backup.restoreStatus",
-                "RestoreStatus",
-                key,
-                value,
-              ),
-            ),
-          ),
+            mergeMap(response => from(Object.entries<[string, any]>(response.parsedResponse))),
+            filter(([key, _]) => key !== '@type'),
+            mergeMap(([key, value]) => this.addState('backup.restoreStatus', 'RestoreStatus', key, value))
+          )
       ),
       switchMap(() => this.createBackupState()),
       switchMap(() => this.deleteBackupState()),
-      switchMap(() => of(undefined)),
+      switchMap(() => of(undefined))
     );
   }
 
   private createBackupFolder() {
-    return this.setObjectNotExistsAsync("backup", {
-      type: "folder",
+    return this.setObjectNotExistsAsync('backup', {
+      type: 'folder',
       common: {
-        name: "backup",
+        name: 'backup',
         read: true,
       },
       native: {
-        id: "backup",
+        id: 'backup',
       },
     });
   }
 
   private createBackupStatusFolder() {
-    return this.setObjectNotExistsAsync("backup.backupStatus", {
-      type: "folder",
+    return this.setObjectNotExistsAsync('backup.backupStatus', {
+      type: 'folder',
       common: {
-        name: "backupStatus",
+        name: 'backupStatus',
         read: true,
       },
       native: {
-        id: "backup.backupStatus",
+        id: 'backup.backupStatus',
       },
     });
   }
 
   private createRestoreStatusFolder() {
-    return this.setObjectNotExistsAsync("backup.restoreStatus", {
-      type: "folder",
+    return this.setObjectNotExistsAsync('backup.restoreStatus', {
+      type: 'folder',
       common: {
-        name: "restoreStatus",
+        name: 'restoreStatus',
         read: true,
       },
       native: {
-        id: "backup.restoreStatus",
+        id: 'backup.restoreStatus',
       },
     });
   }
 
   private createBackupState() {
-    const id = "backup.createBackup";
+    const id = 'backup.createBackup';
     return this.setObjectNotExistsAsync(id, {
-      type: "state",
+      type: 'state',
       common: {
-        name: "Create Backup",
-        type: "boolean",
-        role: "switch",
+        name: 'Create Backup',
+        type: 'boolean',
+        role: 'switch',
         read: false,
         write: true,
       },
@@ -266,13 +224,13 @@ export class BshbBackupHandler extends BshbHandler {
   }
 
   private deleteBackupState() {
-    const id = "backup.deleteBackup";
+    const id = 'backup.deleteBackup';
     return this.setObjectNotExistsAsync(id, {
-      type: "state",
+      type: 'state',
       common: {
-        name: "Delete backup file on Controller",
-        type: "boolean",
-        role: "switch",
+        name: 'Delete backup file on Controller',
+        type: 'boolean',
+        role: 'switch',
         read: false,
         write: true,
       },
@@ -285,7 +243,7 @@ export class BshbBackupHandler extends BshbHandler {
   private addState(prefix: string, type: string, key: string, value: any) {
     const id = `${prefix}.${key}`;
     return this.setObjectNotExistsAsync(id, {
-      type: "state",
+      type: 'state',
       common: {
         name: key,
         type: BshbDefinition.determineType(value),
@@ -305,7 +263,7 @@ export class BshbBackupHandler extends BshbHandler {
     try {
       await fs.access(directoryPath, fs.constants.F_OK);
     } catch (error: any) {
-      if (error.code === "ENOENT") {
+      if (error.code === 'ENOENT') {
         await fs.mkdir(directoryPath, { recursive: true });
       } else {
         throw error;
@@ -321,8 +279,8 @@ export class BshbBackupHandler extends BshbHandler {
     const now = new Date();
 
     const year = now.getFullYear();
-    const month = String(now.getMonth() + 1).padStart(2, "0"); // Months are 0-based
-    const day = String(now.getDate()).padStart(2, "0");
+    const month = String(now.getMonth() + 1).padStart(2, '0'); // Months are 0-based
+    const day = String(now.getDate()).padStart(2, '0');
 
     return `shc-${year}${month}${day}.home`;
   }

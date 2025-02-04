@@ -1,40 +1,28 @@
-import { BshbHandler } from "./bshb-handler";
-import {
-  concat,
-  EMPTY,
-  from,
-  last,
-  map,
-  mergeMap,
-  Observable,
-  of,
-  switchMap,
-  tap,
-} from "rxjs";
-import { BshbDefinition } from "../../bshb-definition";
-import { BshbResponse } from "bosch-smart-home-bridge/dist/bshb-response";
+import { BshbHandler } from './bshb-handler';
+import { concat, EMPTY, from, last, map, mergeMap, Observable, of, switchMap, tap } from 'rxjs';
+import { BshbDefinition } from '../../bshb-definition';
+import { BshbResponse } from 'bosch-smart-home-bridge/dist/bshb-response';
 
 export class BshbIntrusionDetectionHandler extends BshbHandler {
-  private readonly folderName: string = "intrusionDetectionControl";
-  private intrusionDetectionControlRegex =
-    /bshb\.\d+\.intrusionDetectionControl\.(.*)/;
+  private readonly folderName: string = 'intrusionDetectionControl';
+  private intrusionDetectionControlRegex = /bshb\.\d+\.intrusionDetectionControl\.(.*)/;
 
   handleBshcUpdate(resultEntry: any): boolean {
-    if (resultEntry.id === "IntrusionDetectionControl") {
+    if (resultEntry.id === 'IntrusionDetectionControl') {
       const activeProfile = resultEntry.state?.activeProfile;
       const state = resultEntry.state?.value;
       this.detectIntrusionDetectionControl(activeProfile, state).subscribe();
 
       return true;
     } else if (
-      resultEntry["@type"] === "systemAvailability" ||
-      resultEntry["@type"] === "armingState" ||
-      resultEntry["@type"] === "alarmState" ||
-      resultEntry["@type"] === "activeConfigurationProfile" ||
-      resultEntry["@type"] === "securityGapState"
+      resultEntry['@type'] === 'systemAvailability' ||
+      resultEntry['@type'] === 'armingState' ||
+      resultEntry['@type'] === 'alarmState' ||
+      resultEntry['@type'] === 'activeConfigurationProfile' ||
+      resultEntry['@type'] === 'securityGapState'
     ) {
-      from(this.flattenData(resultEntry["@type"], resultEntry))
-        .pipe(mergeMap((d) => this.detectIntrusionData(d.type, d.key, d.value)))
+      from(this.flattenData(resultEntry['@type'], resultEntry))
+        .pipe(mergeMap(d => this.detectIntrusionData(d.type, d.key, d.value)))
         .subscribe(this.handleBshcUpdateError(`id=${resultEntry.id}`));
     }
 
@@ -46,30 +34,21 @@ export class BshbIntrusionDetectionHandler extends BshbHandler {
       .getIntrusionDetectionSystemState()
       .pipe(
         tap({
-          subscribe: () =>
-            this.bshb.log.info("Start detecting intrusion detection system..."),
+          subscribe: () => this.bshb.log.info('Start detecting intrusion detection system...'),
         }),
-        map((r) => r.parsedResponse),
-        switchMap((data) =>
-          this.detectIntrusionDetectionControl(
-            data.activeConfigurationProfile,
-            data.armingState?.state,
-          ).pipe(
+        map(r => r.parsedResponse),
+        switchMap(data =>
+          this.detectIntrusionDetectionControl(data.activeConfigurationProfile, data.armingState?.state).pipe(
             last(),
             switchMap(() => {
-              const fl = this.flattenData("systemState", data);
-              return from(fl).pipe(
-                mergeMap((d) =>
-                  this.detectIntrusionData(d.type, d.key, d.value),
-                ),
-              );
-            }),
-          ),
+              const fl = this.flattenData('systemState', data);
+              return from(fl).pipe(mergeMap(d => this.detectIntrusionData(d.type, d.key, d.value)));
+            })
+          )
         ),
         tap({
-          finalize: () =>
-            this.bshb.log.info("Detecting intrusion detection system finished"),
-        }),
+          finalize: () => this.bshb.log.info('Detecting intrusion detection system finished'),
+        })
       );
   }
 
@@ -79,36 +58,34 @@ export class BshbIntrusionDetectionHandler extends BshbHandler {
     let result = of(false);
 
     if (match) {
-      this.bshb.log.debug(
-        `Found intrusionDetectionControl trigger with id=${match[1]}, value=${state.val}`,
-      );
+      this.bshb.log.debug(`Found intrusionDetectionControl trigger with id=${match[1]}, value=${state.val}`);
 
       if (state.val) {
         const control = match[1];
 
         let command: Observable<BshbResponse<any>>;
         switch (control) {
-          case "fullProtection":
+          case 'fullProtection':
             command = this.getBshcClient().armIntrusionDetectionSystem(0, {
               timeout: this.long_timeout,
             });
             break;
-          case "partialProtection":
+          case 'partialProtection':
             command = this.getBshcClient().armIntrusionDetectionSystem(1, {
               timeout: this.long_timeout,
             });
             break;
-          case "individualProtection":
+          case 'individualProtection':
             command = this.getBshcClient().armIntrusionDetectionSystem(2, {
               timeout: this.long_timeout,
             });
             break;
-          case "disarmProtection":
+          case 'disarmProtection':
             command = this.getBshcClient().disarmIntrusionDetectionSystem({
               timeout: this.long_timeout,
             });
             break;
-          case "muteProtection":
+          case 'muteProtection':
             command = this.getBshcClient().muteIntrusionDetectionSystem({
               timeout: this.long_timeout,
             });
@@ -120,7 +97,7 @@ export class BshbIntrusionDetectionHandler extends BshbHandler {
         result = command.pipe(
           tap(() => this.bshb.setState(id, { val: false, ack: true })),
           tap(this.handleBshcSendError(`id=${match[1]}, value=${state.val}`)),
-          map(() => true),
+          map(() => true)
         );
       }
     }
@@ -136,9 +113,9 @@ export class BshbIntrusionDetectionHandler extends BshbHandler {
     }[] = [];
 
     for (const [key, value] of Object.entries(data)) {
-      if (typeof value === "object" && !Array.isArray(value)) {
+      if (typeof value === 'object' && !Array.isArray(value)) {
         result.push(...this.flattenData(key, value));
-      } else if (key !== "@type" && key !== "deleted") {
+      } else if (key !== '@type' && key !== 'deleted') {
         result.push({
           type: type,
           key: key,
@@ -160,16 +137,16 @@ export class BshbIntrusionDetectionHandler extends BshbHandler {
     const states = BshbDefinition.determineStates(type, key);
 
     return this.setObjectNotExistsAsync(this.folderName, {
-      type: "folder",
+      type: 'folder',
       common: {
-        name: "Intrusion Detection Control",
+        name: 'Intrusion Detection Control',
         read: true,
       },
       native: {},
     }).pipe(
       switchMap(() =>
         this.setObjectNotExistsAsync(id, {
-          type: "folder",
+          type: 'folder',
           common: {
             name: type,
             read: true,
@@ -179,7 +156,7 @@ export class BshbIntrusionDetectionHandler extends BshbHandler {
         }).pipe(
           switchMap(() =>
             this.setObjectNotExistsAsync(stateId, {
-              type: "state",
+              type: 'state',
               common: {
                 name: key,
                 type: stateType,
@@ -195,19 +172,19 @@ export class BshbIntrusionDetectionHandler extends BshbHandler {
                 this.bshb.setState(stateId, {
                   val: this.mapValueToStorage(value),
                   ack: true,
-                }),
-              ),
-            ),
-          ),
-        ),
+                })
+              )
+            )
+          )
+        )
       ),
-      switchMap(() => this.handleSpecialCases(type, key, value)),
+      switchMap(() => this.handleSpecialCases(type, key, value))
     );
   }
 
   private handleSpecialCases(type: string, key: string, value: any) {
-    if (type === "armingState" && key === "state") {
-      const keyName = "remainingTimeUntilArmed";
+    if (type === 'armingState' && key === 'state') {
+      const keyName = 'remainingTimeUntilArmed';
       const stateId = `${this.folderName}.${type}.${keyName}`;
 
       const role = BshbDefinition.determineRole(type, keyName, 0);
@@ -215,10 +192,10 @@ export class BshbIntrusionDetectionHandler extends BshbHandler {
       const states = BshbDefinition.determineStates(type, keyName);
 
       return this.setObjectNotExistsAsync(stateId, {
-        type: "state",
+        type: 'state',
         common: {
           name: key,
-          type: "number",
+          type: 'number',
           role: role,
           read: true,
           write: false,
@@ -228,27 +205,24 @@ export class BshbIntrusionDetectionHandler extends BshbHandler {
         native: {},
       }).pipe(
         tap(() => {
-          if (value === "SYSTEM_DISARMED" || value === "SYSTEM_ARMED") {
+          if (value === 'SYSTEM_DISARMED' || value === 'SYSTEM_ARMED') {
             this.bshb.setState(stateId, {
-              val: this.mapValueToStorage(value === "SYSTEM_DISARMED" ? -1 : 0),
+              val: this.mapValueToStorage(value === 'SYSTEM_DISARMED' ? -1 : 0),
               ack: true,
             });
           }
-        }),
+        })
       );
     } else {
       return EMPTY;
     }
   }
 
-  private detectIntrusionDetectionControl(
-    activateProfile: string,
-    armingState: string,
-  ): Observable<void> {
+  private detectIntrusionDetectionControl(activateProfile: string, armingState: string): Observable<void> {
     return this.setObjectNotExistsAsync(this.folderName, {
-      type: "folder",
+      type: 'folder',
       common: {
-        name: "Intrusion Detection Control",
+        name: 'Intrusion Detection Control',
         read: true,
       },
       native: {
@@ -256,7 +230,7 @@ export class BshbIntrusionDetectionHandler extends BshbHandler {
       },
     }).pipe(
       switchMap(() => {
-        const idPrefix = this.folderName + ".";
+        const idPrefix = this.folderName + '.';
 
         const observables = [];
 
@@ -264,72 +238,57 @@ export class BshbIntrusionDetectionHandler extends BshbHandler {
         observables.push(
           this.addProfile(
             idPrefix,
-            "fullProtection",
-            "Full Protection",
-            () => activateProfile === "0" && this.profileStatOk(armingState),
-          ),
+            'fullProtection',
+            'Full Protection',
+            () => activateProfile === '0' && this.profileStatOk(armingState)
+          )
         );
         // partial
         observables.push(
           this.addProfile(
             idPrefix,
-            "partialProtection",
-            "Partial Protection",
-            () => activateProfile === "1" && this.profileStatOk(armingState),
-          ),
+            'partialProtection',
+            'Partial Protection',
+            () => activateProfile === '1' && this.profileStatOk(armingState)
+          )
         );
         // individual
         observables.push(
           this.addProfile(
             idPrefix,
-            "individualProtection",
-            "Individual Protection",
-            () => activateProfile === "2" && this.profileStatOk(armingState),
-          ),
+            'individualProtection',
+            'Individual Protection',
+            () => activateProfile === '2' && this.profileStatOk(armingState)
+          )
         );
         // disarm
         observables.push(
-          this.addProfile(
-            idPrefix,
-            "disarmProtection",
-            "Disarm Protection",
-            () => armingState === "SYSTEM_DISARMED",
-          ),
+          this.addProfile(idPrefix, 'disarmProtection', 'Disarm Protection', () => armingState === 'SYSTEM_DISARMED')
         );
         // mute
         observables.push(
-          this.addProfile(
-            idPrefix,
-            "muteProtection",
-            "Mute Protection",
-            () => armingState === "MUTE_ALARM",
-          ),
+          this.addProfile(idPrefix, 'muteProtection', 'Mute Protection', () => armingState === 'MUTE_ALARM')
         );
 
         return concat(...observables);
-      }),
+      })
     );
   }
 
   private profileStatOk(armingState: string) {
-    return armingState === "SYSTEM_ARMED" || armingState === "SYSTEM_ARMING";
+    return armingState === 'SYSTEM_ARMED' || armingState === 'SYSTEM_ARMING';
   }
 
-  private addProfile(
-    idPrefix: string,
-    id: string,
-    name: string,
-    predicate: () => boolean,
-  ) {
-    return new Observable<void>((subscriber) => {
+  private addProfile(idPrefix: string, id: string, name: string, predicate: () => boolean) {
+    return new Observable<void>(subscriber => {
       this.bshb.setObjectNotExists(
         idPrefix + id,
         {
-          type: "state",
+          type: 'state',
           common: {
             name: name,
-            type: "boolean",
-            role: "switch",
+            type: 'boolean',
+            role: 'switch',
             read: false,
             write: true,
           },
@@ -343,12 +302,12 @@ export class BshbIntrusionDetectionHandler extends BshbHandler {
 
           subscriber.next();
           subscriber.complete();
-        },
+        }
       );
     });
   }
 
   name(): string {
-    return "intrusionDetectionHandler";
+    return 'intrusionDetectionHandler';
   }
 }

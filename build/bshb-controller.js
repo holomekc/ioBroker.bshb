@@ -31,7 +31,7 @@ const bshb_backup_handler_1 = require("./controller/handler/bshb-backup-handler"
 class BshbController {
     bshb;
     boschSmartHomeBridge;
-    clientName = "ioBroker.bshb";
+    clientName = 'ioBroker.bshb';
     $rateLimit = new rxjs_1.Subject();
     alive = new rxjs_1.Subject();
     handlers;
@@ -72,15 +72,15 @@ class BshbController {
             this.handlers.push(new bshb_climate_handler_1.BshbClimateHandler(this.bshb, this.boschSmartHomeBridge));
             this.handlers.push(new bshb_backup_handler_1.BshbBackupHandler(this.bshb, this.boschSmartHomeBridge));
             this.$rateLimit
-                .pipe((0, rate_limiter_1.rateLimit)(this.bshb.config.rateLimit, this.bshb), (0, rxjs_1.concatMap)((data) => {
+                .pipe((0, rate_limiter_1.rateLimit)(this.bshb.config.rateLimit, this.bshb), (0, rxjs_1.concatMap)(data => {
                 const observables = [];
                 for (let i = 0; i < this.handlers.length; i++) {
                     observables.push(this.handlers[i].sendUpdateToBshc(data.id, data.state).pipe(
                     // Protect controller
-                    (0, operators_1.catchError)((err) => {
+                    (0, operators_1.catchError)(err => {
                         this.bshb.log.silly(`Handler "${this.handlers[i].constructor.name}" failed with ${err}. This might happen when the controller answers with an error.`);
                         return (0, rxjs_1.of)(true);
-                    }), (0, operators_1.tap)((handled) => {
+                    }), (0, operators_1.tap)(handled => {
                         if (handled) {
                             this.bshb.log.silly(`Handler "${this.handlers[i].constructor.name}" send message to controller with state id=${data.id} and value=${data.state.val}`);
                         }
@@ -119,22 +119,22 @@ class BshbController {
         // Here we retry the pairIfNeeded without attempts configured. So we try once. If something is not ok we wait
         // for pairing delay before we try again. We use takeUntil to make sure that we stop streams if adapter shuts-down
         // takeUntil must be last in pipe to prevent issues.
-        return new rxjs_1.Observable((subscriber) => {
+        return new rxjs_1.Observable(subscriber => {
             const retry = new rxjs_1.BehaviorSubject(true);
             retry
-                .pipe((0, operators_1.catchError)((err) => err.pipe((0, operators_1.delay)(pairingDelay))), (0, operators_1.tap)(() => {
+                .pipe((0, operators_1.catchError)(err => err.pipe((0, operators_1.delay)(pairingDelay))), (0, operators_1.tap)(() => {
                 this.boschSmartHomeBridge
                     .pairIfNeeded(this.clientName, this.bshb.config.identifier, systemPassword, pairingDelay, -1)
                     .pipe((0, operators_1.takeUntil)(this.bshb.alive))
                     .subscribe({
-                    next: (response) => {
+                    next: response => {
                         // Everything is ok. We can stop all.
-                        this.bshb.log.info("Ok with pairing");
+                        this.bshb.log.info('Ok with pairing');
                         subscriber.next(response);
                         subscriber.complete();
                         retry.complete();
                     },
-                    error: (err) => {
+                    error: err => {
                         this.bshb.log.error(err);
                         // Something went wrong. Already logged by lib. We just wait and retry.
                         (0, rxjs_1.timer)(pairingDelay)
@@ -156,8 +156,8 @@ class BshbController {
      * @return observable with no content
      */
     startDetection() {
-        this.bshb.log.info("Start detection");
-        return (0, rxjs_1.concat)(...this.handlers.map((value) => value.handleDetection())).pipe((0, rxjs_1.last)(undefined, void 0));
+        this.bshb.log.info('Start detection');
+        return (0, rxjs_1.concat)(...this.handlers.map(value => value.handleDetection())).pipe((0, rxjs_1.last)(undefined, void 0));
     }
     /**
      * Changes on a state which results in a call to bshc controller

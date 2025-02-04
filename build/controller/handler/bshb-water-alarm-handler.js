@@ -9,19 +9,18 @@ class BshbWaterAlarmHandler extends bshb_handler_1.BshbHandler {
     cachedStates = new Map();
     handleDetection() {
         return this.detectWaterAlarm().pipe((0, rxjs_1.switchMap)(() => this.createMuteAction()), (0, rxjs_1.tap)({
-            subscribe: () => this.bshb.log.info("Start detecting water alarm..."),
-            finalize: () => this.bshb.log.info("Detecting water alarm finished"),
+            subscribe: () => this.bshb.log.info('Start detecting water alarm...'),
+            finalize: () => this.bshb.log.info('Detecting water alarm finished'),
         }));
     }
     handleBshcUpdate(resultEntry) {
         // I am not sure about this. I cannot really test this. I would need to buy a compatible device to test this.
-        if (resultEntry["@type"] === "waterAlarmSystemState" ||
-            resultEntry["@type"] === "waterAlarmSystemConfiguration") {
-            const idPrefix = "waterAlarm.waterAlarmSystemState";
-            Object.keys(resultEntry).forEach((key) => {
+        if (resultEntry['@type'] === 'waterAlarmSystemState' || resultEntry['@type'] === 'waterAlarmSystemConfiguration') {
+            const idPrefix = 'waterAlarm.waterAlarmSystemState';
+            Object.keys(resultEntry).forEach(key => {
                 const id = `${idPrefix}.${key}`;
                 (0, rxjs_1.from)(this.bshb.getObjectAsync(id))
-                    .pipe((0, rxjs_1.switchMap)((obj) => {
+                    .pipe((0, rxjs_1.switchMap)(obj => {
                     if (obj) {
                         this.bshb.setState(id, {
                             val: this.mapValueToStorage(resultEntry[key]),
@@ -46,10 +45,10 @@ class BshbWaterAlarmHandler extends bshb_handler_1.BshbHandler {
             if (id === `${this.bshb.namespace}.waterAlarm.waterAlarmSystemState.mute`) {
                 result = this.getBshcClient()
                     .muteWaterAlarm({ timeout: this.long_timeout })
-                    .pipe((0, rxjs_1.tap)(() => this.bshb.setState(id, { val: false, ack: true })), (0, rxjs_1.tap)(this.handleBshcSendError("mute")), (0, rxjs_1.map)(() => true));
+                    .pipe((0, rxjs_1.tap)(() => this.bshb.setState(id, { val: false, ack: true })), (0, rxjs_1.tap)(this.handleBshcSendError('mute')), (0, rxjs_1.map)(() => true));
             }
             else {
-                result = (0, rxjs_1.zip)((0, rxjs_1.from)(this.bshb.getStateAsync("waterAlarm.waterAlarmSystemState.visualActuatorsAvailable")), (0, rxjs_1.from)(this.bshb.getStateAsync("waterAlarm.waterAlarmSystemState.videoActuatorsAvailable"))).pipe((0, rxjs_1.switchMap)((result) => {
+                result = (0, rxjs_1.zip)((0, rxjs_1.from)(this.bshb.getStateAsync('waterAlarm.waterAlarmSystemState.visualActuatorsAvailable')), (0, rxjs_1.from)(this.bshb.getStateAsync('waterAlarm.waterAlarmSystemState.videoActuatorsAvailable'))).pipe((0, rxjs_1.switchMap)(result => {
                     const data = {
                         visualActuatorsAvailable: result[0] ? result[0].val : false,
                         videoActuatorsAvailable: result[1] ? result[1].val : false,
@@ -63,40 +62,40 @@ class BshbWaterAlarmHandler extends bshb_handler_1.BshbHandler {
         return result;
     }
     createMuteAction() {
-        const id = "waterAlarm.waterAlarmSystemState.mute";
+        const id = 'waterAlarm.waterAlarmSystemState.mute';
         return this.setObjectNotExistsAsync(id, {
-            type: "state",
+            type: 'state',
             common: {
-                name: "Mute",
-                type: "boolean",
-                role: "switch",
+                name: 'Mute',
+                type: 'boolean',
+                role: 'switch',
                 read: false,
                 write: true,
             },
             native: {},
-        }).pipe((0, rxjs_1.switchMap)(() => (0, rxjs_1.from)(this.bshb.getStateAsync(id))), (0, rxjs_1.switchMap)((state) => this.setInitialStateValueIfNotSet(id, state, false)));
+        }).pipe((0, rxjs_1.switchMap)(() => (0, rxjs_1.from)(this.bshb.getStateAsync(id))), (0, rxjs_1.switchMap)(state => this.setInitialStateValueIfNotSet(id, state, false)));
     }
     detectWaterAlarm() {
-        return this.setObjectNotExistsAsync("waterAlarm", {
-            type: "folder",
+        return this.setObjectNotExistsAsync('waterAlarm', {
+            type: 'folder',
             common: {
-                name: "WaterAlarm",
+                name: 'WaterAlarm',
                 read: true,
             },
             native: {},
-        }).pipe((0, rxjs_1.switchMap)(() => this.getBshcClient().getWaterAlarm({ timeout: this.long_timeout })), (0, rxjs_1.map)((response) => response.parsedResponse), (0, rxjs_1.switchMap)((waterAlarm) => this.addWaterAlarm(waterAlarm)), (0, rxjs_1.switchMap)(() => (0, rxjs_1.of)(undefined)));
+        }).pipe((0, rxjs_1.switchMap)(() => this.getBshcClient().getWaterAlarm({ timeout: this.long_timeout })), (0, rxjs_1.map)(response => response.parsedResponse), (0, rxjs_1.switchMap)(waterAlarm => this.addWaterAlarm(waterAlarm)), (0, rxjs_1.switchMap)(() => (0, rxjs_1.of)(undefined)));
     }
     addWaterAlarm(waterAlarm) {
-        return this.setObjectNotExistsAsync("waterAlarm.waterAlarmSystemState", {
-            type: "channel",
+        return this.setObjectNotExistsAsync('waterAlarm.waterAlarmSystemState', {
+            type: 'channel',
             common: {
-                name: "WaterAlarmSystemState",
+                name: 'WaterAlarmSystemState',
             },
             native: {},
-        }).pipe((0, rxjs_1.mergeMap)(() => (0, rxjs_1.from)(Object.keys(waterAlarm))), (0, rxjs_1.mergeMap)((key) => this.importState(key, waterAlarm)));
+        }).pipe((0, rxjs_1.mergeMap)(() => (0, rxjs_1.from)(Object.keys(waterAlarm))), (0, rxjs_1.mergeMap)(key => this.importState(key, waterAlarm)));
     }
     importState(key, waterAlarm) {
-        if (key === "@type") {
+        if (key === '@type') {
             return (0, rxjs_1.of)(undefined);
         }
         const id = `waterAlarm.waterAlarmSystemState.${key}`;
@@ -105,20 +104,20 @@ class BshbWaterAlarmHandler extends bshb_handler_1.BshbHandler {
             key: key,
         });
         return this.setObjectNotExistsAsync(id, {
-            type: "state",
+            type: 'state',
             common: {
                 name: key,
                 type: bshb_definition_1.BshbDefinition.determineType(value),
-                role: bshb_definition_1.BshbDefinition.determineRole("waterAlarmSystemState", key, value),
+                role: bshb_definition_1.BshbDefinition.determineRole('waterAlarmSystemState', key, value),
                 read: true,
-                write: bshb_definition_1.BshbDefinition.determineWrite("waterAlarmSystemState", key),
-                states: bshb_definition_1.BshbDefinition.determineStates("waterAlarmSystemState", key),
+                write: bshb_definition_1.BshbDefinition.determineWrite('waterAlarmSystemState', key),
+                states: bshb_definition_1.BshbDefinition.determineStates('waterAlarmSystemState', key),
             },
             native: {},
-        }).pipe((0, rxjs_1.switchMap)(() => (0, rxjs_1.from)(this.bshb.getStateAsync(id))), (0, rxjs_1.switchMap)((state) => this.setInitialStateValueIfNotSet(id, state, value)));
+        }).pipe((0, rxjs_1.switchMap)(() => (0, rxjs_1.from)(this.bshb.getStateAsync(id))), (0, rxjs_1.switchMap)(state => this.setInitialStateValueIfNotSet(id, state, value)));
     }
     name() {
-        return "waterAlarmHandler";
+        return 'waterAlarmHandler';
     }
 }
 exports.BshbWaterAlarmHandler = BshbWaterAlarmHandler;

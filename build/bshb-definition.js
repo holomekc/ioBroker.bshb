@@ -15,7 +15,7 @@ const write_1 = require("./definition/write");
 class BshbDefinition {
     static determineFunction(value) {
         const func = function_1.FUNCTIONS[value];
-        if (func !== null && typeof func !== "undefined") {
+        if (func !== null && typeof func !== 'undefined') {
             return func;
         }
         return undefined;
@@ -30,9 +30,9 @@ class BshbDefinition {
      */
     static determineWrite(type, key) {
         const writeType = write_1.WRITE[type];
-        if (writeType !== null && typeof writeType !== "undefined") {
+        if (writeType !== null && typeof writeType !== 'undefined') {
             const write = writeType[key];
-            if (write !== null && typeof write !== "undefined") {
+            if (write !== null && typeof write !== 'undefined') {
                 return write;
             }
         }
@@ -45,7 +45,7 @@ class BshbDefinition {
      */
     static determineType(value) {
         if (Array.isArray(value)) {
-            return "array";
+            return 'array';
         }
         return typeof value;
     }
@@ -60,26 +60,26 @@ class BshbDefinition {
      */
     static determineRole(type, key, value) {
         // faults are always a list. Does not matter which service.
-        if (key === "faults") {
-            return "list";
+        if (key === 'faults') {
+            return 'list';
         }
         const roleType = roles_1.ROLES[type];
-        if (roleType !== null && typeof roleType !== "undefined") {
+        if (roleType !== null && typeof roleType !== 'undefined') {
             const role = roleType[key];
-            if (role !== null && typeof role !== "undefined") {
+            if (role !== null && typeof role !== 'undefined') {
                 return role;
             }
         }
         if (Array.isArray(value)) {
-            return "list";
+            return 'list';
         }
-        return "state";
+        return 'state';
     }
     static determineUnit(type, key) {
         const unitType = units_1.UNITS[type];
-        if (unitType !== null && typeof unitType !== "undefined") {
+        if (unitType !== null && typeof unitType !== 'undefined') {
             const unit = unitType[key];
-            if (unit !== null && typeof unit !== "undefined") {
+            if (unit !== null && typeof unit !== 'undefined') {
                 return unit;
             }
         }
@@ -87,9 +87,9 @@ class BshbDefinition {
     }
     static determineStates(type, key) {
         const stateType = states_1.STATES[type];
-        if (stateType !== null && typeof stateType !== "undefined") {
+        if (stateType !== null && typeof stateType !== 'undefined') {
             const state = stateType[key];
-            if (state !== null && typeof state !== "undefined") {
+            if (state !== null && typeof state !== 'undefined') {
                 return state;
             }
         }

@@ -8,7 +8,7 @@ const rateLimit = (interval, bshb) => {
     return (0, rxjs_1.pipe)((0, rxjs_1.mergeMap)((v) => {
         let result = (0, rxjs_1.of)(v).pipe((0, operators_1.tap)(() => (last = Date.now())));
         if (interval === 0) {
-            bshb.log.silly("rateLimit disabled.");
+            bshb.log.silly('rateLimit disabled.');
             // Disabled
         }
         else {
