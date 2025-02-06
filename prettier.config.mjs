@@ -14,7 +14,7 @@ const config = {
   trailingComma: 'es5',
   bracketSameLine: true,
   printWidth: 120,
-  endOfLine: 'auto',
+  endOfLine: 'lf',
 };
 
 export default config;
