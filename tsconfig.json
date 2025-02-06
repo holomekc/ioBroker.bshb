@@ -24,7 +24,8 @@
     "inlineSourceMap": false,
     "typeRoots": [
       "node_modules/@types"
-    ]
+    ],
+    "newLine": "lf"
   },
   "include": [
     "src/**/*.ts",
