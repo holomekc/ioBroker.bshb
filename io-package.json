@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "bshb",
-    "version": "0.4.2",
+    "version": "0.5.0",
     "news": {
+      "0.5.0": {
+        "en": "Minor cleanup",
+        "de": "Mindestreinigung",
+        "ru": "Незначительная очистка",
+        "pt": "Limpeza menor",
+        "nl": "Kleine opruiming",
+        "fr": "Nettoyage mineur",
+        "it": "Pulizie minori",
+        "es": "Limpieza menor",
+        "pl": "Drobne czyszczenie",
+        "uk": "Мінорний очищувач",
+        "zh-cn": "小清理"
+      },
       "0.4.2": {
         "en": "Fixed undefined object issue",
         "de": "Problem mit undefinierten Objekten behoben",
@@ -80,19 +93,6 @@
         "pl": "Zaktualizowano zależności i naprawiono ograniczenie szybkości.",
         "uk": "Оновити залежності та виправити обмеження швидкості.",
         "zh-cn": "更新依赖关系并修复速率限制。"
-      },
-      "0.2.6": {
-        "de": "Unterstützung für benutzerdefinierte Zustände.",
-        "en": "Support for user defined states.",
-        "ru": "Поддержка состояний, определяемых пользователем.",
-        "pt": "Suporte para estados definidos pelo utilizador.",
-        "nl": "Ondersteuning voor door de gebruiker gedefinieerde toestanden.",
-        "fr": "Prise en charge des états définis par l'utilisateur.",
-        "it": "Supporto per gli stati definiti dall'utente.",
-        "es": "Soporte para estados definidos por el usuario.",
-        "pl": "Obsługa stanów zdefiniowanych przez użytkownika.",
-        "uk": "Підтримка станів, визначених користувачем.",
-        "zh-cn": "支持用户自定义状态。"
       }
     },
     "titleLang": {

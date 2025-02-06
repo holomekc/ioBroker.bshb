@@ -1,3 +1,7 @@
+### 0.2.6
+
+* (holomekc) Support for user defined states
+
 ### 0.2.5
 
 * (holomekc) Support for user defined states
