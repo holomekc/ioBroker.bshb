@@ -505,6 +505,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@eslint/js@npm:9.24.0":
+  version: 9.24.0
+  resolution: "@eslint/js@npm:9.24.0"
+  checksum: 10c0/efe22e29469e4140ac3e2916be8143b1bcfd1084a6edf692b7a58a3e54949d53c67f7f979bc0a811db134d9cc1e7bff8aa71ef1376b47eecd7e226b71206bb36
+  languageName: node
+  linkType: hard
+
 "@eslint/object-schema@npm:^2.1.6":
   version: 2.1.6
   resolution: "@eslint/object-schema@npm:2.1.6"
@@ -4967,7 +4974,7 @@ __metadata:
     "@commitlint/cli": "npm:^19.8.0"
     "@commitlint/config-conventional": "npm:^19.8.0"
     "@eslint/eslintrc": "npm:3.3.1"
-    "@eslint/js": "npm:9.23.0"
+    "@eslint/js": "npm:9.24.0"
     "@iobroker/adapter-core": "npm:^3.2.3"
     "@iobroker/adapter-dev": "npm:^1.4.0"
     "@iobroker/testing": "npm:^5.0.4"
