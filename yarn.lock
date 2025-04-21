@@ -1820,7 +1820,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typescript-eslint/parser@npm:^6.7.5":
+"@typescript-eslint/parser@npm:^6.21.0":
   version: 6.21.0
   resolution: "@typescript-eslint/parser@npm:6.21.0"
   dependencies:
@@ -2789,7 +2789,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"common-tags@npm:^1.4.0":
+"common-tags@npm:^1.8.2":
   version: 1.8.2
   resolution: "common-tags@npm:1.8.2"
   checksum: 10c0/23efe47ff0a1a7c91489271b3a1e1d2a171c12ec7f9b35b29b2fce51270124aff0ec890087e2bc2182c1cb746e232ab7561aaafe05f1e7452aea733d2bfe3f63
@@ -3147,7 +3147,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dlv@npm:^1.1.0":
+"dlv@npm:^1.1.3":
   version: 1.1.3
   resolution: "dlv@npm:1.1.3"
   checksum: 10c0/03eb4e769f19a027fd5b43b59e8a05e3fd2100ac239ebb0bf9a745de35d449e2f25cfaf3aa3934664551d72856f4ae8b7822016ce5c42c2d27c18ae79429ec42
@@ -3606,7 +3606,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint@npm:^8.7.0":
+"eslint@npm:^8.57.1":
   version: 8.57.1
   resolution: "eslint@npm:8.57.1"
   dependencies:
@@ -4944,7 +4944,7 @@ __metadata:
     mocha: "npm:11.1.0"
     pinst: "npm:3.0.0"
     prettier: "npm:3.5.3"
-    prettier-eslint: "npm:16.3.0"
+    prettier-eslint: "npm:16.4.1"
     proxyquire: "npm:2.1.3"
     rimraf: "npm:6.0.1"
     rxjs: "npm:7.8.2"
@@ -5660,7 +5660,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"lodash.merge@npm:^4.6.0, lodash.merge@npm:^4.6.2":
+"lodash.merge@npm:^4.6.2":
   version: 4.6.2
   resolution: "lodash.merge@npm:4.6.2"
   checksum: 10c0/402fa16a1edd7538de5b5903a90228aa48eb5533986ba7fa26606a49db2572bf414ff73a2c9f5d5fd36b31c46a5d5c7e1527749c07cbcf965ccff5fbdf32c506
@@ -7092,22 +7092,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prettier-eslint@npm:16.3.0":
-  version: 16.3.0
-  resolution: "prettier-eslint@npm:16.3.0"
+"prettier-eslint@npm:16.4.1":
+  version: 16.4.1
+  resolution: "prettier-eslint@npm:16.4.1"
   dependencies:
-    "@typescript-eslint/parser": "npm:^6.7.5"
-    common-tags: "npm:^1.4.0"
-    dlv: "npm:^1.1.0"
-    eslint: "npm:^8.7.0"
+    "@typescript-eslint/parser": "npm:^6.21.0"
+    common-tags: "npm:^1.8.2"
+    dlv: "npm:^1.1.3"
+    eslint: "npm:^8.57.1"
     indent-string: "npm:^4.0.0"
-    lodash.merge: "npm:^4.6.0"
+    lodash.merge: "npm:^4.6.2"
     loglevel-colored-level-prefix: "npm:^1.0.0"
-    prettier: "npm:^3.0.1"
+    prettier: "npm:^3.5.3"
     pretty-format: "npm:^29.7.0"
     require-relative: "npm:^0.8.7"
-    typescript: "npm:^5.2.2"
-    vue-eslint-parser: "npm:^9.1.0"
+    vue-eslint-parser: "npm:^9.4.3"
   peerDependencies:
     prettier-plugin-svelte: ^3.0.0
     svelte-eslint-parser: "*"
@@ -7116,7 +7115,7 @@ __metadata:
       optional: true
     svelte-eslint-parser:
       optional: true
-  checksum: 10c0/9efe0fbfceee8d635c1cdb62bd8442b5c4f4b8045d8ec438f5ab0acc2d696c42723c67a4f9b9a660975c39ea95cedb60b310cd77aefe302faf7d0e9ff67e0cae
+  checksum: 10c0/df1298b5237b2842c28f493aafb119e35637f8a9350ca6fba69a0b6646eb024914e779be7cea76e860f48d14a9784b0729fe6ffa67b980541e8e6cf5aba741a6
   languageName: node
   linkType: hard
 
@@ -7129,21 +7128,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prettier@npm:3.5.3":
+"prettier@npm:3.5.3, prettier@npm:^3.5.3":
   version: 3.5.3
   resolution: "prettier@npm:3.5.3"
   bin:
     prettier: bin/prettier.cjs
   checksum: 10c0/3880cb90b9dc0635819ab52ff571518c35bd7f15a6e80a2054c05dbc8a3aa6e74f135519e91197de63705bcb38388ded7e7230e2178432a1468005406238b877
-  languageName: node
-  linkType: hard
-
-"prettier@npm:^3.0.1":
-  version: 3.4.2
-  resolution: "prettier@npm:3.4.2"
-  bin:
-    prettier: bin/prettier.cjs
-  checksum: 10c0/99e076a26ed0aba4ebc043880d0f08bbb8c59a4c6641cdee6cdadf2205bdd87aa1d7823f50c3aea41e015e99878d37c58d7b5f0e663bba0ef047f94e36b96446
   languageName: node
   linkType: hard
 
@@ -8680,16 +8670,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:^5.2.2":
-  version: 5.7.3
-  resolution: "typescript@npm:5.7.3"
-  bin:
-    tsc: bin/tsc
-    tsserver: bin/tsserver
-  checksum: 10c0/b7580d716cf1824736cc6e628ab4cd8b51877408ba2be0869d2866da35ef8366dd6ae9eb9d0851470a39be17cbd61df1126f9e211d8799d764ea7431d5435afa
-  languageName: node
-  linkType: hard
-
 "typescript@patch:typescript@npm%3A5.8.3#optional!builtin<compat/typescript>":
   version: 5.8.3
   resolution: "typescript@patch:typescript@npm%3A5.8.3#optional!builtin<compat/typescript>::version=5.8.3&hash=5786d5"
@@ -8697,16 +8677,6 @@ __metadata:
     tsc: bin/tsc
     tsserver: bin/tsserver
   checksum: 10c0/39117e346ff8ebd87ae1510b3a77d5d92dae5a89bde588c747d25da5c146603a99c8ee588c7ef80faaf123d89ed46f6dbd918d534d641083177d5fac38b8a1cb
-  languageName: node
-  linkType: hard
-
-"typescript@patch:typescript@npm%3A^5.2.2#optional!builtin<compat/typescript>":
-  version: 5.7.3
-  resolution: "typescript@patch:typescript@npm%3A5.7.3#optional!builtin<compat/typescript>::version=5.7.3&hash=5786d5"
-  bin:
-    tsc: bin/tsc
-    tsserver: bin/tsserver
-  checksum: 10c0/6fd7e0ed3bf23a81246878c613423730c40e8bdbfec4c6e4d7bf1b847cbb39076e56ad5f50aa9d7ebd89877999abaee216002d3f2818885e41c907caaa192cc4
   languageName: node
   linkType: hard
 
@@ -8878,7 +8848,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"vue-eslint-parser@npm:^9.1.0":
+"vue-eslint-parser@npm:^9.4.3":
   version: 9.4.3
   resolution: "vue-eslint-parser@npm:9.4.3"
   dependencies:
