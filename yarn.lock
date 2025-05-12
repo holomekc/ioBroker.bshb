@@ -5056,7 +5056,7 @@ __metadata:
     mocha: "npm:11.2.2"
     pinst: "npm:3.0.0"
     prettier: "npm:3.5.3"
-    prettier-eslint: "npm:16.4.1"
+    prettier-eslint: "npm:16.4.2"
     proxyquire: "npm:2.1.3"
     rimraf: "npm:6.0.1"
     rxjs: "npm:7.8.2"
@@ -7211,9 +7211,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prettier-eslint@npm:16.4.1":
-  version: 16.4.1
-  resolution: "prettier-eslint@npm:16.4.1"
+"prettier-eslint@npm:16.4.2":
+  version: 16.4.2
+  resolution: "prettier-eslint@npm:16.4.2"
   dependencies:
     "@typescript-eslint/parser": "npm:^6.21.0"
     common-tags: "npm:^1.8.2"
@@ -7225,6 +7225,7 @@ __metadata:
     prettier: "npm:^3.5.3"
     pretty-format: "npm:^29.7.0"
     require-relative: "npm:^0.8.7"
+    tslib: "npm:^2.8.1"
     vue-eslint-parser: "npm:^9.4.3"
   peerDependencies:
     prettier-plugin-svelte: ^3.0.0
@@ -7234,7 +7235,7 @@ __metadata:
       optional: true
     svelte-eslint-parser:
       optional: true
-  checksum: 10c0/df1298b5237b2842c28f493aafb119e35637f8a9350ca6fba69a0b6646eb024914e779be7cea76e860f48d14a9784b0729fe6ffa67b980541e8e6cf5aba741a6
+  checksum: 10c0/0f8f68ee873b1420cbb9b917af2a631c6eff4f182ef3fc09959e25cc95a0590b4095b85650b7251314cfa39e54cf681f9ebcf032b596f413207cd7921884f00e
   languageName: node
   linkType: hard
 
