@@ -71,7 +71,7 @@
     "chai": "5.2.0",
     "conventional-changelog-conventionalcommits": "8.0.0",
     "eslint": "9.26.0",
-    "eslint-config-prettier": "10.1.2",
+    "eslint-config-prettier": "10.1.5",
     "eslint-plugin-prefer-arrow": "1.2.3",
     "eslint-plugin-prettier": "5.4.0",
     "eslint-plugin-unused-imports": "4.1.4",
