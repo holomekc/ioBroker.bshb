@@ -46,7 +46,7 @@
   },
   "dependencies": {
     "@iobroker/adapter-core": "^3.2.3",
-    "bosch-smart-home-bridge": "1.7.17",
+    "bosch-smart-home-bridge": "1.7.18",
     "rxjs": "7.8.2"
   },
   "devDependencies": {
