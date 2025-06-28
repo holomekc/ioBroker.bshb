@@ -1,7 +1,18 @@
 import * as utils from '@iobroker/adapter-core';
 import { BshbController } from './bshb-controller';
-import { BehaviorSubject, EMPTY, from, map, Observable, Subject, Subscriber } from 'rxjs';
-import { catchError, switchMap, takeUntil, tap } from 'rxjs/operators';
+import {
+  BehaviorSubject,
+  catchError,
+  EMPTY,
+  from,
+  map,
+  Observable,
+  Subject,
+  Subscriber,
+  switchMap,
+  takeUntil,
+  tap,
+} from 'rxjs';
 import { Migration } from './migration';
 import { Utils } from './utils';
 import { ClientCert } from './client-cert';

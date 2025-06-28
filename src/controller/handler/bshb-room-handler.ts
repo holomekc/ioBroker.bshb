@@ -1,6 +1,5 @@
 import { BshbHandler } from './bshb-handler';
-import { from, mergeMap, Observable, of, tap } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { from, mergeMap, Observable, of, switchMap, tap } from 'rxjs';
 import { BshbDefinition } from '../../bshb-definition';
 
 export class BshbRoomHandler extends BshbHandler {

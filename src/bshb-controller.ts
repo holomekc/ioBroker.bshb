@@ -1,8 +1,21 @@
 import { BoschSmartHomeBridge, BoschSmartHomeBridgeBuilder } from 'bosch-smart-home-bridge';
 import { Bshb } from './main';
 import { BshbLogger } from './bshb-logger';
-import { BehaviorSubject, concat, concatMap, last, merge, Observable, of, Subject, timer } from 'rxjs';
-import { catchError, delay, takeUntil, tap } from 'rxjs/operators';
+import {
+  BehaviorSubject,
+  catchError,
+  concat,
+  concatMap,
+  delay,
+  last,
+  merge,
+  Observable,
+  of,
+  Subject,
+  takeUntil,
+  tap,
+  timer,
+} from 'rxjs';
 import { Utils } from './utils';
 import { BshbHandler } from './controller/handler/bshb-handler';
 import { BshbScenarioHandler } from './controller/handler/bshb-scenario-handler';

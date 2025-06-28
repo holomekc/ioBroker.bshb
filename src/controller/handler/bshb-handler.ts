@@ -1,7 +1,6 @@
-import { tap } from 'rxjs/operators';
 import { Bshb } from '../../main';
 import { BoschSmartHomeBridge } from 'bosch-smart-home-bridge';
-import { concatMap, from, map, Observable, Observer, of, Subject, switchMap } from 'rxjs';
+import { concatMap, from, map, Observable, Observer, of, Subject, switchMap, tap } from 'rxjs';
 import { Utils } from '../../utils';
 
 /**

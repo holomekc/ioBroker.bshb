@@ -1,7 +1,6 @@
 import { BshbHandler } from './bshb-handler';
-import { concat, Observable, of, tap } from 'rxjs';
+import { concat, Observable, of, switchMap, tap } from 'rxjs';
 import { BshbResponse } from 'bosch-smart-home-bridge';
-import { switchMap } from 'rxjs/operators';
 
 export class BshbOpenDoorWindowHandler extends BshbHandler {
   public handleDetection(): Observable<void> {

@@ -1,7 +1,6 @@
 import { BshbHandler } from './bshb-handler';
-import { from, map, mergeMap, Observable, of, switchMap, tap, throwError, zip } from 'rxjs';
+import { catchError, from, map, mergeMap, Observable, of, switchMap, tap, throwError, zip } from 'rxjs';
 import { BshbDefinition } from '../../bshb-definition';
-import { catchError } from 'rxjs/operators';
 
 export class BshbAirPurityGuardianHandler extends BshbHandler {
   private regex = /bshb\.\d+\.airPurityGuardian\.(.*)/;

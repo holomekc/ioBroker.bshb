@@ -1,6 +1,5 @@
 import { BshbHandler } from './bshb-handler';
-import { concat, filter, from, map, mergeMap, Observable, of } from 'rxjs';
-import { catchError, switchMap, tap } from 'rxjs/operators';
+import { catchError, concat, filter, from, map, mergeMap, Observable, of, switchMap, tap } from 'rxjs';
 import { BshbDefinition } from '../../bshb-definition';
 import { Utils } from '../../utils';
 import { LogLevel } from '../../log-level';

@@ -1,6 +1,5 @@
 import { BshbHandler } from './bshb-handler';
-import { Observable, of } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
+import { Observable, of, switchMap } from 'rxjs';
 
 export class BshbDeviceStatusUpdateHandler extends BshbHandler {
   handleDetection(): Observable<void> {

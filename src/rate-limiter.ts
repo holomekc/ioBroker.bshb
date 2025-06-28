@@ -1,5 +1,4 @@
-import { mergeMap, MonoTypeOperatorFunction, of, pipe } from 'rxjs';
-import { delay, tap } from 'rxjs/operators';
+import { delay, mergeMap, MonoTypeOperatorFunction, of, pipe, tap } from 'rxjs';
 import { Bshb } from './main';
 
 export const rateLimit = <T>(interval: number, bshb: Bshb): MonoTypeOperatorFunction<T> => {

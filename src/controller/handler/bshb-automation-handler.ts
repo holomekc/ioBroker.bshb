@@ -1,6 +1,5 @@
 import { BshbHandler } from './bshb-handler';
-import { from, last, map, mergeMap, Observable, of, switchMap, tap } from 'rxjs';
-import { catchError, delay } from 'rxjs/operators';
+import { catchError, delay, from, last, map, mergeMap, Observable, of, switchMap, tap } from 'rxjs';
 
 /**
  * This handler is used to detect automations of bshc
