@@ -149,7 +149,7 @@
     ],
     "globalDependencies": [
       {
-        "admin": ">=5.1.13"
+        "admin": ">=7.4.10"
       }
     ],
     "tier": 2,
