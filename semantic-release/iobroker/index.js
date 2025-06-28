@@ -1,6 +1,6 @@
-import {readFile, writeFile} from 'fs/promises';
-import {translateText} from './translate.js'
-import {generateNotes} from '../commits.js';
+import { readFile, writeFile } from 'fs/promises';
+import { translateText } from './translate-deepl.js';
+import { generateNotes } from '../commits.js';
 
 function createNews(commits, logger) {
   let message = '';
@@ -24,7 +24,7 @@ function createNews(commits, logger) {
  * @param {*} pluginConfig The semantic-release plugin config
  * @param {*} context The context provided by semantic-release
  */
-export async function prepare(pluginConfig, {commits, nextRelease, logger}) {
+export async function prepare(pluginConfig, { commits, nextRelease, logger }) {
   if (pluginConfig.skip) {
     logger.log('Skip iobroker plugin due to skip = true');
     return;
