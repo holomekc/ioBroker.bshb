@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "bshb",
-    "version": "0.5.1",
+    "version": "0.5.2",
     "news": {
+      "0.5.2": {
+        "en": "Dependencies updated",
+        "de": "Abhängigkeiten aktualisiert",
+        "ru": "Обновлены зависимости",
+        "pt": "Dependências actualizadas",
+        "nl": "Afhankelijkheden bijgewerkt",
+        "fr": "Mise à jour des dépendances",
+        "it": "Dipendenze aggiornate",
+        "es": "Dependencias actualizadas",
+        "pl": "Zaktualizowano zależności",
+        "uk": "Оновлені залежності",
+        "zh-cn": "更新了依赖关系"
+      },
       "0.5.1": {
         "en": "Dependencies updated",
         "de": "Ausgaben aktualisiert",
@@ -80,19 +93,6 @@
         "pl": "Wsparcie dla automatyzacji.",
         "uk": "Підтримка автоматизації.",
         "zh-cn": "支持自动化。"
-      },
-      "0.2.8": {
-        "de": "Aktualisierung der Abhängigkeiten und Stabilisierungsmaßnahmen.",
-        "en": "Updating dependencies and stabilization measures.",
-        "ru": "Обновление зависимостей и стабилизационных мер.",
-        "pt": "Atualização das dependências e das medidas de estabilização.",
-        "nl": "Bijwerken van de afhankelijkheden en stabilisatiemaatregelen.",
-        "fr": "Mise à jour des dépendances et des mesures de stabilisation.",
-        "it": "Aggiornamento delle dipendenze e delle misure di stabilizzazione.",
-        "es": "Actualización de las dependencias y medidas de estabilización.",
-        "pl": "Aktualizacja zależności i środków stabilizacji.",
-        "uk": "Оновлення залежностей та стабілізаційних заходів.",
-        "zh-cn": "更新从属关系和稳定措施。"
       }
     },
     "titleLang": {

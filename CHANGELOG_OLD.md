@@ -1,3 +1,7 @@
+### 0.2.8
+
+* (holomekc) Improve stability and update dependencies
+
 ### 0.2.7
 
 * (holomekc) Update dependencies and fix rate limiting
