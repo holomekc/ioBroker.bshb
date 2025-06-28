@@ -120,5 +120,5 @@
     "instrument": true
   },
   "readmeFilename": "README.md",
-  "packageManager": "yarn@4.6.0"
+  "packageManager": "yarn@4.9.2"
 }
