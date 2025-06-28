@@ -1,6 +1,6 @@
 #!/bin/bash
 tags="/tags/"
-while read -rd $'0' arg
+while read -r $'0' arg
 do
   if [ "${arg/$tags}" != "$arg" ]
   then
