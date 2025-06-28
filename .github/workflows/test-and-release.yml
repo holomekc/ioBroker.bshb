@@ -7,6 +7,7 @@ on:
     branches:
       - "*"
   pull_request: { }
+  workflow_dispatch:
 
 # Cancel previous PR/branch runs when a new commit is pushed
 concurrency:
