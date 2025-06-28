@@ -36,6 +36,10 @@ use of the adapter. You find a link at the top.
 
 ## Changelog
 
+### 0.5.1
+
+* Dependencies updated
+
 ### 0.5.0
 
 * (holomekc) Minor cleanup
@@ -64,10 +68,6 @@ use of the adapter. You find a link at the top.
 ### 0.2.8
 
 * (holomekc) Improve stability and update dependencies
-
-### 0.2.7
-
-* (holomekc) Update dependencies and fix rate limiting
 
 ### Older entries
 

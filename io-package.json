@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "bshb",
-    "version": "0.5.0",
+    "version": "0.5.1",
     "news": {
+      "0.5.1": {
+        "en": "Dependencies updated",
+        "de": "Ausgaben aktualisiert",
+        "ru": "Обновленные зависимости",
+        "pt": "Dependências atualizadas",
+        "nl": "Afhankelijkheden bijgewerkt",
+        "fr": "Dépendances actualisées",
+        "it": "Dipendenze aggiornate",
+        "es": "Actualización de las dependencias",
+        "pl": "Aktualizacja zależności",
+        "uk": "Залежність оновлено",
+        "zh-cn": "更新的依赖关系"
+      },
       "0.5.0": {
         "en": "Minor cleanup",
         "de": "Mindestreinigung",
@@ -80,19 +93,6 @@
         "pl": "Aktualizacja zależności i środków stabilizacji.",
         "uk": "Оновлення залежностей та стабілізаційних заходів.",
         "zh-cn": "更新从属关系和稳定措施。"
-      },
-      "0.2.7": {
-        "de": "Aktualisierung der Abhängigkeiten und Behebung der Ratenbegrenzung.",
-        "en": "Update dependencies and fix rate limiting.",
-        "ru": "Обновление зависимостей и исправление ограничения скорости.",
-        "pt": "Atualização das dependências e correção da limitação da taxa.",
-        "nl": "Afhankelijkheden bijwerken en snelheidsbeperking repareren.",
-        "fr": "Mise à jour des dépendances et correction de la limitation du taux.",
-        "it": "Aggiornamento delle dipendenze e correzione della limitazione della velocità.",
-        "es": "Actualización de las dependencias y corrección de la limitación de velocidad.",
-        "pl": "Zaktualizowano zależności i naprawiono ograniczenie szybkości.",
-        "uk": "Оновити залежності та виправити обмеження швидкості.",
-        "zh-cn": "更新依赖关系并修复速率限制。"
       }
     },
     "titleLang": {
