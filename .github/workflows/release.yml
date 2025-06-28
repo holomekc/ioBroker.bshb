@@ -7,6 +7,7 @@ on:
 
 env:
   FORCE_COLOR: 1
+  DEBUG_COLORS: 1
   NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
   HUSKY: 0
 
@@ -36,8 +37,6 @@ jobs:
   adapter-tests:
     if: contains(github.event.head_commit.message, '[skip ci]') == false
 
-    needs: [ check-and-lint ]
-
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
@@ -57,7 +56,7 @@ jobs:
 
   # Release the final package to NPM
   release:
-    needs: [ adapter-tests ]
+    needs: [ check-and-lint, adapter-tests ]
     if: contains(github.event.head_commit.message, '[skip ci]') == false
 
     runs-on: ubuntu-latest
@@ -68,8 +67,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          ssh-key: ${{ secrets.SSH_KEY }}
+          ssh-known-hosts: ${{ secrets.SSH_KNOWN_HOSTS }}
           fetch-depth: 0
-          persist-credentials: false
 
       - uses: actions/setup-node@v4
         with:
@@ -92,7 +92,7 @@ jobs:
           GIT_AUTHOR_EMAIL: 30546982+holomekc@users.noreply.github.com
           GIT_COMMITTER_NAME: holomekc
           GIT_COMMITTER_EMAIL: 30546982+holomekc@users.noreply.github.com
-          GH_TOKEN: ${{ secrets.SEMANTIC_RELEASE_TOKEN }}
+          GH_TOKEN: ${{ github.token }}
         run: |
           yarn run release
 
@@ -101,7 +101,7 @@ jobs:
         shell: bash
         if: steps.release.outputs.version != ''
         env:
-          GH_TOKEN: ${{ secrets.SEMANTIC_RELEASE_TOKEN }}
+          GH_TOKEN: ${{ github.token }}
         run: |
           #!/bin/bash
           gh api \
