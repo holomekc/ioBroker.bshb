@@ -5199,7 +5199,7 @@ __metadata:
     proxyquire: "npm:2.1.3"
     rimraf: "npm:6.0.1"
     rxjs: "npm:7.8.1"
-    semantic-release: "npm:24.2.6"
+    semantic-release: "npm:24.2.7"
     semantic-release-yarn: "npm:3.0.2"
     source-map-support: "npm:0.5.21"
     ts-node: "npm:10.9.2"
@@ -7989,9 +7989,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"semantic-release@npm:24.2.6":
-  version: 24.2.6
-  resolution: "semantic-release@npm:24.2.6"
+"semantic-release@npm:24.2.7":
+  version: 24.2.7
+  resolution: "semantic-release@npm:24.2.7"
   dependencies:
     "@semantic-release/commit-analyzer": "npm:^13.0.0-beta.1"
     "@semantic-release/error": "npm:^4.0.0"
@@ -8024,7 +8024,7 @@ __metadata:
     yargs: "npm:^17.5.1"
   bin:
     semantic-release: bin/semantic-release.js
-  checksum: 10c0/62268d972cf571b3581b9a418a3b08ac92cedc7e5683caccccc17cd155943fa2978a28ab4cf8338ff8726e073706861f1b9251d5d98c2712f646b84bc85ac326
+  checksum: 10c0/d54a64a30a271dd578c84d3341a8f285646fc3ca9e4fad5a35a049a8cffb1b3eafaded5167e94ac62320d834471cb6a28e12e54169b8cf4c502b10b8f58967e6
   languageName: node
   linkType: hard
 
