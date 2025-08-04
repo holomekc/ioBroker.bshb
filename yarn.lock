@@ -509,13 +509,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@eslint/js@npm:9.31.0":
-  version: 9.31.0
-  resolution: "@eslint/js@npm:9.31.0"
-  checksum: 10c0/f9d4c73d0fafe70679a418cbb25ab7ebcc8f1dba6c32456d6f8ba5a137d583ecff233cfe10f61f41d7d4d2220e94cff1f39fc7ed1fa3819d1888dee1cad678ea
-  languageName: node
-  linkType: hard
-
 "@eslint/js@npm:9.32.0":
   version: 9.32.0
   resolution: "@eslint/js@npm:9.32.0"
@@ -1796,15 +1789,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node-forge@npm:^1.3.0":
-  version: 1.3.11
-  resolution: "@types/node-forge@npm:1.3.11"
-  dependencies:
-    "@types/node": "npm:*"
-  checksum: 10c0/3d7d23ca0ba38ac0cf74028393bd70f31169ab9aba43f21deb787840170d307d662644bac07287495effe2812ddd7ac8a14dbd43f16c2936bbb06312e96fc3b9
-  languageName: node
-  linkType: hard
-
 "@types/node@npm:*, @types/node@npm:>=13.7.0":
   version: 22.10.5
   resolution: "@types/node@npm:22.10.5"
@@ -2541,14 +2525,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"bosch-smart-home-bridge@npm:1.7.29":
-  version: 1.7.29
-  resolution: "bosch-smart-home-bridge@npm:1.7.29"
+"bosch-smart-home-bridge@npm:1.7.31":
+  version: 1.7.31
+  resolution: "bosch-smart-home-bridge@npm:1.7.31"
   dependencies:
     rxjs: "npm:7.8.1"
-    selfsigned: "npm:2.4.1"
+    selfsigned: "npm:3.0.1"
     uuid: "npm:11.1.0"
-  checksum: 10c0/3546f4a81f511e06140aa8a71a04c3f7db1df3aec4c86d310502c93a3d1b2d84bef9ba39c138a875dbc655c079bdbfcacb3524e05578787d578166119b4d385d
+  checksum: 10c0/c516c94cd5e5c3b2c23ddefe800f56008eee49f2dcd07e4f789f23da1187fec8c4f3676c4fe7db060368f394909c1c6fcbc3c5f3caa2d8f134366d76bbfc369f
   languageName: node
   linkType: hard
 
@@ -5182,7 +5166,7 @@ __metadata:
     "@types/proxyquire": "npm:1.3.31"
     "@typescript-eslint/eslint-plugin": "npm:8.37.0"
     "@typescript-eslint/parser": "npm:8.38.0"
-    bosch-smart-home-bridge: "npm:1.7.29"
+    bosch-smart-home-bridge: "npm:1.7.31"
     c8: "npm:10.1.3"
     chai: "npm:5.2.1"
     conventional-changelog-conventionalcommits: "npm:9.1.0"
@@ -7961,13 +7945,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"selfsigned@npm:2.4.1":
-  version: 2.4.1
-  resolution: "selfsigned@npm:2.4.1"
+"selfsigned@npm:3.0.1":
+  version: 3.0.1
+  resolution: "selfsigned@npm:3.0.1"
   dependencies:
-    "@types/node-forge": "npm:^1.3.0"
     node-forge: "npm:^1"
-  checksum: 10c0/521829ec36ea042f7e9963bf1da2ed040a815cf774422544b112ec53b7edc0bc50a0f8cc2ae7aa6cc19afa967c641fd96a15de0fc650c68651e41277d2e1df09
+  checksum: 10c0/57e266192299ad5230c46f4e40b662d563e3c15b37ecaadadc22966d2b153eea28ede3c7e465ad36e5f688ad97a0974bbaf47fbfbf616d8bc8420d03ee64ffd0
   languageName: node
   linkType: hard
 
