@@ -728,12 +728,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@iobroker/adapter-core@npm:^3.3.1":
-  version: 3.3.1
-  resolution: "@iobroker/adapter-core@npm:3.3.1"
+"@iobroker/adapter-core@npm:^3.3.2":
+  version: 3.3.2
+  resolution: "@iobroker/adapter-core@npm:3.3.2"
   peerDependencies:
     "@iobroker/types": ">=6.0.11"
-  checksum: 10c0/ac3d2ddbad1f60a6c3e92372131e3b705ab69e38290c2154acb070e49101811b69fd2e2ad9ddac8506d40056c420ca253f55845a86065dd84bdf4ba4c406e063
+  checksum: 10c0/44f181ba1f23419343f6b18e66b5f1560d91f0159a0e0d7448a3ad0f6883318efd50bf1fa4b680f00597a885a046f88ec796b001d8abede9332dc5f28f7ee7ac
   languageName: node
   linkType: hard
 
@@ -5083,7 +5083,7 @@ __metadata:
     "@commitlint/config-conventional": "npm:^19.8.1"
     "@eslint/eslintrc": "npm:3.3.1"
     "@eslint/js": "npm:9.33.0"
-    "@iobroker/adapter-core": "npm:^3.3.1"
+    "@iobroker/adapter-core": "npm:^3.3.2"
     "@iobroker/adapter-dev": "npm:^1.4.0"
     "@iobroker/testing": "npm:^5.0.4"
     "@iobroker/types": "npm:7.0.7"
