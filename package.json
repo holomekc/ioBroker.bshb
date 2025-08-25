@@ -45,7 +45,7 @@
     "pack": "yarn run build && yarn pack --out ./%s-%v.tgz"
   },
   "dependencies": {
-    "@iobroker/adapter-core": "^3.3.1",
+    "@iobroker/adapter-core": "^3.3.2",
     "bosch-smart-home-bridge": "1.7.33",
     "rxjs": "7.8.1"
   },
