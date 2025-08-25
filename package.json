@@ -53,7 +53,7 @@
     "@commitlint/cli": "^19.8.1",
     "@commitlint/config-conventional": "^19.8.1",
     "@eslint/eslintrc": "3.3.1",
-    "@eslint/js": "9.33.0",
+    "@eslint/js": "9.34.0",
     "@iobroker/adapter-dev": "^1.4.0",
     "@iobroker/testing": "^5.0.4",
     "@iobroker/types": "7.0.7",
