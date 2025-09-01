@@ -55,7 +55,7 @@
     "@eslint/eslintrc": "3.3.1",
     "@eslint/js": "9.34.0",
     "@iobroker/adapter-dev": "^1.4.0",
-    "@iobroker/testing": "^5.1.0",
+    "@iobroker/testing": "^5.1.1",
     "@iobroker/types": "7.0.7",
     "@semantic-release/exec": "7.1.0",
     "@semantic-release/git": "^10.0.1",
