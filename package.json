@@ -59,7 +59,7 @@
     "@iobroker/types": "7.0.7",
     "@semantic-release/exec": "7.1.0",
     "@semantic-release/git": "^10.0.1",
-    "@semantic-release/release-notes-generator": "^14.0.3",
+    "@semantic-release/release-notes-generator": "^14.1.0",
     "@tsconfig/node22": "22.0.2",
     "@types/chai": "5.2.2",
     "@types/mocha": "10.0.10",
