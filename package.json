@@ -76,7 +76,7 @@
     "eslint-plugin-prettier": "5.5.4",
     "eslint-plugin-unused-imports": "4.2.0",
     "express": "5.1.0",
-    "globals": "16.3.0",
+    "globals": "16.4.0",
     "husky": "9.1.7",
     "mocha": "11.7.2",
     "pinst": "3.0.0",
