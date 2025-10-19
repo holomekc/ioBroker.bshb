@@ -59,3 +59,6 @@ admin/i18n/*/flat.txt
 
 # yarn
 .yarn
+
+#ignore .commitinfo created by ioBroker release script
+.commitinfo
