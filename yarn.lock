@@ -2512,14 +2512,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"bosch-smart-home-bridge@npm:1.7.40":
-  version: 1.7.40
-  resolution: "bosch-smart-home-bridge@npm:1.7.40"
+"bosch-smart-home-bridge@npm:1.7.41":
+  version: 1.7.41
+  resolution: "bosch-smart-home-bridge@npm:1.7.41"
   dependencies:
     rxjs: "npm:7.8.1"
     selfsigned: "npm:3.0.1"
     uuid: "npm:13.0.0"
-  checksum: 10c0/ba759b779e3ee4260254613d396e80115dc250284e85f8a97acb13abe58c3aae23e90c859f12a3ba2173867876f3705178441b43f31d8849194d0bfd326d2316
+  checksum: 10c0/fab1215a1ddf29f54b58c745a7f9d220ae7e273fe8c98e478f852f76c0a5b49ed41c0c714125b1797f14fdf7217aabe79f41d3d5788abb4b498ecde453063a27
   languageName: node
   linkType: hard
 
@@ -5118,7 +5118,7 @@ __metadata:
     "@types/proxyquire": "npm:1.3.31"
     "@typescript-eslint/eslint-plugin": "npm:8.46.0"
     "@typescript-eslint/parser": "npm:8.46.0"
-    bosch-smart-home-bridge: "npm:1.7.40"
+    bosch-smart-home-bridge: "npm:1.7.41"
     c8: "npm:10.1.3"
     chai: "npm:6.2.0"
     conventional-changelog-conventionalcommits: "npm:9.1.0"
