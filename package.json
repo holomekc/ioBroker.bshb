@@ -60,7 +60,7 @@
     "@semantic-release/exec": "7.1.0",
     "@semantic-release/git": "^10.0.1",
     "@semantic-release/release-notes-generator": "^14.1.0",
-    "@tsconfig/node22": "22.0.2",
+    "@tsconfig/node22": "22.0.4",
     "@types/chai": "5.2.3",
     "@types/mocha": "10.0.10",
     "@types/node": "22.15.34",
