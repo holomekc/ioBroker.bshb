@@ -891,10 +891,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@iobroker/types@npm:7.0.7":
-  version: 7.0.7
-  resolution: "@iobroker/types@npm:7.0.7"
-  checksum: 10c0/18cdce5b0709a2306dd433d4d0e6830377c9d050aa6d84b6d3c3bfcfac1a78ef8054c60d3ec158d34f27edd9e094558c6be618cf3d5e8072628796d7b2a507d8
+"@iobroker/types@npm:7.1.0":
+  version: 7.1.0
+  resolution: "@iobroker/types@npm:7.1.0"
+  checksum: 10c0/ed321a59ec4225f0ef1037db939d3749a4d3c36984fa49d3b7a2e47ab4cd6c404aba1457b135f8ab43dec832e7c3f1dc25ad41da1687232b1d35ed53f7b96403
   languageName: node
   linkType: hard
 
@@ -5290,7 +5290,7 @@ __metadata:
     "@iobroker/adapter-core": "npm:^3.3.2"
     "@iobroker/adapter-dev": "npm:^1.4.0"
     "@iobroker/testing": "npm:^5.2.2"
-    "@iobroker/types": "npm:7.0.7"
+    "@iobroker/types": "npm:7.1.0"
     "@semantic-release/exec": "npm:7.1.0"
     "@semantic-release/git": "npm:^10.0.1"
     "@semantic-release/release-notes-generator": "npm:^14.1.0"
