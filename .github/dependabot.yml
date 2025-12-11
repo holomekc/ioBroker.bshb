@@ -1,17 +1,21 @@
+# Dependabot will run on day 13 of each month at 01:58 (Europe/Berlin timezone)
 version: 2
 updates:
-  - package-ecosystem: npm
-    directory: "/"
+
+  - package-ecosystem: "npm"
     schedule:
-      interval: weekly
+      interval: "weekly"
       time: "04:00"
-      timezone: Europe/Berlin
+      timezone: "Europe/Berlin"
     open-pull-requests-limit: 20
     assignees:
-      - Author
-    versioning-strategy: increase
+      - "Author"
+    versioning-strategy: "increase"
     commit-message:
       prefix: "chore(deps)"
     ignore:
       - dependency-name: "@types/node"
-        versions: [ ">22.999.999" ]
+        versions:
+          - ">22.999.999"
+    directories:
+      - "**/*"
