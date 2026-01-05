@@ -118,13 +118,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@commitlint/config-conventional@npm:^20.2.0":
-  version: 20.2.0
-  resolution: "@commitlint/config-conventional@npm:20.2.0"
+"@commitlint/config-conventional@npm:^20.3.0":
+  version: 20.3.0
+  resolution: "@commitlint/config-conventional@npm:20.3.0"
   dependencies:
     "@commitlint/types": "npm:^20.2.0"
     conventional-changelog-conventionalcommits: "npm:^7.0.2"
-  checksum: 10c0/b6cc4532a85622ff364a5b4e1f542502dfd37eb6a9be9f96432b4be9ac50a30e905c3cdb78ca1640de59e30a285012f146bdf8cbef63bdf0c9818d725a19ab2b
+  checksum: 10c0/ab71b0dc519723df689dafca205af5eef9ce99e62d079411672d57a1241ff90da76e7f741d21800b08df358ffa153190e221103a69af27e9e66eacd02bee80fc
   languageName: node
   linkType: hard
 
@@ -5273,7 +5273,7 @@ __metadata:
   resolution: "iobroker.bshb@workspace:."
   dependencies:
     "@commitlint/cli": "npm:^20.2.0"
-    "@commitlint/config-conventional": "npm:^20.2.0"
+    "@commitlint/config-conventional": "npm:^20.3.0"
     "@eslint/eslintrc": "npm:3.3.3"
     "@eslint/js": "npm:9.39.2"
     "@iobroker/adapter-core": "npm:^3.3.2"
