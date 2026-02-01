@@ -10,6 +10,6 @@
   "author": "",
   "license": "MIT",
   "dependencies": {
-    "conventional-commits-parser": "^6.0.0"
+    "conventional-commits-parser": "^6.2.1"
   }
 }
