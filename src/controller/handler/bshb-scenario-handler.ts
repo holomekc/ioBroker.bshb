@@ -88,15 +88,16 @@ export class BshbScenarioHandler extends BshbHandler {
         )
       ),
       mergeMap(scenario => {
-        this.bshb.log.debug(`Found scenario ${scenario.id}, ${scenario.name}`);
+        this.bshb.log.debug(`Found scenario ${scenario.id}, ${scenario.name || 'Unknown'}`);
         const id = 'scenarios.' + scenario.id;
+        const scenarioName = scenario.name || scenario.id || 'Unknown';
 
         // we overwrite object here on purpose because we reflect 1-1 the data from controller here.
         return from(
           this.bshb.setObject(id, {
             type: 'state',
             common: {
-              name: scenario.name,
+              name: scenarioName,
               type: 'boolean',
               role: 'switch',
               write: true,
@@ -104,7 +105,7 @@ export class BshbScenarioHandler extends BshbHandler {
             },
             native: {
               id: scenario.id,
-              name: scenario.name,
+              name: scenarioName,
             },
           })
         ).pipe(tap(() => this.bshb.setState(id, { val: false, ack: true })));

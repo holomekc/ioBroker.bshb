@@ -37,7 +37,6 @@ exports.Bshb = void 0;
 const utils = __importStar(require("@iobroker/adapter-core"));
 const bshb_controller_1 = require("./bshb-controller");
 const rxjs_1 = require("rxjs");
-const operators_1 = require("rxjs/operators");
 const migration_1 = require("./migration");
 const utils_1 = require("./utils");
 const client_cert_1 = require("./client-cert");
@@ -165,22 +164,41 @@ class Bshb extends utils.Adapter {
         const migrationResult = this.migration();
         if (migrationResult) {
             clientCert = migrationResult;
+            // store information
+            this.storeCertificate(obj, certificateKeys, clientCert).subscribe({
+                next: () => {
+                    subscriber.next(clientCert);
+                    subscriber.complete();
+                },
+                error: error => {
+                    subscriber.error(error);
+                    subscriber.complete();
+                },
+            });
         }
         else {
             this.log.info('No client certificate found in old configuration or it failed. Generate new certificate');
-            clientCert = Bshb.generateCertificate();
+            (0, rxjs_1.from)(Bshb.generateCertificate()).subscribe({
+                next: cert => {
+                    clientCert = cert;
+                    // store information
+                    this.storeCertificate(obj, certificateKeys, clientCert).subscribe({
+                        next: () => {
+                            subscriber.next(clientCert);
+                            subscriber.complete();
+                        },
+                        error: error => {
+                            subscriber.error(error);
+                            subscriber.complete();
+                        },
+                    });
+                },
+                error: error => {
+                    subscriber.error(error);
+                    subscriber.complete();
+                },
+            });
         }
-        // store information
-        this.storeCertificate(obj, certificateKeys, clientCert).subscribe({
-            next: () => {
-                subscriber.next(clientCert);
-                subscriber.complete();
-            },
-            error: error => {
-                subscriber.error(error);
-                subscriber.complete();
-            },
-        });
     }
     readCertificate(clientCert, subscriber) {
         // found certificates
@@ -213,9 +231,9 @@ class Bshb extends utils.Adapter {
         // store information
         obj.native.certificates[certificateKeys.cert] = clientCert.certificate;
         obj.native.certificates[certificateKeys.key] = clientCert.privateKey;
-        return (0, rxjs_1.from)(this.setForeignObjectAsync('system.certificates', obj)).pipe((0, operators_1.catchError)(err => {
+        return (0, rxjs_1.from)(this.setForeignObjectAsync('system.certificates', obj)).pipe((0, rxjs_1.catchError)(err => {
             throw utils_1.Utils.createError(this.log, 'Could not store client certificate in system.certificates due to an error:' + err);
-        }), (0, operators_1.tap)(() => this.log.info('Client certificate stored in system.certificates.')), (0, rxjs_1.map)(() => undefined));
+        }), (0, rxjs_1.tap)(() => this.log.info('Client certificate stored in system.certificates.')), (0, rxjs_1.map)(() => undefined));
     }
     migration() {
         // migration:
@@ -235,23 +253,23 @@ class Bshb extends utils.Adapter {
             return undefined;
         }
     }
-    static generateCertificate() {
-        const certificateDefinition = bosch_smart_home_bridge_1.BshbUtils.generateClientCertificate();
+    static async generateCertificate() {
+        const certificateDefinition = await bosch_smart_home_bridge_1.BshbUtils.generateClientCertificate();
         return new client_cert_1.ClientCert(certificateDefinition.cert, certificateDefinition.private);
     }
     init(bshbController) {
         // start pairing if needed
         bshbController
             .pairDeviceIfNeeded(this.config.systemPassword)
-            .pipe((0, operators_1.catchError)((err) => {
+            .pipe((0, rxjs_1.catchError)((err) => {
             this.log.error(utils_1.Utils.handleError('Something went wrong during initialization', err));
             return rxjs_1.EMPTY;
         }), 
         // Everything is ok. We check for devices first
-        (0, operators_1.switchMap)(() => bshbController.startDetection().pipe((0, operators_1.catchError)((err) => {
+        (0, rxjs_1.switchMap)(() => bshbController.startDetection().pipe((0, rxjs_1.catchError)((err) => {
             this.log.error(utils_1.Utils.handleError('Something went wrong during detection', err));
             return rxjs_1.EMPTY;
-        }))), (0, operators_1.takeUntil)(this.alive))
+        }))), (0, rxjs_1.takeUntil)(this.alive))
             .subscribe({
             next: () => {
                 this.log.info('Subscribe to ioBroker states');

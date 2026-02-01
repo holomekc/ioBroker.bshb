@@ -4,7 +4,6 @@ exports.BshbAirPurityGuardianHandler = void 0;
 const bshb_handler_1 = require("./bshb-handler");
 const rxjs_1 = require("rxjs");
 const bshb_definition_1 = require("../../bshb-definition");
-const operators_1 = require("rxjs/operators");
 class BshbAirPurityGuardianHandler extends bshb_handler_1.BshbHandler {
     regex = /bshb\.\d+\.airPurityGuardian\.(.*)/;
     roomRegex = /^airPurityGuardian_(.*)$/;
@@ -71,7 +70,7 @@ class BshbAirPurityGuardianHandler extends bshb_handler_1.BshbHandler {
         if (match) {
             roomAndFunctions = this.getBshcClient()
                 .getRoom(match ? match[1] : match[1])
-                .pipe((0, rxjs_1.map)(response => response.parsedResponse), (0, operators_1.catchError)(() => (0, rxjs_1.of)(undefined)));
+                .pipe((0, rxjs_1.map)(response => response.parsedResponse), (0, rxjs_1.catchError)(() => (0, rxjs_1.of)(undefined)));
         }
         else {
             roomAndFunctions = (0, rxjs_1.throwError)(() => new Error('No room could be extracted from airPurityGuardian.'));
@@ -79,13 +78,13 @@ class BshbAirPurityGuardianHandler extends bshb_handler_1.BshbHandler {
         return (0, rxjs_1.zip)(this.setObjectNotExistsAsync(`airPurityGuardian.${airPurityGuardian.id}`, {
             type: 'channel',
             common: {
-                name: airPurityGuardian.name,
+                name: airPurityGuardian.name || airPurityGuardian.id || 'Unknown',
             },
             native: {},
         }), roomAndFunctions).pipe((0, rxjs_1.tap)(objAndRoom => {
             const obj = objAndRoom[0];
             const room = objAndRoom[1];
-            if (obj && room && obj._bshbCreated) {
+            if (obj && room && room.name && obj._bshbCreated) {
                 this.addRoomEnum(room.name, 'airPurityGuardian', airPurityGuardian.id);
                 this.addFunctionEnum(bshb_definition_1.BshbDefinition.determineFunction('airPurityGuardian'), 'airPurityGuardian', airPurityGuardian.id);
             }

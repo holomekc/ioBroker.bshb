@@ -4,7 +4,6 @@ exports.BshbController = void 0;
 const bosch_smart_home_bridge_1 = require("bosch-smart-home-bridge");
 const bshb_logger_1 = require("./bshb-logger");
 const rxjs_1 = require("rxjs");
-const operators_1 = require("rxjs/operators");
 const utils_1 = require("./utils");
 const bshb_scenario_handler_1 = require("./controller/handler/bshb-scenario-handler");
 const bshb_device_handler_1 = require("./controller/handler/bshb-device-handler");
@@ -77,17 +76,17 @@ class BshbController {
                 for (let i = 0; i < this.handlers.length; i++) {
                     observables.push(this.handlers[i].sendUpdateToBshc(data.id, data.state).pipe(
                     // Protect controller
-                    (0, operators_1.catchError)(err => {
+                    (0, rxjs_1.catchError)(err => {
                         this.bshb.log.silly(`Handler "${this.handlers[i].constructor.name}" failed with ${err}. This might happen when the controller answers with an error.`);
                         return (0, rxjs_1.of)(true);
-                    }), (0, operators_1.tap)(handled => {
+                    }), (0, rxjs_1.tap)(handled => {
                         if (handled) {
                             this.bshb.log.silly(`Handler "${this.handlers[i].constructor.name}" send message to controller with state id=${data.id} and value=${data.state.val}`);
                         }
                     })));
                 }
                 return (0, rxjs_1.merge)(...observables);
-            }), (0, operators_1.takeUntil)(this.alive))
+            }), (0, rxjs_1.takeUntil)(this.alive))
                 .subscribe();
         }
         catch (e) {
@@ -122,10 +121,10 @@ class BshbController {
         return new rxjs_1.Observable(subscriber => {
             const retry = new rxjs_1.BehaviorSubject(true);
             retry
-                .pipe((0, operators_1.catchError)(err => err.pipe((0, operators_1.delay)(pairingDelay))), (0, operators_1.tap)(() => {
+                .pipe((0, rxjs_1.catchError)(err => err.pipe((0, rxjs_1.delay)(pairingDelay))), (0, rxjs_1.tap)(() => {
                 this.boschSmartHomeBridge
                     .pairIfNeeded(this.clientName, this.bshb.config.identifier, systemPassword, pairingDelay, -1)
-                    .pipe((0, operators_1.takeUntil)(this.bshb.alive))
+                    .pipe((0, rxjs_1.takeUntil)(this.bshb.alive))
                     .subscribe({
                     next: response => {
                         // Everything is ok. We can stop all.
@@ -138,13 +137,13 @@ class BshbController {
                         this.bshb.log.error(err);
                         // Something went wrong. Already logged by lib. We just wait and retry.
                         (0, rxjs_1.timer)(pairingDelay)
-                            .pipe((0, operators_1.takeUntil)(this.bshb.alive))
+                            .pipe((0, rxjs_1.takeUntil)(this.bshb.alive))
                             .subscribe(() => {
                             retry.next(true);
                         });
                     },
                 });
-            }), (0, operators_1.takeUntil)(this.bshb.alive))
+            }), (0, rxjs_1.takeUntil)(this.bshb.alive))
                 .subscribe(() => {
                 // We do not care
             });

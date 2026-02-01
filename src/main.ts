@@ -164,21 +164,40 @@ export class Bshb extends utils.Adapter {
     const migrationResult = this.migration();
     if (migrationResult) {
       clientCert = migrationResult;
+      // store information
+      this.storeCertificate(obj, certificateKeys, clientCert).subscribe({
+        next: () => {
+          subscriber.next(clientCert);
+          subscriber.complete();
+        },
+        error: error => {
+          subscriber.error(error);
+          subscriber.complete();
+        },
+      });
     } else {
       this.log.info('No client certificate found in old configuration or it failed. Generate new certificate');
-      clientCert = Bshb.generateCertificate();
+      from(Bshb.generateCertificate()).subscribe({
+        next: cert => {
+          clientCert = cert;
+          // store information
+          this.storeCertificate(obj, certificateKeys, clientCert).subscribe({
+            next: () => {
+              subscriber.next(clientCert);
+              subscriber.complete();
+            },
+            error: error => {
+              subscriber.error(error);
+              subscriber.complete();
+            },
+          });
+        },
+        error: error => {
+          subscriber.error(error);
+          subscriber.complete();
+        },
+      });
     }
-    // store information
-    this.storeCertificate(obj, certificateKeys, clientCert).subscribe({
-      next: () => {
-        subscriber.next(clientCert);
-        subscriber.complete();
-      },
-      error: error => {
-        subscriber.error(error);
-        subscriber.complete();
-      },
-    });
   }
 
   private readCertificate(clientCert: ClientCert, subscriber: Subscriber<ClientCert>) {
@@ -258,8 +277,8 @@ export class Bshb extends utils.Adapter {
     }
   }
 
-  private static generateCertificate(): ClientCert {
-    const certificateDefinition = BshbUtils.generateClientCertificate();
+  private static async generateCertificate(): Promise<ClientCert> {
+    const certificateDefinition = await BshbUtils.generateClientCertificate();
     return new ClientCert(certificateDefinition.cert, certificateDefinition.private);
   }
 

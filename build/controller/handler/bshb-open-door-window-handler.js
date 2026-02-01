@@ -3,7 +3,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.BshbOpenDoorWindowHandler = void 0;
 const bshb_handler_1 = require("./bshb-handler");
 const rxjs_1 = require("rxjs");
-const operators_1 = require("rxjs/operators");
 class BshbOpenDoorWindowHandler extends bshb_handler_1.BshbHandler {
     handleDetection() {
         return this.detectOpenDoorsAndWindows().pipe((0, rxjs_1.tap)({
@@ -41,7 +40,7 @@ class BshbOpenDoorWindowHandler extends bshb_handler_1.BshbHandler {
             native: {
                 id: 'openDoorsAndWindows',
             },
-        })), (0, operators_1.switchMap)(result => {
+        })), (0, rxjs_1.switchMap)(result => {
             const idPrefix = 'openDoorsAndWindows.';
             const observables = [];
             observables.push(this.setAllState(idPrefix, result));
@@ -75,17 +74,19 @@ class BshbOpenDoorWindowHandler extends bshb_handler_1.BshbHandler {
                 id: idPrefix + id,
                 name: id,
             },
-        }).pipe((0, operators_1.switchMap)(() => (0, rxjs_1.of)(undefined)));
+        }).pipe((0, rxjs_1.switchMap)(() => (0, rxjs_1.of)(undefined)));
     }
     setList(idPrefix, id, key, name, result) {
-        return this.setListState(idPrefix, id, key, name, result).pipe((0, operators_1.switchMap)(() => this.setListCount(idPrefix, id, key, name, result)));
+        return this.setListState(idPrefix, id, key, name, result).pipe((0, rxjs_1.switchMap)(() => this.setListCount(idPrefix, id, key, name, result)));
     }
     setListState(idPrefix, id, key, name, result) {
         const list = [];
         this.getElements(result, key).forEach((val) => {
-            list.push(val.name);
+            if (val && val.name) {
+                list.push(val.name);
+            }
         });
-        return (0, rxjs_1.of)(list).pipe((0, operators_1.switchMap)(() => this.setObjectNotExistsAsync(idPrefix + id, {
+        return (0, rxjs_1.of)(list).pipe((0, rxjs_1.switchMap)(() => this.setObjectNotExistsAsync(idPrefix + id, {
             type: 'state',
             common: {
                 name: name,
@@ -101,7 +102,7 @@ class BshbOpenDoorWindowHandler extends bshb_handler_1.BshbHandler {
         })), (0, rxjs_1.tap)(() => this.bshb.setState(idPrefix + id, {
             val: this.mapValueToStorage(list),
             ack: true,
-        })), (0, operators_1.switchMap)(() => (0, rxjs_1.of)(undefined)));
+        })), (0, rxjs_1.switchMap)(() => (0, rxjs_1.of)(undefined)));
     }
     setListCount(idPrefix, id, key, name, result) {
         return this.setObjectNotExistsAsync(idPrefix + id + 'Count', {
@@ -120,7 +121,7 @@ class BshbOpenDoorWindowHandler extends bshb_handler_1.BshbHandler {
         }).pipe((0, rxjs_1.tap)(() => this.bshb.setState(idPrefix + id + 'Count', {
             val: this.getElements(result, key).length,
             ack: true,
-        })), (0, operators_1.switchMap)(() => (0, rxjs_1.of)(undefined)));
+        })), (0, rxjs_1.switchMap)(() => (0, rxjs_1.of)(undefined)));
     }
     getElements(result, key) {
         if (key.startsWith('--all')) {
@@ -160,7 +161,7 @@ class BshbOpenDoorWindowHandler extends bshb_handler_1.BshbHandler {
         }).pipe((0, rxjs_1.tap)(() => this.bshb.setState(idPrefix + 'raw', {
             val: this.mapValueToStorage(result.parsedResponse),
             ack: true,
-        })), (0, operators_1.switchMap)(() => (0, rxjs_1.of)(undefined)));
+        })), (0, rxjs_1.switchMap)(() => (0, rxjs_1.of)(undefined)));
     }
     static getGroupPrefix(key) {
         switch (key) {

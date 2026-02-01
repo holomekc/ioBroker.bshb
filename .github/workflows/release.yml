@@ -8,13 +8,18 @@ on:
 env:
   FORCE_COLOR: 1
   DEBUG_COLORS: 1
-  NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
   HUSKY: 0
 
 # Cancel previous PR/branch runs when a new commit is pushed
 concurrency:
   group: ${{ github.ref }}
   cancel-in-progress: true
+
+permissions:
+  id-token: write  # Required for OIDC
+  contents: write
+  issues: write
+  pull-requests: write
 
 jobs:
   # Performs quick checks before the expensive test runs
@@ -69,8 +74,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          ssh-key: ${{ secrets.SSH_KEY }}
-          ssh-known-hosts: ${{ secrets.SSH_KNOWN_HOSTS }}
           fetch-depth: 0
 
       - uses: actions/setup-node@v4

@@ -1,7 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.BshbHandler = void 0;
-const operators_1 = require("rxjs/operators");
 const rxjs_1 = require("rxjs");
 const utils_1 = require("../../utils");
 /**
@@ -128,7 +127,7 @@ class BshbHandler {
     setObjectNotExistsAsync(id, object, options) {
         return (0, rxjs_1.from)(this.bshb.getObjectAsync(id, options)).pipe((0, rxjs_1.switchMap)(obj => {
             if (!obj) {
-                return (0, rxjs_1.from)(this.bshb.setObject(id, object)).pipe((0, operators_1.tap)(o => {
+                return (0, rxjs_1.from)(this.bshb.setObject(id, object)).pipe((0, rxjs_1.tap)(o => {
                     if (o) {
                         o._bshbCreated = true;
                     }
@@ -142,7 +141,7 @@ class BshbHandler {
     }
     setInitialStateValueIfNotSet(id, state, value) {
         if (state) {
-            return this.mapValueFromStorage(id, state.val).pipe((0, operators_1.tap)(value => {
+            return this.mapValueFromStorage(id, state.val).pipe((0, rxjs_1.tap)(value => {
                 if (value !== value) {
                     // only set again if a change is detected.
                     this.bshb.setState(id, {

@@ -9,7 +9,7 @@ plugins:
   - '@semantic-release/git'
   - '@semantic-release/exec'
   - '@semantic-release/github'
-  - 'semantic-release-yarn'
+  - '@semantic-release/npm'
 
 dryRun: false
 ci: true
@@ -36,7 +36,7 @@ verifyRelease:
 prepare:
   - path: './semantic-release/changelog'
   - path: './semantic-release/iobroker'
-  - path: 'semantic-release-yarn'
+  - path: '@semantic-release/npm'
   - path: '@semantic-release/git'
     assets:
       - "README.md"

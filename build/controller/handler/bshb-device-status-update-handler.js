@@ -3,7 +3,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.BshbDeviceStatusUpdateHandler = void 0;
 const bshb_handler_1 = require("./bshb-handler");
 const rxjs_1 = require("rxjs");
-const operators_1 = require("rxjs/operators");
 class BshbDeviceStatusUpdateHandler extends bshb_handler_1.BshbHandler {
     handleDetection() {
         // No detection needed here. This is part of the device handler. Initial values also handled there.
@@ -19,7 +18,7 @@ class BshbDeviceStatusUpdateHandler extends bshb_handler_1.BshbHandler {
             const statusId = `${resultEntry.sourceId}.status`;
             this.getBshcClient()
                 .getDevice(resultEntry.sourceId)
-                .pipe((0, operators_1.switchMap)(result => this.setInitialStateValueIfNotSet(statusId, null, result.parsedResponse.status)))
+                .pipe((0, rxjs_1.switchMap)(result => this.setInitialStateValueIfNotSet(statusId, null, result.parsedResponse.status)))
                 .subscribe(this.handleBshcUpdateError(`id=${resultEntry.id}`));
             return true;
         }
