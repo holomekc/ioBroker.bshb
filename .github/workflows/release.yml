@@ -8,7 +8,6 @@ on:
 env:
   FORCE_COLOR: 1
   DEBUG_COLORS: 1
-  NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
   HUSKY: 0
 
 # Cancel previous PR/branch runs when a new commit is pushed
