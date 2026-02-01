@@ -3,7 +3,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.BshbRoomHandler = void 0;
 const bshb_handler_1 = require("./bshb-handler");
 const rxjs_1 = require("rxjs");
-const operators_1 = require("rxjs/operators");
 const bshb_definition_1 = require("../../bshb-definition");
 class BshbRoomHandler extends bshb_handler_1.BshbHandler {
     cachedStates = new Map();
@@ -31,7 +30,7 @@ class BshbRoomHandler extends bshb_handler_1.BshbHandler {
     }
     handleDefaultUpdate(roomId, id, resultEntry, key) {
         (0, rxjs_1.from)(this.bshb.getObjectAsync(id))
-            .pipe((0, operators_1.switchMap)(obj => {
+            .pipe((0, rxjs_1.switchMap)(obj => {
             if (obj) {
                 this.bshb.setState(id, {
                     val: this.mapValueToStorage(resultEntry[key]),
@@ -59,7 +58,7 @@ class BshbRoomHandler extends bshb_handler_1.BshbHandler {
                 read: true,
             },
             native: {},
-        }).pipe((0, operators_1.switchMap)(() => this.getBshcClient().getRooms({ timeout: this.long_timeout })), (0, rxjs_1.mergeMap)(response => (0, rxjs_1.from)(response.parsedResponse)), (0, rxjs_1.mergeMap)(room => this.addRoom(room)), (0, operators_1.switchMap)(() => (0, rxjs_1.of)(undefined)));
+        }).pipe((0, rxjs_1.switchMap)(() => this.getBshcClient().getRooms({ timeout: this.long_timeout })), (0, rxjs_1.mergeMap)(response => (0, rxjs_1.from)(response.parsedResponse)), (0, rxjs_1.mergeMap)(room => this.addRoom(room)), (0, rxjs_1.switchMap)(() => (0, rxjs_1.of)(undefined)));
     }
     addRoom(room) {
         // Cache room: hz_7 with: {"@type":"room","id":"hz_7","iconId":"icon_room_basement","name":"Test2"}
@@ -100,7 +99,7 @@ class BshbRoomHandler extends bshb_handler_1.BshbHandler {
                     // write: BshbDefinition.determineWrite('room', key)
                 },
                 native: {},
-            }).pipe((0, operators_1.switchMap)(() => (0, rxjs_1.from)(this.bshb.getStateAsync(id))), (0, operators_1.switchMap)(state => this.setInitialStateValueIfNotSet(id, state, value)));
+            }).pipe((0, rxjs_1.switchMap)(() => (0, rxjs_1.from)(this.bshb.getStateAsync(id))), (0, rxjs_1.switchMap)(state => this.setInitialStateValueIfNotSet(id, state, value)));
         }
     }
     addExtProperties(key, room) {
@@ -119,7 +118,7 @@ class BshbRoomHandler extends bshb_handler_1.BshbHandler {
                 // write: BshbDefinition.determineWrite('roomExtProperties', key)
             },
             native: {},
-        }).pipe((0, operators_1.switchMap)(() => (0, rxjs_1.from)(this.bshb.getStateAsync(id))), (0, operators_1.switchMap)(state => this.setInitialStateValueIfNotSet(id, state, value)));
+        }).pipe((0, rxjs_1.switchMap)(() => (0, rxjs_1.from)(this.bshb.getStateAsync(id))), (0, rxjs_1.switchMap)(state => this.setInitialStateValueIfNotSet(id, state, value)));
     }
     name() {
         return 'roomHandler';

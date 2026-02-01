@@ -118,15 +118,16 @@ export class BshbAutomationHandler extends BshbHandler {
         )
       ),
       mergeMap(automation => {
-        this.bshb.log.debug(`Found automation ${automation.id}, ${automation.name}`);
+        this.bshb.log.debug(`Found automation ${automation.id}, ${automation.name || 'Unknown'}`);
         const id = 'automations.' + automation.id;
+        const automationName = automation.name || automation.id || 'Unknown';
 
         // we overwrite object here on purpose because we reflect 1-1 the data from controller here.
         return from(
           this.bshb.setObject(id, {
             type: 'folder',
             common: {
-              name: automation.name,
+              name: automationName,
               type: 'boolean',
               role: 'switch',
               write: true,
@@ -134,7 +135,7 @@ export class BshbAutomationHandler extends BshbHandler {
             },
             native: {
               id: automation.id,
-              name: automation.name,
+              name: automationName,
             },
           })
         ).pipe(

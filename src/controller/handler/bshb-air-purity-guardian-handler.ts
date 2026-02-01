@@ -108,7 +108,7 @@ export class BshbAirPurityGuardianHandler extends BshbHandler {
       this.setObjectNotExistsAsync(`airPurityGuardian.${airPurityGuardian.id}`, {
         type: 'channel',
         common: {
-          name: airPurityGuardian.name,
+          name: airPurityGuardian.name || airPurityGuardian.id || 'Unknown',
         },
         native: {},
       }),
@@ -117,7 +117,7 @@ export class BshbAirPurityGuardianHandler extends BshbHandler {
       tap(objAndRoom => {
         const obj = objAndRoom[0];
         const room = objAndRoom[1];
-        if (obj && room && obj._bshbCreated) {
+        if (obj && room && room.name && obj._bshbCreated) {
           this.addRoomEnum(room.name, 'airPurityGuardian', airPurityGuardian.id);
           this.addFunctionEnum(
             BshbDefinition.determineFunction('airPurityGuardian'),

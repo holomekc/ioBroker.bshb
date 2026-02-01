@@ -516,7 +516,7 @@ export class BshbDeviceHandler extends BshbHandler {
     if (roomId) {
       const room = this.getRoomById(roomId);
 
-      if (room) {
+      if (room && room.name) {
         this.addRoomEnum(room.name, deviceId, deviceServiceId, itemId);
       }
     }
@@ -528,10 +528,10 @@ export class BshbDeviceHandler extends BshbHandler {
   }
 
   private getDeviceName(device: any): string {
-    let name = device.name;
+    let name = device.name || 'Unknown';
     if (device.deviceModel === 'ROOM_CLIMATE_CONTROL') {
       const room = this.getRoomById(device.roomId);
-      name = 'RCC.' + room.name;
+      name = 'RCC.' + (room?.name || 'Unknown');
     } else if (device.deviceModel === 'INTRUSION_DETECTION_SYSTEM') {
       name = 'IDS';
     } else if (device.deviceModel === 'SMOKE_DETECTION_SYSTEM') {

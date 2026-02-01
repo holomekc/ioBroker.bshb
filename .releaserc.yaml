@@ -9,7 +9,7 @@ plugins:
   - '@semantic-release/git'
   - '@semantic-release/exec'
   - '@semantic-release/github'
-  - 'semantic-release-yarn'
+  - '@semantic-release/npm'
 
 dryRun: false
 ci: true

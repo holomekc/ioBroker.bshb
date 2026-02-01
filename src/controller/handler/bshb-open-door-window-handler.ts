@@ -123,7 +123,9 @@ export class BshbOpenDoorWindowHandler extends BshbHandler {
     const list: string[] = [];
 
     this.getElements(result, key).forEach((val: any) => {
-      list.push(val.name);
+      if (val && val.name) {
+        list.push(val.name);
+      }
     });
 
     return of(list).pipe(

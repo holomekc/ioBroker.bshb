@@ -77,15 +77,16 @@ export class BshbUserDefinedStatesHandler extends BshbHandler {
         )
       ),
       mergeMap(userDefinedState => {
-        this.bshb.log.debug(`Found user defined state ${userDefinedState.id}, ${userDefinedState.name}`);
+        this.bshb.log.debug(`Found user defined state ${userDefinedState.id}, ${userDefinedState.name || 'Unknown'}`);
         const id = 'userDefinedStates.' + userDefinedState.id;
+        const stateName = userDefinedState.name || userDefinedState.id || 'Unknown';
 
         // we overwrite object here on purpose because we reflect 1-1 the data from controller here.
         return from(
           this.bshb.setObject(id, {
             type: 'state',
             common: {
-              name: userDefinedState.name,
+              name: stateName,
               type: 'boolean',
               role: 'switch',
               write: true,
@@ -93,7 +94,7 @@ export class BshbUserDefinedStatesHandler extends BshbHandler {
             },
             native: {
               id: userDefinedState.id,
-              name: userDefinedState.name,
+              name: stateName,
             },
           })
         ).pipe(tap(() => this.bshb.setState(id, { val: userDefinedState.state, ack: true })));

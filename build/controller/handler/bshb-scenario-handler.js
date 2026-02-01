@@ -3,7 +3,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.BshbScenarioHandler = void 0;
 const bshb_handler_1 = require("./bshb-handler");
 const rxjs_1 = require("rxjs");
-const operators_1 = require("rxjs/operators");
 /**
  * This handler is used to detect scenarios of bshc
  *
@@ -29,7 +28,7 @@ class BshbScenarioHandler extends bshb_handler_1.BshbHandler {
             // Shortly mark scenario as true and then after 1s switch back to false
             const id = `scenarios.${resultEntry['id']}`;
             (0, rxjs_1.from)(this.bshb.setState(id, { val: true, ack: true }))
-                .pipe((0, operators_1.delay)(1000), (0, rxjs_1.switchMap)(() => (0, rxjs_1.from)(this.bshb.setState(id, {
+                .pipe((0, rxjs_1.delay)(1000), (0, rxjs_1.switchMap)(() => (0, rxjs_1.from)(this.bshb.setState(id, {
                 val: false,
                 ack: true,
             }))))
@@ -65,13 +64,14 @@ class BshbScenarioHandler extends bshb_handler_1.BshbHandler {
                 id: 'scenarios',
             },
         }).pipe((0, rxjs_1.switchMap)(() => this.getBshcClient().getScenarios({ timeout: this.long_timeout })), (0, rxjs_1.switchMap)(response => this.deleteMissingScenarios(response.parsedResponse).pipe((0, rxjs_1.last)(undefined, void 0), (0, rxjs_1.switchMap)(() => (0, rxjs_1.from)(response.parsedResponse)))), (0, rxjs_1.mergeMap)(scenario => {
-            this.bshb.log.debug(`Found scenario ${scenario.id}, ${scenario.name}`);
+            this.bshb.log.debug(`Found scenario ${scenario.id}, ${scenario.name || 'Unknown'}`);
             const id = 'scenarios.' + scenario.id;
+            const scenarioName = scenario.name || scenario.id || 'Unknown';
             // we overwrite object here on purpose because we reflect 1-1 the data from controller here.
             return (0, rxjs_1.from)(this.bshb.setObject(id, {
                 type: 'state',
                 common: {
-                    name: scenario.name,
+                    name: scenarioName,
                     type: 'boolean',
                     role: 'switch',
                     write: true,
@@ -79,7 +79,7 @@ class BshbScenarioHandler extends bshb_handler_1.BshbHandler {
                 },
                 native: {
                     id: scenario.id,
-                    name: scenario.name,
+                    name: scenarioName,
                 },
             })).pipe((0, rxjs_1.tap)(() => this.bshb.setState(id, { val: false, ack: true })));
         }), (0, rxjs_1.switchMap)(() => (0, rxjs_1.of)(undefined)));
@@ -95,7 +95,7 @@ class BshbScenarioHandler extends bshb_handler_1.BshbHandler {
                 }
             }
             if (!found) {
-                return (0, rxjs_1.from)(this.bshb.delObjectAsync(`scenarios.${object.native.id}`)).pipe((0, rxjs_1.tap)(() => this.bshb.log.info(`scenario with id=${object.native.id} removed because it does not exist anymore.`)), (0, operators_1.catchError)(err => {
+                return (0, rxjs_1.from)(this.bshb.delObjectAsync(`scenarios.${object.native.id}`)).pipe((0, rxjs_1.tap)(() => this.bshb.log.info(`scenario with id=${object.native.id} removed because it does not exist anymore.`)), (0, rxjs_1.catchError)(err => {
                     this.bshb.log.error(`Could not delete scenario with id=${object.native.id} because: ` + err);
                     return (0, rxjs_1.of)(undefined);
                 }));
