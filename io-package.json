@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "bshb",
-    "version": "0.5.2",
+    "version": "0.6.0",
     "news": {
+      "0.6.0": {
+        "en": "semantic-release\nrelease\nyarn\nupdate dependencies and fix missing room bug\nDependencies updated",
+        "de": "semantische-Freigabe\nFreigabe\nGarn\nAktualisierung der Abhängigkeiten und Behebung des Fehlers \"missing room\nAbhängigkeiten aktualisiert",
+        "ru": "semantic-release\nрелиз\nyarn\nобновление зависимостей и исправление ошибки с отсутствующей комнатой\nОбновлены зависимости",
+        "pt": "semantic-release\nlançamento\nfio\natualizar as dependências e corrigir o erro da sala em falta\nDependências actualizadas",
+        "nl": "semantische-release\nrelease\ngaren\nafhankelijkheden bijgewerkt en bug in ontbrekende ruimte opgelost\nAfhankelijkheden bijgewerkt",
+        "fr": "semantic-release\nrelease\nfil\nmise à jour des dépendances et correction du bug \"missing room\nMise à jour des dépendances",
+        "it": "rilascio semantico\nrilascio\nfilato\naggiornamento delle dipendenze e correzione del bug delle stanze mancanti\nDipendenze aggiornate",
+        "es": "semantic-release\nversión\nhilo\nactualización de dependencias y corrección de un error de falta de habitaciones\nDependencias actualizadas",
+        "pl": "semantic-release\nwydanie\nprzędza\nzaktualizowano zależności i naprawiono błąd brakującego pokoju\nZaktualizowano zależności",
+        "uk": "семантичний реліз\nреліз\nпряжа\nоновлено залежності та виправлено помилку з відсутніми кімнатами\nОновлені залежності",
+        "zh-cn": "语义发布\n发布\n纱\n更新依赖关系并修复缺少房间的错误\n依赖关系已更新"
+      },
       "0.5.2": {
         "en": "Dependencies updated",
         "de": "Abhängigkeiten aktualisiert",
@@ -80,19 +93,6 @@
         "pl": "Drobne poprawki błędów\nWsparcie dla kopii zapasowych\nJeśli chcesz korzystać z funkcji tworzenia kopii zapasowych, upewnij się, że hasło systemowe jest ustawione w konfiguracji adaptera. Ponadto w aplikacji Bosch należy ustawić uprawnienia klienta na „Obsługa i zarządzanie“. „Więcej“ ➤ „Urządzenia mobilne“ ➤ „OSS ioBroker.bshb“\nAby zapobiec problemom. Zatrzymaj adapter, usuń wszystkie powiązane obiekty, a następnie ponownie uruchom adapter",
         "uk": "Дрібні виправлення помилок\nПідтримка резервних копій\nЯкщо ви хочете використовувати функцію резервного копіювання, переконайтеся, що в конфігурації адаптера встановлено системний пароль. Крім того, у застосунку Bosch встановіть дозволи клієнта на „Експлуатація та керування“. „Більше“ ➤ „Мобільні пристрої“ ➤ „OSS ioBroker.bshb“\nЩоб запобігти проблемам. Зупиніть адаптер, видаліть усі пов'язані з ним об'єкти, а потім перезапустіть адаптер знову",
         "zh-cn": "小错误修复\n支持备份\n如果要使用备份功能，请确保在适配器配置中设置了系统密码。此外，在博世应用程序中将客户端权限设置为 „操作和管理“。„更多“ ➤ „移动设备“ ➤ „OSS ioBroker.bshb“\n防止出现问题。停止适配器，删除所有相关对象，然后重新启动适配器"
-      },
-      "0.3.0": {
-        "de": "Unterstützung für Automationen.",
-        "en": "Support for automations.",
-        "ru": "Поддержка автоматики.",
-        "pt": "Suporte para automatizações.",
-        "nl": "Ondersteuning voor automatiseringen.",
-        "fr": "Prise en charge des automatismes.",
-        "it": "Supporto per le automazioni.",
-        "es": "Soporte para automatizaciones.",
-        "pl": "Wsparcie dla automatyzacji.",
-        "uk": "Підтримка автоматизації.",
-        "zh-cn": "支持自动化。"
       }
     },
     "titleLang": {

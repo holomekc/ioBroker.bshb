@@ -1,3 +1,7 @@
+### 0.3.0
+
+* (holomekc) Support for user automations
+
 ### 0.2.8
 
 * (holomekc) Improve stability and update dependencies
