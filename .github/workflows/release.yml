@@ -90,6 +90,9 @@ jobs:
       - name: build
         run: yarn run build
 
+      - name: Disable GitHub plugin for semantic-release
+        run: node disable-publish-semantic-release-github.cjs
+
       - name: Release
         id: release
         env:
