@@ -1,3 +1,11 @@
+### 0.4.0
+
+* (holomekc) Minor bug fixes
+* (holomekc) Support for backups.
+* (holomekc) If you want to use the backup feature make sure that the systempassword is set in the adapter config.
+  Furthermore, in the Bosch app set the client permissions to „Operate and manage“. „More“ ➤ „Mobile Devices“ ➤ „OSS
+  ioBroker.bshb“
+
 ### 0.3.0
 
 * (holomekc) Support for user automations

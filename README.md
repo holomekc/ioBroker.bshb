@@ -36,6 +36,11 @@ use of the adapter. You find a link at the top.
 
 ## Changelog
 
+### 0.6.1
+
+* (holomekc) adapter post install step
+* Dependencies updated
+
 ### 0.6.0
 
 * (holomekc) semantic-release
@@ -64,14 +69,6 @@ use of the adapter. You find a link at the top.
 ### 0.4.1
 
 * Dependencies updated
-
-### 0.4.0
-
-* (holomekc) Minor bug fixes
-* (holomekc) Support for backups.
-* (holomekc) If you want to use the backup feature make sure that the systempassword is set in the adapter config.
-  Furthermore, in the Bosch app set the client permissions to „Operate and manage“. „More“ ➤ „Mobile Devices“ ➤ „OSS
-  ioBroker.bshb“
 
 ### Older entries
 
