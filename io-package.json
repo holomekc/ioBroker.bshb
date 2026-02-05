@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "bshb",
-    "version": "0.6.1",
+    "version": "0.6.2",
     "news": {
+      "0.6.2": {
+        "en": "update dependency",
+        "de": "Update-Abhängigkeit",
+        "ru": "зависимость от обновления",
+        "pt": "dependência de atualização",
+        "nl": "update-afhankelijkheid",
+        "fr": "dépendance à l'égard des mises à jour",
+        "it": "dipendenza dall'aggiornamento",
+        "es": "dependencia de actualización",
+        "pl": "zależność od aktualizacji",
+        "uk": "залежність від оновлень",
+        "zh-cn": "更新依赖性"
+      },
       "0.6.1": {
         "en": "Dependencies updated",
         "de": "Abhängigkeiten aktualisiert",
@@ -80,19 +93,6 @@
         "pl": "Naprawiono błąd niezdefiniowanego obiektu",
         "uk": "Виправлено проблему невизначених об'єктів",
         "zh-cn": "修正了未定义对象问题"
-      },
-      "0.4.1": {
-        "en": "Dependencies updated",
-        "de": "Ausgaben aktualisiert",
-        "ru": "Обновленные данные о зависимостях",
-        "pt": "Dependências atualizadas",
-        "nl": "Afhankelijkheden bijgewerkt",
-        "fr": "Dépendances actualisées",
-        "it": "Dipendenze aggiornate",
-        "es": "Actualización de las dependencias",
-        "pl": "Aktualizacja zależności",
-        "uk": "Залежність оновлено",
-        "zh-cn": "更新的依赖关系"
       }
     },
     "titleLang": {

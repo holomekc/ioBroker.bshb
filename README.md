@@ -36,6 +36,10 @@ use of the adapter. You find a link at the top.
 
 ## Changelog
 
+### 0.6.2
+
+* (holomekc) update dependency
+
 ### 0.6.1
 
 * (holomekc) adapter post install step
@@ -64,10 +68,6 @@ use of the adapter. You find a link at the top.
 ### 0.4.2
 
 * (holomekc) Fixed undefined object issue
-* Dependencies updated
-
-### 0.4.1
-
 * Dependencies updated
 
 ### Older entries

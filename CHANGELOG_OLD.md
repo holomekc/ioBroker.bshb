@@ -1,3 +1,7 @@
+### 0.4.1
+
+* Dependencies updated
+
 ### 0.4.0
 
 * (holomekc) Minor bug fixes
