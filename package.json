@@ -24,7 +24,7 @@
     "node": ">= 20"
   },
   "scripts": {
-    "postinstall": "husky && node disable-publish-semantic-release-github.cjs",
+    "prepare": "husky && node disable-publish-semantic-release-github.cjs",
     "prepack": "pinst --disable",
     "postpack": "pinst --enable",
     "prebuild": "rimraf ./build",
