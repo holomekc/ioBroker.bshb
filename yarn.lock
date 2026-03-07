@@ -3267,7 +3267,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"conventional-changelog-conventionalcommits@npm:9.1.0, conventional-changelog-conventionalcommits@npm:^9.1.0":
+"conventional-changelog-conventionalcommits@npm:9.3.0":
+  version: 9.3.0
+  resolution: "conventional-changelog-conventionalcommits@npm:9.3.0"
+  dependencies:
+    compare-func: "npm:^2.0.0"
+  checksum: 10c0/36be9435bb1f6e97bc729a1e69471851b6621054980617dc9a82c03221de5f9c21cd2369308c364f89b2383bd596071f90c8c71efdbe7a2908f91a935685fc76
+  languageName: node
+  linkType: hard
+
+"conventional-changelog-conventionalcommits@npm:^9.1.0":
   version: 9.1.0
   resolution: "conventional-changelog-conventionalcommits@npm:9.1.0"
   dependencies:
@@ -5495,7 +5504,7 @@ __metadata:
     bosch-smart-home-bridge: "npm:1.8.1"
     c8: "npm:10.1.3"
     chai: "npm:6.2.2"
-    conventional-changelog-conventionalcommits: "npm:9.1.0"
+    conventional-changelog-conventionalcommits: "npm:9.3.0"
     eslint: "npm:10.0.2"
     eslint-config-prettier: "npm:10.1.8"
     eslint-plugin-prefer-arrow: "npm:1.2.3"
