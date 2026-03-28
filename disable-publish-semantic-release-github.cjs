@@ -1,4 +1,4 @@
-const fs = require('fs');
+const fs = require('node:fs');
 const f1 = 'node_modules/@semantic-release/github/lib/publish.js';
 
 fs.readFile(f1, 'utf8', (err, _data) => {
