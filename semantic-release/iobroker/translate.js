@@ -1,5 +1,5 @@
 import axios from "axios";
-import * as qs from "querystring";
+import * as qs from "node:querystring";
 
 const url = "https://translator.iobroker.in/translator";
 
