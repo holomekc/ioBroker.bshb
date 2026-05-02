@@ -21,7 +21,7 @@
     "url": "https://github.com/holomekc/bosch-smart-home-bridge/issues"
   },
   "engines": {
-    "node": ">= 20"
+    "node": ">= 22"
   },
   "scripts": {
     "prepack": "pinst --disable",

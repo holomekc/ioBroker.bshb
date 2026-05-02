@@ -36,6 +36,9 @@ use of the adapter. You find a link at the top.
 
 ## Changelog
 
+### **WORK IN PROGRESS**
+- (copilot) Adapter requires node.js >= 22 now
+
 ### 0.6.2
 
 * (holomekc) update dependency
