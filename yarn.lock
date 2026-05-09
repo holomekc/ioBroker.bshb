@@ -1801,6 +1801,24 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@semantic-release/release-notes-generator@npm:^14.1.1":
+  version: 14.1.1
+  resolution: "@semantic-release/release-notes-generator@npm:14.1.1"
+  dependencies:
+    conventional-changelog-angular: "npm:^8.0.0"
+    conventional-changelog-writer: "npm:^8.0.0"
+    conventional-commits-filter: "npm:^5.0.0"
+    conventional-commits-parser: "npm:^6.0.0"
+    debug: "npm:^4.0.0"
+    import-from-esm: "npm:^2.0.0"
+    lodash-es: "npm:^4.17.21"
+    read-package-up: "npm:^11.0.0"
+  peerDependencies:
+    semantic-release: ">=20.1.0"
+  checksum: 10c0/2ae962eb8d146e346b5afc4833f61edd0a59db5d92d0ccf4aa6a6bd2e53440c562a3edb876fb3c003d1fc3fa3e62e4b76fbc369e392b8b98eeb9b858edf7527a
+  languageName: node
+  linkType: hard
+
 "@sigstore/bundle@npm:^4.0.0":
   version: 4.0.0
   resolution: "@sigstore/bundle@npm:4.0.0"
@@ -5546,7 +5564,7 @@ __metadata:
     "@iobroker/types": "npm:7.1.1"
     "@semantic-release/exec": "npm:7.1.0"
     "@semantic-release/git": "npm:^10.0.1"
-    "@semantic-release/release-notes-generator": "npm:^14.1.0"
+    "@semantic-release/release-notes-generator": "npm:^14.1.1"
     "@tsconfig/node22": "npm:22.0.5"
     "@types/chai": "npm:5.2.3"
     "@types/mocha": "npm:10.0.10"
