@@ -38,6 +38,12 @@ use of the adapter. You find a link at the top.
 
 ### **WORK IN PROGRESS**
 
+* (holomekc) Migrate from yarn to npm
+* (holomekc) Adopt ioBroker standard release workflow
+* (holomekc) Drop Node.js 20, require >= 22
+* (holomekc) Update dependencies
+* (holomekc) Use node: prefix for built-in modules
+
 ### 0.6.2
 
 * (holomekc) update dependency
