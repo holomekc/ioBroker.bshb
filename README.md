@@ -35,8 +35,7 @@ If you want to support the work I would appreciate a small donation. This is 100
 use of the adapter. You find a link at the top.
 
 ## Changelog
-
-### **WORK IN PROGRESS**
+### 0.6.3 (2026-05-15)
 
 * (holomekc) Migrate from yarn to npm
 * (holomekc) Adopt ioBroker standard release workflow
@@ -65,22 +64,7 @@ use of the adapter. You find a link at the top.
 
 * Dependencies updated
 
-### 0.5.1
-
-* Dependencies updated
-
-### 0.5.0
-
-* (holomekc) Minor cleanup
-
-### 0.4.2
-
-* (holomekc) Fixed undefined object issue
-* Dependencies updated
-
-[Older changelogs can be found there](CHANGELOG_OLD.md)
-
-## License
+[Older changelogs can be found there](CHANGELOG_OLD.md)## License
 
 The MIT License (MIT)
 
