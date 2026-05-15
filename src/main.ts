@@ -18,7 +18,7 @@ import { Utils } from './utils';
 import { ClientCert } from './client-cert';
 import { BshbError, BshbErrorType, BshbUtils } from 'bosch-smart-home-bridge';
 import { LogLevel } from './log-level';
-import * as fs from 'fs';
+import * as fs from 'node:fs';
 import Timeout = NodeJS.Timeout;
 
 /**

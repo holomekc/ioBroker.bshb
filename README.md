@@ -70,9 +70,7 @@ use of the adapter. You find a link at the top.
 * (holomekc) Fixed undefined object issue
 * Dependencies updated
 
-### Older entries
-
-[here](CHANGELOG_OLD.md)
+[Older changelogs can be found there](CHANGELOG_OLD.md)
 
 ## License
 

@@ -18,7 +18,7 @@ updates:
     ignore:
       - dependency-name: "@types/node"
         versions:
-          - ">22.999.999"
+          - ">24.999.999"
     directories:
       - "**/*"
 

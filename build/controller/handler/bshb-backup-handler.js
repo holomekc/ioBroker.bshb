@@ -41,8 +41,8 @@ const rxjs_1 = require("rxjs");
 const bshb_handler_1 = require("./bshb-handler");
 const bshb_definition_1 = require("../../bshb-definition");
 const utils = __importStar(require("@iobroker/adapter-core"));
-const fs_1 = require("fs");
-const path_1 = __importDefault(require("path"));
+const node_fs_1 = require("node:fs");
+const node_path_1 = __importDefault(require("node:path"));
 class BshbBackupHandler extends bshb_handler_1.BshbHandler {
     backupRegex = /bshb\.\d+\.backup\.(createBackup|deleteBackup)/;
     backupStatus$ = new rxjs_1.Subject();
@@ -130,11 +130,11 @@ class BshbBackupHandler extends bshb_handler_1.BshbHandler {
     }
     storeBackupFile(response) {
         const binaryResponse = response.parsedResponse;
-        const backupDir = path_1.default.join(utils.getAbsoluteInstanceDataDir(this.bshb), 'backups');
+        const backupDir = node_path_1.default.join(utils.getAbsoluteInstanceDataDir(this.bshb), 'backups');
         return (0, rxjs_1.from)(this.ensureDirectoryExists(backupDir)).pipe((0, rxjs_1.switchMap)(() => {
-            const filePath = path_1.default.join(backupDir, this.createFileName(binaryResponse.fileName));
+            const filePath = node_path_1.default.join(backupDir, this.createFileName(binaryResponse.fileName));
             this.bshb.log.info(`[Backup] Data downloaded and file created: ${filePath}.`);
-            return (0, rxjs_1.from)(fs_1.promises.writeFile(filePath, binaryResponse.data));
+            return (0, rxjs_1.from)(node_fs_1.promises.writeFile(filePath, binaryResponse.data));
         }));
     }
     deleteBackupFromController() {
@@ -235,11 +235,11 @@ class BshbBackupHandler extends bshb_handler_1.BshbHandler {
     }
     async ensureDirectoryExists(directoryPath) {
         try {
-            await fs_1.promises.access(directoryPath, fs_1.promises.constants.F_OK);
+            await node_fs_1.promises.access(directoryPath, node_fs_1.promises.constants.F_OK);
         }
         catch (error) {
             if (error.code === 'ENOENT') {
-                await fs_1.promises.mkdir(directoryPath, { recursive: true });
+                await node_fs_1.promises.mkdir(directoryPath, { recursive: true });
             }
             else {
                 throw error;

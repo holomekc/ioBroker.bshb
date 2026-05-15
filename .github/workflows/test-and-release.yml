@@ -32,7 +32,7 @@ jobs:
     steps:
       - uses: ioBroker/testing-action-check@v1
         with:
-          node-version: 22.x
+          node-version: 24.x
           lint-command: 'npm run lint'
           test-command: 'npm run test:package'
           type-checking: true
@@ -47,7 +47,7 @@ jobs:
     runs-on: ${{ matrix.os }}
     strategy:
       matrix:
-        node-version: [ 20.x, 22.x ]
+        node-version: [ 22.x, 24.x ]
         os: [ ubuntu-latest, windows-latest, macos-latest ]
 
     steps:
@@ -80,7 +80,7 @@ jobs:
     steps:
       - uses: ioBroker/testing-action-deploy@v1
         with:
-          node-version: '22.x'
+          node-version: '24.x'
           build: true
           build-command: 'npm run build'
           github-token: ${{ secrets.GITHUB_TOKEN }}

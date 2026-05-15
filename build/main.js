@@ -42,7 +42,7 @@ const utils_1 = require("./utils");
 const client_cert_1 = require("./client-cert");
 const bosch_smart_home_bridge_1 = require("bosch-smart-home-bridge");
 const log_level_1 = require("./log-level");
-const fs = __importStar(require("fs"));
+const fs = __importStar(require("node:fs"));
 /**
  * @author Christopher Holomek
  * @since 27.09.2019

@@ -34,7 +34,7 @@ var __importStar = (this && this.__importStar) || (function () {
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Migration = void 0;
-const fs = __importStar(require("fs"));
+const fs = __importStar(require("node:fs"));
 const utils_1 = require("./utils");
 /**
  * This class is used to migrate from old configuration to new one. This will be obsolete at some point.

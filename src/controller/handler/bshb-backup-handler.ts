@@ -2,8 +2,8 @@ import { filter, from, map, mergeMap, Observable, of, Subject, switchMap, take, 
 import { BshbHandler } from './bshb-handler';
 import { BshbDefinition } from '../../bshb-definition';
 import * as utils from '@iobroker/adapter-core';
-import { promises as fs } from 'fs';
-import path from 'path';
+import { promises as fs } from 'node:fs';
+import path from 'node:path';
 import { BinaryResponse, BshbResponse } from 'bosch-smart-home-bridge';
 
 export class BshbBackupHandler extends BshbHandler {
