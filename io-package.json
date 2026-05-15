@@ -1,8 +1,21 @@
 {
   "common": {
     "name": "bshb",
-    "version": "0.6.2",
+    "version": "0.6.3",
     "news": {
+      "0.6.3": {
+        "en": "Migrate from yarn to npm\nAdopt ioBroker standard release workflow\nDrop Node.js 20, require >= 22\nUpdate dependencies\nUse node: prefix for built-in modules",
+        "de": "Von Garn zu npm migrieren\nAdopt ioBroker Standard Release Workflow\nDrop Node.js 20, erforderlich >= 22\nAbhängigkeiten aktualisieren\nEinsatzknoten: Präfix für eingebaute Module",
+        "ru": "Миграция из пряжи в нпм\nПринять стандартный рабочий процесс ioBroker\nDrop Node.js 20, требуется >= 22\nОбновление зависимостей\nУзел использования: префикс для встроенных модулей",
+        "pt": "Migrar do fio ao npm\nAdotar fluxo de trabalho de liberação padrão ioBroker\nDrop Node.js 20, exigir >= 22\nAtualizar dependências\nNó de uso: prefixo para módulos incorporados",
+        "nl": "Van garen naar npm migreren\nioBroker standaard release workflow goedkeuren\nMet een gewicht van <= 200 g/m2\nAfhankelijkheden bijwerken\nNode gebruiken: voorvoegsel voor ingebouwde modules",
+        "fr": "Migrate de fil à npm\nAdopter le flux de travail standard de sortie ioBroker\nDrop Node.js 20, nécessite >= 22\nMise à jour des dépendances\nUtiliser le nœud: préfixe pour les modules intégrés",
+        "it": "Migrazione da filato a npm\nAdottare il flusso di lavoro standard di rilascio\nGoccia Node.js 20, richiedono >= 22\nDipendenze di aggiornamento\nNodo d'uso: prefisso per moduli integrati",
+        "es": "Migrar de hilo a npm\nAdopt ioBroker flujo de trabajo de liberación estándar\nDrop Node.js 20, requiere √= 22\nActualizar las dependencias\nNodo de uso: prefijo para módulos incorporados",
+        "pl": "Migracja z przędzy do npm\nAdoptuj pracę przy standardowym wydaniu jOBroker\nDrop Node.js 20, require > = 22\nAktualizuj zależności\nUżyj węzła: przedrostek dla modułów built- in",
+        "uk": "Migrate від пряжі до npm\nПрийняти ioBroker стандартний робочий процес релізу\nDrop Node.js 20, вимагають >= 22\nОновлення залежності\nВикористання вузла: префікс для вбудованих модулів",
+        "zh-cn": "从纱线移到npm\n采用 ioBroker 标准发布工作流程\nDrop Node.js 20, required >= 22\n更新依赖关系\n内置模块使用节点:前缀"
+      },
       "0.6.2": {
         "en": "update dependency",
         "de": "Update-Abhängigkeit",
@@ -80,19 +93,6 @@
         "pl": "Drobne czyszczenie",
         "uk": "Мінорний очищувач",
         "zh-cn": "小清理"
-      },
-      "0.4.2": {
-        "en": "Fixed undefined object issue",
-        "de": "Problem mit undefinierten Objekten behoben",
-        "ru": "Исправлена проблема неопределенного объекта",
-        "pt": "Corrigido o problema de objectos indefinidos",
-        "nl": "Probleem met ongedefinieerd object opgelost",
-        "fr": "Correction d'un problème d'objet non défini",
-        "it": "Corretto il problema degli oggetti non definiti",
-        "es": "Solucionado un problema de objetos indefinidos",
-        "pl": "Naprawiono błąd niezdefiniowanego obiektu",
-        "uk": "Виправлено проблему невизначених об'єктів",
-        "zh-cn": "修正了未定义对象问题"
       }
     },
     "titleLang": {

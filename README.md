@@ -35,8 +35,7 @@ If you want to support the work I would appreciate a small donation. This is 100
 use of the adapter. You find a link at the top.
 
 ## Changelog
-
-### **WORK IN PROGRESS**
+### 0.6.3 (2026-05-15)
 
 * (holomekc) Migrate from yarn to npm
 * (holomekc) Adopt ioBroker standard release workflow
