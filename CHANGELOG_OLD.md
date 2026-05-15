@@ -224,3 +224,15 @@
 
 * (holomekc) certificate generation added
 * (holomekc) first attempts to creat ioBroker objects, states, etc.
+## 0.5.1
+
+* Dependencies updated
+
+## 0.5.0
+
+* (holomekc) Minor cleanup
+
+## 0.4.2
+
+* (holomekc) Fixed undefined object issue
+* Dependencies updated
