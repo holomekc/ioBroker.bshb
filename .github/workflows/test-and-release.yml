@@ -1,4 +1,4 @@
-name: Test
+name: Test and Release
 
 # Run this job on all pushes and pull requests
 # as well as tags with a semantic version
@@ -6,6 +6,11 @@ on:
   push:
     branches:
       - "*"
+    tags:
+      # normal versions
+      - "v[0-9]+.[0-9]+.[0-9]+"
+      # pre-releases
+      - "v[0-9]+.[0-9]+.[0-9]+-**"
   pull_request: { }
   workflow_dispatch:
 
@@ -28,9 +33,8 @@ jobs:
       - uses: ioBroker/testing-action-check@v1
         with:
           node-version: 22.x
-          install-command: 'corepack enable && yarn install'
-          lint-command: 'yarn run lint'
-          test-command: 'yarn run test:package'
+          lint-command: 'npm run lint'
+          test-command: 'npm run test:package'
           type-checking: true
           lint: true
 
@@ -51,8 +55,32 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
           os: ${{ matrix.os }}
-          install-command: 'corepack enable && yarn install'
-          unit-test-command: 'yarn run test:unit'
-          integration-test-command: 'yarn run test:integration'
-          build-command: 'yarn run build'
+          unit-test-command: 'npm run test:unit'
+          integration-test-command: 'npm run test:integration'
+          build-command: 'npm run build'
           build: true
+
+  # Deploys the final package to NPM
+  deploy:
+    needs: [ check-and-lint, adapter-tests ]
+
+    # Trigger this step only when a commit on any branch is tagged with a version number
+    if: |
+      contains(github.event.head_commit.message, '[skip ci]') == false &&
+      github.event_name == 'push' &&
+      startsWith(github.ref, 'refs/tags/v')
+
+    runs-on: ubuntu-latest
+
+    # Write permissions are required to create GitHub releases
+    permissions:
+      id-token: write
+      contents: write
+
+    steps:
+      - uses: ioBroker/testing-action-deploy@v1
+        with:
+          node-version: '22.x'
+          build: true
+          build-command: 'npm run build'
+          github-token: ${{ secrets.GITHUB_TOKEN }}

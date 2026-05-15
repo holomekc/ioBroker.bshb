@@ -7,6 +7,8 @@ updates:
       interval: "weekly"
       time: "04:00"
       timezone: "Europe/Berlin"
+    cooldown:
+      default: 10
     open-pull-requests-limit: 20
     assignees:
       - "Author"
@@ -19,3 +21,17 @@ updates:
           - ">22.999.999"
     directories:
       - "**/*"
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      time: "04:00"
+      timezone: "Europe/Berlin"
+    cooldown:
+      default: 10
+    open-pull-requests-limit: 5
+    assignees:
+      - "Author"
+    commit-message:
+      prefix: "chore(deps)"
