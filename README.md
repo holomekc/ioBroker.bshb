@@ -36,6 +36,8 @@ use of the adapter. You find a link at the top.
 
 ## Changelog
 
+### **WORK IN PROGRESS**
+
 ### 0.6.2
 
 * (holomekc) update dependency
