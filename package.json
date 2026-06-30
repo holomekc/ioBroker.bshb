@@ -45,7 +45,7 @@
     "pack": "npm run build && npm pack"
   },
   "dependencies": {
-    "@iobroker/adapter-core": "^3.3.2",
+    "@iobroker/adapter-core": "^3.4.1",
     "bosch-smart-home-bridge": "1.8.1",
     "rxjs": "7.8.1"
   },
